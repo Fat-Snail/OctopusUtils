@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>10</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Jieba\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Jieba\Segmenter\Resources\char_state_tab.json" />
+      <EmbeddedResource Include="Jieba\Segmenter\Resources\char_state_tab.json" />
+      <None Remove="Jieba\Segmenter\Resources\dict.txt" />
+      <EmbeddedResource Include="Jieba\Segmenter\Resources\dict.txt" />
+      <None Remove="Jieba\Segmenter\Resources\pos_prob_emit.json" />
+      <EmbeddedResource Include="Jieba\Segmenter\Resources\pos_prob_emit.json" />
+      <None Remove="Jieba\Segmenter\Resources\pos_prob_start.json" />
+      <EmbeddedResource Include="Jieba\Segmenter\Resources\pos_prob_start.json" />
+      <None Remove="Jieba\Segmenter\Resources\pos_prob_trans.json" />
+      <EmbeddedResource Include="Jieba\Segmenter\Resources\pos_prob_trans.json" />
+      <None Remove="Jieba\Segmenter\Resources\prob_emit.json" />
+      <EmbeddedResource Include="Jieba\Segmenter\Resources\prob_emit.json" />
+      <None Remove="Jieba\Segmenter\Resources\prob_trans.json" />
+      <EmbeddedResource Include="Jieba\Segmenter\Resources\prob_trans.json" />
+      <None Remove="Jieba\Segmenter\Resources\stopwords.txt" />
+      <EmbeddedResource Include="Jieba\Segmenter\Resources\stopwords.txt" />
+      <None Remove="Jieba\Segmenter\Resources\idf.txt" />
+      <EmbeddedResource Include="Jieba\Segmenter\Resources\idf.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Text.Json" Version="8.0.3" />
+    </ItemGroup>
+
+</Project>

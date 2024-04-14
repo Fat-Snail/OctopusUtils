@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Lucene.JIEba.Analyzer.NetCore</PackageId>
+    <PackageVersion>1.0.1</PackageVersion>
+    <Authors>shshshddy</Authors>
+    <Description>JIEba.Lucene.Net is an analyzer tools for lucene.net which is kind to chinese</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/shshshdy/JIEba-netcore</PackageProjectUrl>
+    <Copyright>Copyright 2020 (c) AgileLabs. All rights reserved.</Copyright>
+    <PackageTags>Analyzer Segment JIEba.net core2.0</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Company>shshshddy</Company>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>删除多余依赖</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\idf.txt" />
+    <None Remove="Resources\stopwords.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\idf.txt">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\stopwords.txt">
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Segmenter\Segmenter.csproj" />
+  </ItemGroup>
+</Project>

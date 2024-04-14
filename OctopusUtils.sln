@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30709.132
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Octopus.SearchCore", "Octopus.SearchCore\Octopus.SearchCore.csproj", "{66ED4541-A56B-4E92-B8FA-0F39A8CD3B1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Octopus.Segment", "Octopus.Segment\Octopus.Segment.csproj", "{0D7807C4-B2C6-4484-834A-F5F93FBECD05}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Guid版本|Any CPU = Guid版本|Any CPU
+		Long版本|Any CPU = Long版本|Any CPU
+		Release|Any CPU = Release|Any CPU
+		String版本|Any CPU = String版本|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{66ED4541-A56B-4E92-B8FA-0F39A8CD3B1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66ED4541-A56B-4E92-B8FA-0F39A8CD3B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66ED4541-A56B-4E92-B8FA-0F39A8CD3B1C}.Guid版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{66ED4541-A56B-4E92-B8FA-0F39A8CD3B1C}.Guid版本|Any CPU.Build.0 = Debug|Any CPU
+		{66ED4541-A56B-4E92-B8FA-0F39A8CD3B1C}.Long版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{66ED4541-A56B-4E92-B8FA-0F39A8CD3B1C}.Long版本|Any CPU.Build.0 = Debug|Any CPU
+		{66ED4541-A56B-4E92-B8FA-0F39A8CD3B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66ED4541-A56B-4E92-B8FA-0F39A8CD3B1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66ED4541-A56B-4E92-B8FA-0F39A8CD3B1C}.String版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{66ED4541-A56B-4E92-B8FA-0F39A8CD3B1C}.String版本|Any CPU.Build.0 = Debug|Any CPU
+		{0D7807C4-B2C6-4484-834A-F5F93FBECD05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D7807C4-B2C6-4484-834A-F5F93FBECD05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D7807C4-B2C6-4484-834A-F5F93FBECD05}.Guid版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D7807C4-B2C6-4484-834A-F5F93FBECD05}.Guid版本|Any CPU.Build.0 = Debug|Any CPU
+		{0D7807C4-B2C6-4484-834A-F5F93FBECD05}.Long版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D7807C4-B2C6-4484-834A-F5F93FBECD05}.Long版本|Any CPU.Build.0 = Debug|Any CPU
+		{0D7807C4-B2C6-4484-834A-F5F93FBECD05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D7807C4-B2C6-4484-834A-F5F93FBECD05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D7807C4-B2C6-4484-834A-F5F93FBECD05}.String版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D7807C4-B2C6-4484-834A-F5F93FBECD05}.String版本|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5C40C6B-2856-4202-A102-44DD07D576E4}
+	EndGlobalSection
+EndGlobal
