@@ -3,14 +3,19 @@ using JiebaNet.Segmenter;
 using Lucene.Net.Analysis.Jieba;
 using Lucene.Net.Store;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Octopus.SearchCore;
+using Octopus.SearchCore.Ext;
 using Octopus.SearchCore.IndexDemo;
 using Octopus.SearchCore.Interfaces;
 using Octopus.SearchCore.TagSource;
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+
+
 //分词
 var segmenter = new JiebaSegmenter();
 var words= segmenter.Cut("男子洗澡时发现舒肤佳香皂内嵌刀");
@@ -92,7 +97,18 @@ foreach (var n in newsList)
 
 indexer.CreateIndex(newsList,true);
 
-var engine2 = new SearchEngine(FSDirectory.Open(option.Path),new JieBaAnalyzer(TokenizerMode.Search),new MemoryCache(cacheOps));
+// //注入获取，适合Web项目
+// var service = new ServiceCollection();
+// service.AddSearchEngine(new LuceneIndexerOptions()
+// {
+//     Path = "lucene"
+// });
+// var serviceProvider = service.BuildServiceProvider();
+//
+// var engine2 = serviceProvider.GetService<ISearchEngine>();
+
+
+ var engine2 = new SearchEngine(FSDirectory.Open(option.Path),new JieBaAnalyzer(TokenizerMode.Search),new MemoryCache(cacheOps));
 
 var searchOpt=new SearchOptions("天才", 1, 10, "Title");
 searchOpt.Score = 0.1f;

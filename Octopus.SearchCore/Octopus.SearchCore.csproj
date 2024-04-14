@@ -10,6 +10,7 @@
     <ItemGroup>
       <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00016" />
       <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
