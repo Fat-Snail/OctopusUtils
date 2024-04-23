@@ -18,7 +18,9 @@ namespace JiebaNet.Segmenter.Common
                 return File.ReadAllText(path);
             }
 
-            var embeddedPath = $"{_embeddedRoot}.{path.Replace("/", ".")}";
+            path = path.Replace("/", ".");
+            path = path.Replace("\\", ".");
+            var embeddedPath = $"{_embeddedRoot}.{path}";
             
             return ResourceHelper.GetResourceInputString(embeddedPath);
             //return ReadEmbeddedAllLine(path, Encoding.UTF8);

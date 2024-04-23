@@ -60,7 +60,7 @@ public class TagUtils
     {
         var tags = new List<string>();
 
-        var lines = text.Split(new[] { Environment.NewLine },
+        var lines = text.Split(new[] { "\r\n","\n" },
             StringSplitOptions.None
         );
         foreach (var line in lines)
