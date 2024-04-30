@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Octopus.Segment", "Octopus.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Octopus.Tools", "Octopus.Tools\Octopus.Tools.csproj", "{41E49348-B12D-4B3C-B521-7BDED180B254}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "..\..\Nihaowa\ConsoleApp1\ConsoleApp1.csproj", "{66ED9C3E-0442-4099-B2CA-81F365790738}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,16 @@ Global
 		{41E49348-B12D-4B3C-B521-7BDED180B254}.Release|Any CPU.Build.0 = Release|Any CPU
 		{41E49348-B12D-4B3C-B521-7BDED180B254}.String版本|Any CPU.ActiveCfg = Debug|Any CPU
 		{41E49348-B12D-4B3C-B521-7BDED180B254}.String版本|Any CPU.Build.0 = Debug|Any CPU
+		{66ED9C3E-0442-4099-B2CA-81F365790738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66ED9C3E-0442-4099-B2CA-81F365790738}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66ED9C3E-0442-4099-B2CA-81F365790738}.Guid版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{66ED9C3E-0442-4099-B2CA-81F365790738}.Guid版本|Any CPU.Build.0 = Debug|Any CPU
+		{66ED9C3E-0442-4099-B2CA-81F365790738}.Long版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{66ED9C3E-0442-4099-B2CA-81F365790738}.Long版本|Any CPU.Build.0 = Debug|Any CPU
+		{66ED9C3E-0442-4099-B2CA-81F365790738}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66ED9C3E-0442-4099-B2CA-81F365790738}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66ED9C3E-0442-4099-B2CA-81F365790738}.String版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{66ED9C3E-0442-4099-B2CA-81F365790738}.String版本|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
