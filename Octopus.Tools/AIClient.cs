@@ -115,7 +115,7 @@ public class CompletionRequest
     public string Model { get; set; }
 
     [JsonPropertyName("prompt")]
-    public string[] Prompts { get; set; } = new string[0];
+    public string[] Prompts { get; set; } //= new string[0];
     [JsonPropertyName("messages")]
     public List<CompletionMessage> Messages { get; set; } = new List<CompletionMessage>();
 
