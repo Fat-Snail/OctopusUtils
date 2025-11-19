@@ -2,20 +2,20 @@
 {
     public class Token
     {
-        public string Word { get; set; }
-        public int StartIndex { get; set; }
-        public int EndIndex { get; set; }
+    public String Word { get; set; }
+    public Int32 StartIndex { get; set; }
+    public Int32 EndIndex { get; set; }
 
-        public Token(string word, int startIndex, int endIndex)
+        public Token(String word, Int32 startIndex, Int32 endIndex)
         {
             Word = word;
             StartIndex = startIndex;
             EndIndex = endIndex;
         }
 
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("[{0}, ({1}, {2})]", Word, StartIndex, EndIndex);
+            return String.Format("[{0}, ({1}, {2})]", Word, StartIndex, EndIndex);
         }
     }
 }

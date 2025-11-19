@@ -19,13 +19,13 @@ namespace Octopus.SearchCore.Interfaces
         /// </summary>
         [LuceneIndex(Name = "Id", Store = Field.Store.YES), Key]
 
-        int Id { get; set; }
+        Int32 Id { get; set; }
 
 #if Long
-        long Id { get; set; }
+        Int64 Id { get; set; }
 #endif
 #if String
-        string Id { get; set; }
+        String Id { get; set; }
 #endif
 #if Guid
         Guid Id { get; set; }
@@ -36,7 +36,7 @@ namespace Octopus.SearchCore.Interfaces
         /// </summary>
         [LuceneIndex(Name = "IndexId", Store = Field.Store.YES)]
         [XmlIgnore, NotMapped]
-        internal string IndexId { get; set; }
+        internal String IndexId { get; set; }
 
         /// <summary>
         /// 转换成Lucene文档

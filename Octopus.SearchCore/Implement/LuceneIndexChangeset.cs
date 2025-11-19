@@ -15,7 +15,7 @@ public class LuceneIndexChangeset
     /// </summary>
     /// <param name="state">状态</param>
     /// <returns></returns>
-    private bool EntriesHaveState(LuceneIndexState state)
+    private Boolean EntriesHaveState(LuceneIndexState state)
     {
         return Entries.Any(x => x.State == state);
     }
@@ -23,22 +23,22 @@ public class LuceneIndexChangeset
     /// <summary>
     /// 已经被添加？
     /// </summary>
-    public bool HasAdds => EntriesHaveState(LuceneIndexState.Added);
+    public Boolean HasAdds => EntriesHaveState(LuceneIndexState.Added);
 
     /// <summary>
     /// 已经被更新？
     /// </summary>
-    public bool HasUpdates => EntriesHaveState(LuceneIndexState.Updated);
+    public Boolean HasUpdates => EntriesHaveState(LuceneIndexState.Updated);
 
     /// <summary>
     /// 已经被删除？
     /// </summary>
-    public bool HasDeletes => EntriesHaveState(LuceneIndexState.Removed);
+    public Boolean HasDeletes => EntriesHaveState(LuceneIndexState.Removed);
 
     /// <summary>
     /// 已经被修改
     /// </summary>
-    public bool HasChanges => Entries.Any() && (HasAdds || HasUpdates || HasDeletes);
+    public Boolean HasChanges => Entries.Any() && (HasAdds || HasUpdates || HasDeletes);
 
     /// <summary>
     /// 构造函数

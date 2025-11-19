@@ -10,12 +10,12 @@ namespace Octopus.SearchCore.Interfaces
         /// <summary>
         /// 总条数
         /// </summary>
-        int TotalHits { get; set; }
+        Int32 TotalHits { get; set; }
 
         /// <summary>
         /// 耗时
         /// </summary>
-        long Elapsed { get; set; }
+        Int64 Elapsed { get; set; }
 
         /// <summary>
         /// 结果集

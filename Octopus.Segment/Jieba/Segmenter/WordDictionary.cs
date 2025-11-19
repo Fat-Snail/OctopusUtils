@@ -13,14 +13,14 @@ namespace JiebaNet.Segmenter
     public class WordDictionary
     {
         private static readonly Lazy<WordDictionary> lazy = new Lazy<WordDictionary>(() => new WordDictionary());
-        private static readonly string MainDict = ConfigManager.MainDictFile;
+        private static readonly String MainDict = ConfigManager.MainDictFile;
 
-        internal IDictionary<string, int> Trie = new Dictionary<string, int>();
+        internal IDictionary<String, Int32> Trie = new Dictionary<String, Int32>();
 
         /// <summary>
         /// total occurrence of all words.
         /// </summary>
-        public double Total { get; set; }
+        public Double Total { get; set; }
 
         private WordDictionary()
         {

@@ -14,7 +14,7 @@ namespace Octopus.SearchCore.Interfaces
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        List<string> CutKeywords(string keyword);
+        List<String> CutKeywords(String keyword);
 
         /// <summary>
         /// 搜索单条记录
@@ -42,6 +42,6 @@ namespace Octopus.SearchCore.Interfaces
         /// <param name="skip">跳过多少条</param>
         /// <param name="take">取多少条</param>
         /// <returns></returns>
-        ILuceneSearchResultCollection ScoredSearch(string keywords, string fields, int maximumNumberOfHits, Dictionary<string, float> boosts, Type type, string sortBy, int? skip, int? take);
+        ILuceneSearchResultCollection ScoredSearch(String keywords, String fields, Int32 maximumNumberOfHits, Dictionary<String, Single> boosts, Type type, String sortBy, Int32? skip, Int32? take);
     }
 }

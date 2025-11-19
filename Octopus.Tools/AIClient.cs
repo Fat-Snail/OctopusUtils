@@ -12,21 +12,21 @@ namespace Octopus.Tools;
 public class AIClient : IDisposable
 {
     #region >配置实例，简单粗暴<
-    private static string _aiApiDomain = "https://api.openai.com";
-    private static string _aiApiKey = string.Empty;
-    private static string _aiModel = string.Empty;
+    private static String _aiApiDomain = "https://api.openai.com";
+    private static String _aiApiKey = String.Empty;
+    private static String _aiModel = String.Empty;
 
     private static JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    private static DictionaryCache<string, AIClient> _clientCache = new DictionaryCache<string, AIClient>();
+    private static DictionaryCache<String, AIClient> _clientCache = new DictionaryCache<String, AIClient>();
     #endregion
 
     private HttpClient _httpClient = null;
 
-    public AIClient(string name)
+    public AIClient(String name)
     {
         _httpClient = new HttpClient();
         _httpClient.BaseAddress = new Uri(_aiApiDomain);
@@ -120,31 +120,31 @@ public class CompletionRequest
     public List<CompletionMessage> Messages { get; set; } = new List<CompletionMessage>();
 
     [JsonPropertyName("suffix")]
-    public string Suffix { get; set; } = null;
+    public String Suffix { get; set; } = null;
 
     [JsonPropertyName("max_tokens")]
-    public int MaxTokens { get; set; } = 16;
+    public Int32 MaxTokens { get; set; } = 16;
 
     [JsonPropertyName("temperature")]
-    public double Temperature { get; set; } = 1;
+    public Double Temperature { get; set; } = 1;
 
     [JsonPropertyName("top_p")]
-    public double ProbabilityMass { get; set; } = 1;
+    public Double ProbabilityMass { get; set; } = 1;
 
     [JsonPropertyName("n")]
-    public int CompletionsPerPrompt { get; set; } = 1;
+    public Int32 CompletionsPerPrompt { get; set; } = 1;
 
     [JsonPropertyName("stream")]
-    public bool Stream { get; set; } = false;
+    public Boolean Stream { get; set; } = false;
 
     [JsonPropertyName("logprobs")]
-    public int? LogProbabilities { get; set; } = null;
+    public Int32? LogProbabilities { get; set; } = null;
 
     [JsonPropertyName("echo")]
-    public bool Echo { get; set; } = false;
+    public Boolean Echo { get; set; } = false;
 
     [JsonPropertyName("stop")]
-    public string[] Stop { get; set; } = null;
+    public String[] Stop { get; set; } = null;
 
     [JsonPropertyName("presence_penalty")]
     public double PresencePenalty { get; set; } = 0;

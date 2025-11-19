@@ -13,8 +13,8 @@ namespace JiebaNet
 {
     public class JieBaTokenizer : Tokenizer
     {
-        private string _inputText;
-        private readonly string _dictPath = "Resources/dict.txt";
+        private String _inputText;
+        private readonly String _dictPath = "Resources/dict.txt";
 
         private readonly JiebaSegmenter _segmenter;
         private TokenizerMode _mode;
@@ -26,7 +26,7 @@ namespace JiebaNet
 
         private IEnumerator<Token> _iter;
 
-        public List<string> StopWords { get; } = new List<string>();
+        public List<String> StopWords { get; } = new List<String>();
 
         /// <summary>
         /// 
@@ -34,7 +34,7 @@ namespace JiebaNet
         /// <param name="input"></param>
         /// <param name="Mode"></param>
         /// <param name="defaultUserDict">致敬习大大用</param>
-        public JieBaTokenizer(TextReader input, TokenizerMode Mode, bool defaultUserDict = false)
+        public JieBaTokenizer(TextReader input, TokenizerMode Mode, Boolean defaultUserDict = false)
             : base(AttributeFactory.DEFAULT_ATTRIBUTE_FACTORY, input)
         {
 
@@ -45,12 +45,12 @@ namespace JiebaNet
                 _segmenter.LoadUserDictForEmbedded(Assembly.GetCallingAssembly(), _dictPath);
             }
 
-            if (!string.IsNullOrEmpty(Settings.IgnoreDictFile))
+            if (!String.IsNullOrEmpty(Settings.IgnoreDictFile))
             {
                 var list = FileExtension.ReadAllLines(Settings.IgnoreDictFile);
                 foreach (var item in list)
                 {
-                    if (string.IsNullOrEmpty(item))
+                    if (String.IsNullOrEmpty(item))
                         continue;
                     if (StopWords.Contains(item))
                         continue;
@@ -58,7 +58,7 @@ namespace JiebaNet
                 }
             }
 
-            if (!string.IsNullOrEmpty(Settings.UserDictFile))
+            if (!String.IsNullOrEmpty(Settings.UserDictFile))
             {
                 _segmenter.LoadUserDict(Settings.UserDictFile);
             }
@@ -76,7 +76,7 @@ namespace JiebaNet
             AddAttribute<IPositionIncrementAttribute>();
         }
 
-        private string ReadToEnd(TextReader input)
+        private String ReadToEnd(TextReader input)
         {
             return input.ReadToEnd();
         }
@@ -104,7 +104,7 @@ namespace JiebaNet
         }
         #endregion
 
-        public sealed override bool IncrementToken()
+        public sealed override Boolean IncrementToken()
         {
             ClearAttributes();
 

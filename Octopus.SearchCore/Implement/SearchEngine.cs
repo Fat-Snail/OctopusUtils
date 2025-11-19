@@ -29,7 +29,7 @@ public class SearchEngine : ISearchEngine
     /// <summary>
     /// 索引条数
     /// </summary>
-    public int IndexCount => LuceneIndexer.Count();
+    public Int32 IndexCount => LuceneIndexer.Count();
 
     /// <summary>
     /// 搜索引擎
@@ -104,7 +104,7 @@ public class SearchEngine : ISearchEngine
     /// 保存数据更改并同步索引
     /// </summary>
     /// <returns></returns>
-    public int SaveChanges(bool index = true)
+    public Int32 SaveChanges(Boolean index = true)
     {
         var result = 0;
 
@@ -129,7 +129,7 @@ public class SearchEngine : ISearchEngine
     /// </summary>
     /// <param name="index">是否需要被重新索引</param>
     /// <returns></returns>
-    public async Task<int> SaveChangesAsync(bool index = true)
+    public async Task<Int32> SaveChangesAsync(Boolean index = true)
     {
         var result = 0;
 
@@ -175,7 +175,7 @@ public class SearchEngine : ISearchEngine
     /// <summary>
     /// 创建指定数据表的索引
     /// </summary>
-    public void CreateIndex(List<string> tables)
+    public void CreateIndex(List<String> tables)
     {
         if (LuceneIndexer == null)
         {
@@ -304,7 +304,7 @@ public class SearchEngine : ISearchEngine
     /// 导入自定义词库
     /// </summary>
     /// <param name="words"></param>
-    public void ImportCustomerKeywords(IEnumerable<string> words)
+    public void ImportCustomerKeywords(IEnumerable<String> words)
     {
         var segmenter = new JiebaSegmenter();
         foreach (var word in words)

@@ -13,12 +13,12 @@ public static class DocumentExtension
     /// <param name="key">键</param>
     /// <param name="t">类型</param>
     /// <returns></returns>
-    internal static object Get(this Document doc, string key, Type t)
+    internal static Object Get(this Document doc, String key, Type t)
     {
         var value = doc.Get(key);
         return t switch
         {
-            _ when t.IsAssignableFrom(typeof(string)) => value,
+            _ when t.IsAssignableFrom(typeof(String)) => value,
             _ when t.IsValueType => ConvertTo(value, t),
             _ => System.Text.Json.JsonSerializer.Deserialize(value, t) //JsonConvert.DeserializeObject(value, t)
         };
@@ -30,7 +30,7 @@ public static class DocumentExtension
     /// <param name="value"></param>
     /// <param name="type">目标类型</param>
     /// <returns></returns>
-    private static object ConvertTo(string value, Type type)
+    private static Object ConvertTo(String value, Type type)
     {
         if (value == null)
         {

@@ -12,27 +12,27 @@ public class SearchOptions
     /// <summary>
     /// 关键词
     /// </summary>
-    public string Keywords { get; set; }
+    public String Keywords { get; set; }
 
     /// <summary>
     /// 限定搜索字段
     /// </summary>
-    public List<string> Fields { get; set; }
+    public List<String> Fields { get; set; }
 
     /// <summary>
     /// 最大检索量
     /// </summary>
-    public int MaximumNumberOfHits { get; set; }
+    public Int32 MaximumNumberOfHits { get; set; }
 
     /// <summary>
     /// 多字段搜索时，给字段设定搜索权重
     /// </summary>
-    private readonly Dictionary<string, float> _boosts;
+    private readonly Dictionary<String, Single> _boosts;
 
     /// <summary>
     /// 多字段搜索时，给字段设定搜索权重
     /// </summary>
-    internal Dictionary<string, float> Boosts
+    internal Dictionary<String, Single> Boosts
     {
         get
         {
@@ -53,12 +53,12 @@ public class SearchOptions
     /// <summary>
     /// 跳过多少条
     /// </summary>
-    public int? Skip { get; set; }
+    public Int32? Skip { get; set; }
 
     /// <summary>
     /// 取多少条
     /// </summary>
-    public int? Take { get; set; }
+    public Int32? Take { get; set; }
 
     /// <summary>
     /// 文档类型
@@ -68,7 +68,7 @@ public class SearchOptions
     /// <summary>
     /// 匹配度，0-1，数值越大结果越精确
     /// </summary>
-    public float Score { get; set; } = 0.5f;
+    public Single Score { get; set; } = 0.5f;
 
     /// <summary>
     /// 过滤条件
@@ -86,9 +86,9 @@ public class SearchOptions
     /// <param name="orderBy">排序字段</param>
     /// <param name="skip">跳过多少条</param>
     /// <param name="take">取多少条</param>
-    public SearchOptions(string keywords, string fields, int maximumNumberOfHits = 1000, Dictionary<string, float> boosts = null, Type type = null, string orderBy = null, int? skip = null, int? take = null)
+    public SearchOptions(String keywords, String fields, Int32 maximumNumberOfHits = 1000, Dictionary<String, Single> boosts = null, Type type = null, String orderBy = null, Int32? skip = null, Int32? take = null)
     {
-        if (string.IsNullOrWhiteSpace(keywords))
+        if (String.IsNullOrWhiteSpace(keywords))
         {
             throw new ArgumentException("搜索关键词不能为空！");
         }
@@ -97,16 +97,16 @@ public class SearchOptions
         MaximumNumberOfHits = maximumNumberOfHits;
         Skip = skip;
         Take = take;
-        _boosts = boosts ?? new Dictionary<string, float>();
+        _boosts = boosts ?? new Dictionary<String, Single>();
         Type = type;
-        Fields = new List<string>();
+        Fields = new List<String>();
         OrderBy = new List<SortField>()
             {
                 SortField.FIELD_SCORE
             };
 
         // 添加被检索字段
-        if (!string.IsNullOrEmpty(fields))
+        if (!String.IsNullOrEmpty(fields))
         {
             fields = fields.RemoveCharacters(" ");
             Fields.AddRange(fields.Split(',').ToList());
@@ -148,7 +148,7 @@ public class SearchOptions
     /// <param name="size">页大小</param>
     /// <param name="page">第几页</param>
     /// <param name="t">需要被全文检索的类型</param>
-    public SearchOptions(string keywords, int page, int size, Type t) : this(keywords, string.Join(",", t.GetProperties().Where(p => p.GetCustomAttributes<LuceneIndexAttribute>().Any()).Select(p => p.Name)), int.MaxValue, null, null, null, (page - 1) * size, size)
+    public SearchOptions(String keywords, Int32 page, Int32 size, Type t) : this(keywords, String.Join(",", t.GetProperties().Where(p => p.GetCustomAttributes<LuceneIndexAttribute>().Any()).Select(p => p.Name)), Int32.MaxValue, null, null, null, (page - 1) * size, size)
     {
         if (page < 1)
         {
@@ -162,7 +162,7 @@ public class SearchOptions
         Take = size;
     }
 
-    public void SetBoosts(string field, float boost)
+    public void SetBoosts(String field, Single boost)
     {
         _boosts[field] = boost;
     }

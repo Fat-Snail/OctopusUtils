@@ -84,7 +84,7 @@ var tagExtractor = new JiebaNet.Analyser.TfidfExtractor(tagSegmenter);
 
 foreach (var n in newsList)
 {
-    var tags = tagExtractor.ExtractTags(n.Title + " " + n.Content, 10, new List<string> { "role", "scene" });
+    var tags = tagExtractor.ExtractTags(n.Title + " " + n.Content, 10, new List<String> { "role", "scene" });
     if (tags.Any())
     {
         foreach (var tag in tags)
@@ -171,7 +171,7 @@ var result2 = engine2.ScoredSearch<News>(searchOpt);
 //     keyword = "天才",
 //     index = 1,
 //     size = 20,
-//     fields = new string[] { "Title", "Content" },
+//     fields = new String[] { "Title", "Content" },
 //     OrderByField = "Id",
 // });
 

@@ -16,12 +16,12 @@ public class SearchResultCollection<T> : ISearchResultCollection<T>
     /// <summary>
     /// 耗时
     /// </summary>
-    public long Elapsed { get; set; }
+    public Int64 Elapsed { get; set; }
 
     /// <summary>
     /// 总条数
     /// </summary>
-    public int TotalHits { get; set; }
+    public Int32 TotalHits { get; set; }
 
     public SearchResultCollection()
     {

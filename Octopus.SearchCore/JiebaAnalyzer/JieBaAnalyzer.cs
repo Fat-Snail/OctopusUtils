@@ -9,20 +9,20 @@ namespace Lucene.Net.Analysis.Jieba;
 public class JieBaAnalyzer : Analyzer
 {
     private readonly TokenizerMode _mode;
-    private readonly bool _defaultUserDict;
+    private readonly Boolean _defaultUserDict;
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="mode"></param>
     /// <param name="defaultUserDict"></param>
-    public JieBaAnalyzer(TokenizerMode mode, bool defaultUserDict = false)
+    public JieBaAnalyzer(TokenizerMode mode, Boolean defaultUserDict = false)
     {
         _mode = mode;
         _defaultUserDict = defaultUserDict;
     }
 
-    protected override TokenStreamComponents CreateComponents(string filedName, TextReader reader)
+    protected override TokenStreamComponents CreateComponents(String filedName, TextReader reader)
     {
         var tokenizer = new JiebaNet.JieBaTokenizer(reader, _mode, _defaultUserDict);
         var tokenstream = new LowerCaseFilter(Lucene.Net.Util.LuceneVersion.LUCENE_48, tokenizer);

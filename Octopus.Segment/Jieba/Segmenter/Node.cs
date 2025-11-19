@@ -2,10 +2,10 @@
 {
     public class Node
     {
-        public char Value { get; private set; }
-        public Node Parent { get; private set; }
+    public Char Value { get; private set; }
+    public Node Parent { get; private set; }
 
-        public Node(char value, Node parent)
+        public Node(Char value, Node parent)
         {
             Value = value;
             Parent = parent;

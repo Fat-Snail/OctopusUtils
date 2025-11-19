@@ -41,7 +41,7 @@ public class LuceneIndexer : ILuceneIndexer
     /// </summary>
     /// <param name="entities">实体集</param>
     /// <param name="recreate">是否需要覆盖</param>
-    public void CreateIndex(IEnumerable<ILuceneIndexable> entities, bool recreate = true)
+    public void CreateIndex(IEnumerable<ILuceneIndexable> entities, Boolean recreate = true)
     {
         var config = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, _analyzer);
 
@@ -90,7 +90,7 @@ public class LuceneIndexer : ILuceneIndexer
     /// 删除所有索引
     /// </summary>
     /// <param name="commit">是否提交</param>
-    public void DeleteAll(bool commit = true)
+    public void DeleteAll(Boolean commit = true)
     {
         var config = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, _analyzer);
         using var writer = new IndexWriter(_directory, config);
@@ -162,7 +162,7 @@ public class LuceneIndexer : ILuceneIndexer
     /// 索引库数量
     /// </summary>
     /// <returns></returns>
-    public int Count()
+    public Int32 Count()
     {
         try
         {

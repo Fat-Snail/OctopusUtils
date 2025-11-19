@@ -6,19 +6,19 @@ public class News : LuceneIndexableBaseEntity
     /// 标题
     /// </summary>
     [LuceneIndex]
-    public string Title { get; set; }
+    public String Title { get; set; }
 
     /// <summary>
     /// 作者
     /// </summary>
     [LuceneIndex]
-    public string Author { get; set; }
+    public String Author { get; set; }
 
     /// <summary>
     /// 内容
     /// </summary>
     [LuceneIndex(IsHtml = true)]
-    public string Content { get; set; }
+    public String Content { get; set; }
 
     /// <summary>
     /// 发表时间

@@ -41,11 +41,11 @@ public class LuceneIndexSearcher : ILuceneIndexSearcher
     /// </summary>
     /// <param name="keyword"></param>
     /// <returns></returns>
-    public List<string> CutKeywords(string keyword)
+    public List<String> CutKeywords(String keyword)
     {
         if (keyword.Length <= 2)
         {
-            return new List<string>
+            return new List<String>
                 {
                     keyword
                 };
@@ -55,7 +55,7 @@ public class LuceneIndexSearcher : ILuceneIndexSearcher
         return _memoryCache.GetOrCreate(keyword, entry =>
         {
             entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
-            var list = new HashSet<string>
+            var list = new HashSet<String>
             {
                     keyword
             };
@@ -75,7 +75,7 @@ public class LuceneIndexSearcher : ILuceneIndexSearcher
             list.AddRange(new JiebaSegmenter().Cut(keyword, true));//结巴分词
             list.RemoveWhere(s => s.Length < 2);
 
-            var pinyins = new HashSet<string>();
+            var pinyins = new HashSet<String>();
             // list.AddRange(KeywordsManager.SynonymWords.Where(t => list.Contains(t.key) || list.Contains(t.value)).SelectMany(t => new[] { t.key, t.value }));
 
             // foreach (var s in list.Select(s => Regex.Replace(s, @"\p{P}|\p{S}", "")).Distinct())
@@ -254,7 +254,7 @@ public class LuceneIndexSearcher : ILuceneIndexSearcher
     /// <param name="skip">跳过多少条</param>
     /// <param name="take">取多少条</param>
     /// <returns></returns>
-    public ILuceneSearchResultCollection ScoredSearch(string keywords, string fields, int maximumNumberOfHits, Dictionary<string, float> boosts, Type type, string sortBy, int? skip, int? take)
+    public ILuceneSearchResultCollection ScoredSearch(String keywords, String fields, Int32 maximumNumberOfHits, Dictionary<String, Single> boosts, Type type, String sortBy, Int32? skip, Int32? take)
     {
         var options = new SearchOptions(keywords, fields, maximumNumberOfHits, boosts, type, sortBy, skip, take);
         return ScoredSearch(options);

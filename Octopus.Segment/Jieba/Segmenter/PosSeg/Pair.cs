@@ -2,17 +2,17 @@
 {
     public class Pair
     {
-        public string Word { get; set; }
-        public string Flag { get; set; }
-        public Pair(string word, string flag)
+    public String Word { get; set; }
+    public String Flag { get; set; }
+    public Pair(String word, String flag)
         {
             Word = word;
             Flag = flag;
         }
 
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("{0}/{1}", Word, Flag);
+            return String.Format("{0}/{1}", Word, Flag);
         }
     }
 }

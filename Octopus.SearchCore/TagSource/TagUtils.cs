@@ -8,8 +8,8 @@ public class TagUtils
     internal static readonly Regex RegexUserDict =
         new Regex("^(?<word>.+?)(?<freq> [0-9]+)?(?<tag> [a-z]+)?$", RegexOptions.Compiled);
 
-    private static string _tagRoleEmbeddedPath = "TagSource.tag_role.txt";
-    private static string _tagSceneEmbeddedPath = "TagSource.tag_scene.txt";
+    private static String _tagRoleEmbeddedPath = "TagSource.tag_role.txt";
+    private static String _tagSceneEmbeddedPath = "TagSource.tag_scene.txt";
 
     private static Assembly _asm = Assembly.GetExecutingAssembly();
 
@@ -22,9 +22,9 @@ public class TagUtils
         return segmenter;
     }
 
-    public static List<string> GetAllTags()
+    public static List<String> GetAllTags()
     {
-        var tags = new List<string>();
+        var tags = new List<String>();
 
         var text = GetResourceInputString(_tagRoleEmbeddedPath);
         tags.AddRange(GetTagsFormText(text));
@@ -35,9 +35,9 @@ public class TagUtils
         return tags;
     }
 
-    public static string GetAllTagsToJson()
+    public static String GetAllTagsToJson()
     {
-        var jsonObj = new { code = 1, msg = "success", data = new List<object>() };
+        var jsonObj = new { code = 1, msg = "success", data = new List<Object>() };
 
         var text = GetResourceInputString(_tagRoleEmbeddedPath);
         jsonObj.data.Add(
@@ -56,16 +56,16 @@ public class TagUtils
         return System.Text.Json.JsonSerializer.Serialize(jsonObj);
     }
 
-    private static List<string> GetTagsFormText(string text)
+    private static List<String> GetTagsFormText(String text)
     {
-        var tags = new List<string>();
+        var tags = new List<String>();
 
         var lines = text.Split(new[] { "\r\n", "\n" },
             StringSplitOptions.None
         );
         foreach (var line in lines)
         {
-            if (string.IsNullOrWhiteSpace(line))
+            if (String.IsNullOrWhiteSpace(line))
             {
                 continue;
             }
@@ -81,14 +81,14 @@ public class TagUtils
         return tags;
     }
 
-    public static Stream GetResourceInputStream(string resourceName)
+    public static Stream GetResourceInputStream(String resourceName)
     {
-        return _asm.GetManifestResourceStream(string.Format("{0}.{1}", _asm.GetName().Name, resourceName));
+        return _asm.GetManifestResourceStream(String.Format("{0}.{1}", _asm.GetName().Name, resourceName));
     }
 
-    public static string GetResourceInputString(string resourceName)
+    public static String GetResourceInputString(String resourceName)
     {
-        var result = string.Empty;
+        var result = String.Empty;
         using (var sr = new StreamReader(GetResourceInputStream(resourceName)))
         {
             result = sr.ReadToEnd();

@@ -10,9 +10,9 @@ public static class StringHelpers
     /// <param name="s"></param>
     /// <param name="chars"></param>
     /// <returns></returns>
-    internal static string RemoveCharacters(this string s, IEnumerable<char> chars)
+    internal static String RemoveCharacters(this String s, IEnumerable<Char> chars)
     {
-        return string.IsNullOrEmpty(s) ? string.Empty : new string(s.Where(c => !chars.Contains(c)).ToArray());
+        return String.IsNullOrEmpty(s) ? String.Empty : new String(s.Where(c => !chars.Contains(c)).ToArray());
     }
 
     /// <summary>
@@ -20,7 +20,7 @@ public static class StringHelpers
     /// </summary>
     /// <param name="html">源html</param>
     /// <returns></returns>
-    internal static string RemoveHtmlTag(this string html)
+    internal static String RemoveHtmlTag(this String html)
     {
         var strText = Regex.Replace(html, "<[^>]+>", "");
         strText = Regex.Replace(strText, "&[^;]+;", "");

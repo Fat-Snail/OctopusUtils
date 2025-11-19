@@ -15,7 +15,7 @@ namespace Octopus.SearchCore.Interfaces
         /// </summary>
         /// <param name="entities">实体集</param>
         /// <param name="recreate">是否需要覆盖</param>
-        void CreateIndex(IEnumerable<ILuceneIndexable> entities, bool recreate = true);
+        void CreateIndex(IEnumerable<ILuceneIndexable> entities, Boolean recreate = true);
 
         /// <summary>
         /// 删除索引
@@ -33,7 +33,7 @@ namespace Octopus.SearchCore.Interfaces
         /// 删除所有索引
         /// </summary>
         /// <param name="commit">是否提交</param>
-        void DeleteAll(bool commit = true);
+        void DeleteAll(Boolean commit = true);
 
         /// <summary>
         /// 更新索引
@@ -57,6 +57,6 @@ namespace Octopus.SearchCore.Interfaces
         /// 索引库数量
         /// </summary>
         /// <returns></returns>
-        int Count();
+        Int32 Count();
     }
 }

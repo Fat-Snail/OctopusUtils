@@ -10,7 +10,7 @@ namespace Octopus.SearchCore.Interfaces
         /// <summary>
         /// 匹配度
         /// </summary>
-        float Score { get; set; }
+        Single Score { get; set; }
 
         /// <summary>
         /// 文档

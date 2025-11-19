@@ -20,7 +20,7 @@ namespace Octopus.SearchCore.Interfaces
         /// <summary>
         /// 索引总数
         /// </summary>
-        int IndexCount { get; }
+        Int32 IndexCount { get; }
 
         /// <summary>
         /// 创建索引
@@ -30,7 +30,7 @@ namespace Octopus.SearchCore.Interfaces
         /// <summary>
         /// 创建指定数据表的索引
         /// </summary>
-        void CreateIndex(List<string> tables);
+        void CreateIndex(List<String> tables);
 
         /// <summary>
         /// 删除索引
@@ -42,14 +42,14 @@ namespace Octopus.SearchCore.Interfaces
         /// </summary>
         /// <param name="index">创建索引</param>
         /// <returns></returns>
-        int SaveChanges(bool index = true);
+        Int32 SaveChanges(Boolean index = true);
 
         /// <summary>
         /// 保存数据更改并同步索引
         /// </summary>
         /// <param name="index">创建索引</param>
         /// <returns></returns>
-        Task<int> SaveChangesAsync(bool index = true);
+        Task<Int32> SaveChangesAsync(Boolean index = true);
 
         /// <summary>
         /// 执行搜索并将结果限制为特定类型，在返回之前，搜索结果将转换为相关类型
@@ -95,6 +95,6 @@ namespace Octopus.SearchCore.Interfaces
         /// 导入自定义词库
         /// </summary>
         /// <param name="words"></param>
-        void ImportCustomerKeywords(IEnumerable<string> words);
+        void ImportCustomerKeywords(IEnumerable<String> words);
     }
 }

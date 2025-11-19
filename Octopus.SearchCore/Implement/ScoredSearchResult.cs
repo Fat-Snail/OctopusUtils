@@ -11,7 +11,7 @@ public class ScoredSearchResult<T> : IScoredSearchResult<T>
     /// <summary>
     /// 匹配度
     /// </summary>
-    public float Score { get; set; }
+    public Single Score { get; set; }
 
     /// <summary>
     /// 物理实体

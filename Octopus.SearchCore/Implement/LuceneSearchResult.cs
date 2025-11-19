@@ -11,7 +11,7 @@ public class LuceneSearchResult : ILuceneSearchResult
     /// <summary>
     /// 匹配度
     /// </summary>
-    public float Score { get; set; }
+    public Single Score { get; set; }
 
     /// <summary>
     /// 文档

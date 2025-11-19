@@ -14,7 +14,7 @@ public static class LinqExtension
     /// <param name="left">左条件</param>
     /// <param name="right">右条件</param>
     /// <returns>新表达式</returns>
-    internal static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
+    internal static Expression<Func<T, Boolean>> And<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
     {
         return CombineLambdas(left, right, ExpressionType.AndAlso);
     }

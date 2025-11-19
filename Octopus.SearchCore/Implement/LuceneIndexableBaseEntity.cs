@@ -19,14 +19,14 @@ public abstract class LuceneIndexableBaseEntity : ILuceneIndexable
     [LuceneIndex(Name = nameof(Id), Store = Field.Store.YES), Key]
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public Int32 Id { get; set; }
 
 #if Long
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public Int64 Id { get; set; }
 #endif
 #if String
-        public string Id { get; set; }
+        public String Id { get; set; }
 #endif
 #if Guid
         public Guid Id { get; set; }
@@ -93,19 +93,19 @@ public abstract class LuceneIndexableBaseEntity : ILuceneIndexable
                         doc.Add(new StringField(name, time.ToString("yyyy-MM-dd HH:mm:ss"), attr.Store));
                         break;
 
-                    case int num:
+                    case Int32 num:
                         doc.Add(new Int32Field(name, num, attr.Store));
                         break;
 
-                    case long num:
+                    case Int64 num:
                         doc.Add(new Int64Field(name, num, attr.Store));
                         break;
 
-                    case float num:
+                    case Single num:
                         doc.Add(new SingleField(name, num, attr.Store));
                         break;
 
-                    case double num:
+                    case Double num:
                         doc.Add(new DoubleField(name, num, attr.Store));
                         break;
 
