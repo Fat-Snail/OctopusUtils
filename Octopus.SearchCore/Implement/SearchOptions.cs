@@ -36,9 +36,9 @@ namespace Octopus.SearchCore;
         {
             get
             {
-                foreach (var field in Fields.Where(field => _boosts.All(x => x.Key.ToUpper() != field.ToUpper())))
+                foreach (var f in Fields.Where(f => _boosts.All(x => x.Key.ToUpper() != f.ToUpper())))
                 {
-                    _boosts.Add(field, 2.0f);
+                    _boosts.Add(f, 2.0f);
                 }
 
                 return _boosts;
