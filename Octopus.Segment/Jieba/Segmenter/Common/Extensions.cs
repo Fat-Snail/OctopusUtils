@@ -93,7 +93,7 @@ namespace JiebaNet.Segmenter.Common
         {
             return RegexDigits.IsMatch(s);
         }
-        
+
         public static string[] SplitLines(this string s)
         {
             return RegexNewline.Split(s);

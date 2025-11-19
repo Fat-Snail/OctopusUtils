@@ -1,4 +1,4 @@
-namespace Octopus.SearchCore;
+﻿namespace Octopus.SearchCore;
 
 /// <summary>
 /// 索引状态枚举

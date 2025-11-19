@@ -1,8 +1,8 @@
-﻿using JiebaNet.Segmenter.Common;
-//using Microsoft.Extensions.FileProviders;
+﻿//using Microsoft.Extensions.FileProviders;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using JiebaNet.Segmenter.Common;
 
 namespace JiebaNet.Analyser
 {

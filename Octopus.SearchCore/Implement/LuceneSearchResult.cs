@@ -1,4 +1,4 @@
-using Lucene.Net.Documents;
+﻿using Lucene.Net.Documents;
 using Octopus.SearchCore.Interfaces;
 
 namespace Octopus.SearchCore;

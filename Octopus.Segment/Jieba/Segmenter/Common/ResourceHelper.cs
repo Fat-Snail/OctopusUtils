@@ -39,8 +39,8 @@ internal class ResourceHelper
 
     public static string GetResourceInputString(string resourceName)
     {
-        string result = string.Empty;
-        using (StreamReader sr = new StreamReader(GetResourceInputStream(resourceName)))
+        var result = string.Empty;
+        using (var sr = new StreamReader(GetResourceInputStream(resourceName)))
         {
             result = sr.ReadToEnd();
             sr.Close();
@@ -48,4 +48,3 @@ internal class ResourceHelper
         return result;
     }
 }
-

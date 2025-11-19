@@ -1,6 +1,6 @@
-namespace Octopus.SearchCore.IndexDemo;
+﻿namespace Octopus.SearchCore.IndexDemo;
 
-public class News: LuceneIndexableBaseEntity
+public class News : LuceneIndexableBaseEntity
 {
     /// <summary>
     /// 标题
@@ -24,6 +24,5 @@ public class News: LuceneIndexableBaseEntity
     /// 发表时间
     /// </summary>
     public DateTime PostDate { get; set; }
-    
-}
 
+}

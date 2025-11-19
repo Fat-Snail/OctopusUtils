@@ -2,10 +2,10 @@
 using System;
 #endif
 
-using Lucene.Net.Documents;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
+using Lucene.Net.Documents;
 
 namespace Octopus.SearchCore.Interfaces
 {
@@ -20,7 +20,7 @@ namespace Octopus.SearchCore.Interfaces
         [LuceneIndex(Name = "Id", Store = Field.Store.YES), Key]
 
         int Id { get; set; }
-        
+
 #if Long
         long Id { get; set; }
 #endif

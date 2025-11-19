@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using JiebaNet.Segmenter;
 using JiebaNet.Segmenter.Common;
@@ -51,7 +51,8 @@ namespace JiebaNet.Analyser
             if (count <= 0) { count = 20; }
             return rank.OrderByDescending(p => p.Value).Select(p => new WordWeightPair()
             {
-                Word = p.Key, Weight = p.Value
+                Word = p.Key,
+                Weight = p.Value
             }).Take(count);
         }
 

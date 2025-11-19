@@ -1,8 +1,8 @@
-﻿using JiebaNet.Segmenter;
+﻿using System.IO;
+using JiebaNet.Segmenter;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Core;
 using Lucene.Net.Analysis.TokenAttributes;
-using System.IO;
 
 namespace Lucene.Net.Analysis.Jieba;
 
@@ -24,7 +24,7 @@ public class JieBaAnalyzer : Analyzer
 
     protected override TokenStreamComponents CreateComponents(string filedName, TextReader reader)
     {
-        var tokenizer = new  JiebaNet.JieBaTokenizer(reader, _mode, _defaultUserDict);
+        var tokenizer = new JiebaNet.JieBaTokenizer(reader, _mode, _defaultUserDict);
         var tokenstream = new LowerCaseFilter(Lucene.Net.Util.LuceneVersion.LUCENE_48, tokenizer);
         tokenstream.AddAttribute<ICharTermAttribute>();
         tokenstream.AddAttribute<IOffsetAttribute>();

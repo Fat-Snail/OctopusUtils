@@ -1,4 +1,4 @@
-using JiebaNet.Segmenter;
+﻿using JiebaNet.Segmenter;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Jieba;
 using Microsoft.Extensions.DependencyInjection;

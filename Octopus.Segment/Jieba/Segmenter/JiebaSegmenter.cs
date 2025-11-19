@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using JiebaNet.Segmenter.Common;
 using JiebaNet.Segmenter.FinalSeg;
-using System.IO;
-using System.Reflection;
 
 namespace JiebaNet.Segmenter
 {
@@ -239,7 +239,7 @@ namespace JiebaNet.Segmenter
             for (var i = n - 1; i > -1; i--)
             {
                 var candidate = new Pair<int>(-1, double.MinValue);
-                foreach (int x in dag[i])
+                foreach (var x in dag[i])
                 {
                     var freq = Math.Log(WordDict.GetFreqOrDefault(sentence.Sub(i, x + 1))) - logtotal + route[x + 1].Freq;
                     if (candidate.Freq < freq)
@@ -331,7 +331,7 @@ namespace JiebaNet.Segmenter
             var words = new List<string>();
 
             var x = 0;
-            string buf = string.Empty;
+            var buf = string.Empty;
             var N = sentence.Length;
 
             var y = -1;
@@ -524,7 +524,7 @@ namespace JiebaNet.Segmenter
                 try
                 {
 
-                    var lines = text.Split(new[] { "\r\n","\n" },
+                    var lines = text.Split(new[] { "\r\n", "\n" },
                         StringSplitOptions.None
                     );
                     foreach (var line in lines)

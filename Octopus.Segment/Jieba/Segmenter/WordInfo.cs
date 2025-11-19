@@ -3,7 +3,7 @@ namespace JiebaNet.Segmenter
 {
     public class WordInfo
     {
-        public WordInfo(string value,int position)
+        public WordInfo(string value, int position)
         {
             this.value = value;
             this.position = position;

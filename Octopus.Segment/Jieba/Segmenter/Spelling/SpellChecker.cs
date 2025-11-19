@@ -1,4 +1,4 @@
-﻿ using JiebaNet.Segmenter.Common;
+﻿using JiebaNet.Segmenter.Common;
 
 namespace JiebaNet.Segmenter.Spelling
 {
@@ -12,7 +12,7 @@ namespace JiebaNet.Segmenter.Spelling
         internal static readonly WordDictionary WordDict = WordDictionary.Instance;
 
         internal readonly Trie WordTrie;
-        internal readonly Dictionary<char, HashSet<char>> FirstChars; 
+        internal readonly Dictionary<char, HashSet<char>> FirstChars;
 
         public SpellChecker()
         {
@@ -69,7 +69,7 @@ namespace JiebaNet.Segmenter.Spelling
                 }
 
                 var node = WordTrie.Root.Children[word[0]];
-                for (int i = 1; node.IsNotNull() && node.Children.IsNotEmpty() && i < word.Length; i++)
+                for (var i = 1; node.IsNotNull() && node.Children.IsNotEmpty() && i < word.Length; i++)
                 {
                     foreach (var c in node.Children.Keys)
                     {
@@ -92,11 +92,11 @@ namespace JiebaNet.Segmenter.Spelling
                 }
 
                 var node = WordTrie.Root.Children.GetValueOrDefaultEx(word[0]);
-                for (int i = 0; node.IsNotNull() && node.Children.IsNotEmpty() && i < word.Length; i++)
+                for (var i = 0; node.IsNotNull() && node.Children.IsNotEmpty() && i < word.Length; i++)
                 {
                     foreach (var c in node.Children.Keys)
                     {
-                        inserts.Add(word.Substring(0, i+1) + c + word.Substring(i+1));
+                        inserts.Add(word.Substring(0, i + 1) + c + word.Substring(i + 1));
                     }
 
                     if (i < word.Length - 1)
@@ -134,7 +134,7 @@ namespace JiebaNet.Segmenter.Spelling
         {
             if (WordDict.ContainsWord(word))
             {
-                return new[] {word};
+                return new[] { word };
             }
 
             var candicates = GetKnownWords(GetEdits1(word));
@@ -142,7 +142,7 @@ namespace JiebaNet.Segmenter.Spelling
             {
                 return candicates.OrderByDescending(c => WordDict.GetFreqOrDefault(c));
             }
-            
+
             candicates.UnionWith(GetKnownEdits2(word));
             return candicates.OrderByDescending(c => WordDict.GetFreqOrDefault(c));
         }

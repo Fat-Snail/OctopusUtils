@@ -9,8 +9,8 @@ namespace JiebaNet.Segmenter.Common
 {
     public static class FileExtension
     {
-        private static string _embeddedRoot="Jieba.Segmenter";
-        
+        private static string _embeddedRoot = "Jieba.Segmenter";
+
         public static string ReadEmbeddedAllLine(string path)
         {
             if (File.Exists(path))
@@ -21,7 +21,7 @@ namespace JiebaNet.Segmenter.Common
             path = path.Replace("/", ".");
             path = path.Replace("\\", ".");
             var embeddedPath = $"{_embeddedRoot}.{path}";
-            
+
             return ResourceHelper.GetResourceInputString(embeddedPath);
             //return ReadEmbeddedAllLine(path, Encoding.UTF8);
         }
@@ -56,7 +56,7 @@ namespace JiebaNet.Segmenter.Common
         public static List<string> ReadAllLines(string path, Encoding encoding)
         {
             var list = new List<string>();
-            using (StreamReader streamReader = new StreamReader(path, encoding))
+            using (var streamReader = new StreamReader(path, encoding))
             {
                 string item;
                 while ((item = streamReader.ReadLine()) != null)
@@ -86,7 +86,7 @@ namespace JiebaNet.Segmenter.Common
             //     }
             // }
             var text = ReadEmbeddedAllLine(path);
-            var lines = System.Text.RegularExpressions.Regex.Split(text, @"\n"); 
+            var lines = System.Text.RegularExpressions.Regex.Split(text, @"\n");
             return new List<string>(lines);
         }
     }

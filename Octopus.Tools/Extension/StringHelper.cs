@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -113,7 +113,7 @@ public static class StringHelper
     }
 
 
- 
+
 
     /// <summary>追加分隔符字符串，忽略开头，常用于拼接</summary>
     /// <param name="sb">字符串构造者</param>
@@ -141,14 +141,14 @@ public static class StringHelper
         return encoding.GetBytes(value);
     }
 
-    
 
- 
+
+
 
 
     #endregion
 
- 
+
 }
 
 [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
@@ -156,7 +156,7 @@ public sealed class NotNullWhenAttribute : Attribute
 {
     /// <summary>Initializes the attribute with the specified return value condition.</summary>
     /// <param name="returnValue">The return value condition. If the method returns this value, the associated parameter will not be <see langword="null" />.</param>
-    public NotNullWhenAttribute(bool returnValue) => this.ReturnValue = returnValue;
+    public NotNullWhenAttribute(bool returnValue) => ReturnValue = returnValue;
 
     /// <summary>Gets the return value condition.</summary>
     /// <returns>The return value condition. If the method returns this value, the associated parameter will not be <see langword="null" />.</returns>

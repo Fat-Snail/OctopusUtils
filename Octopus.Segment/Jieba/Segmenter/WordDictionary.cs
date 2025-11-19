@@ -1,12 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using JiebaNet.Segmenter.Common;
 //using Microsoft.Extensions.FileProviders;
 using System.Reflection;
+using System.Text;
+using JiebaNet.Segmenter.Common;
 
 namespace JiebaNet.Segmenter
 {
@@ -46,8 +46,8 @@ namespace JiebaNet.Segmenter
                 // var fileInfo = provider.GetFileInfo(filePath);
                 // using (var sr = new StreamReader(fileInfo.CreateReadStream(), Encoding.UTF8))
                 // {
-                
-                string text = string.Empty;
+
+                var text = string.Empty;
 
                 // if (File.Exists(MainDict))
                 // {
@@ -67,7 +67,7 @@ namespace JiebaNet.Segmenter
                 stopWatch.Start();
 
 
-                var lines = text.Split(new[] { "\r\n","\n" },
+                var lines = text.Split(new[] { "\r\n", "\n" },
                     StringSplitOptions.None
                 );
                 foreach (var line in lines)
@@ -75,27 +75,27 @@ namespace JiebaNet.Segmenter
                     // string line = null;
                     // while ((line = sr.ReadLine()) != null)
                     // {
-                        var tokens = line.Split(' ');
-                        if (tokens.Length < 2)
+                    var tokens = line.Split(' ');
+                    if (tokens.Length < 2)
+                    {
+                        Debug.Fail(string.Format("Invalid line: {0}", line));
+                        continue;
+                    }
+
+                    var word = tokens[0];
+                    var freq = int.Parse(tokens[1]);
+
+                    Trie[word] = freq;
+                    Total += freq;
+
+                    foreach (var ch in Enumerable.Range(0, word.Length))
+                    {
+                        var wfrag = word.Sub(0, ch + 1);
+                        if (!Trie.ContainsKey(wfrag))
                         {
-                            Debug.Fail(string.Format("Invalid line: {0}", line));
-                            continue;
+                            Trie[wfrag] = 0;
                         }
-
-                        var word = tokens[0];
-                        var freq = int.Parse(tokens[1]);
-
-                        Trie[word] = freq;
-                        Total += freq;
-
-                        foreach (var ch in Enumerable.Range(0, word.Length))
-                        {
-                            var wfrag = word.Sub(0, ch + 1);
-                            if (!Trie.ContainsKey(wfrag))
-                            {
-                                Trie[wfrag] = 0;
-                            }
-                        }
+                    }
                     //}
                 }
 

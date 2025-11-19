@@ -1,13 +1,13 @@
 ﻿using System;
-using Lucene.Net.Analysis.TokenAttributes;
-using Lucene.Net.Analysis;
-using JiebaNet.Segmenter;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
-using JiebaNet.Segmenter.Common;
 using System.Text.RegularExpressions;
+using JiebaNet.Segmenter;
+using JiebaNet.Segmenter.Common;
+using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Jieba;
+using Lucene.Net.Analysis.TokenAttributes;
 using Token = JiebaNet.Segmenter.Token;
 namespace JiebaNet
 {
@@ -96,7 +96,7 @@ namespace JiebaNet
                     var offset = zh.Matches(word.Word).Count;
                     var len = 10;
                     offset = offset > len ? 0 : offset;
-                    Console.WriteLine($"==分词：{ word.Word.PadRight(len - offset, '=') }==起始位置：{ word.StartIndex.ToString().PadLeft(3, '=') }==结束位置{ word.EndIndex.ToString().PadLeft(3, '=') }");
+                    Console.WriteLine($"==分词：{word.Word.PadRight(len - offset, '=')}==起始位置：{word.StartIndex.ToString().PadLeft(3, '=')}==结束位置{word.EndIndex.ToString().PadLeft(3, '=')}");
                 }
                 return token;
             }

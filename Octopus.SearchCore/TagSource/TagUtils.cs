@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace Octopus.SearchCore.TagSource;
@@ -10,7 +10,7 @@ public class TagUtils
 
     private static string _tagRoleEmbeddedPath = "TagSource.tag_role.txt";
     private static string _tagSceneEmbeddedPath = "TagSource.tag_scene.txt";
-    
+
     private static Assembly _asm = Assembly.GetExecutingAssembly();
 
     public static JiebaNet.Segmenter.JiebaSegmenter GetSegmenter()
@@ -31,7 +31,7 @@ public class TagUtils
 
         text = GetResourceInputString(_tagSceneEmbeddedPath);
         tags.AddRange(GetTagsFormText(text));
-        
+
         return tags;
     }
 
@@ -60,7 +60,7 @@ public class TagUtils
     {
         var tags = new List<string>();
 
-        var lines = text.Split(new[] { "\r\n","\n" },
+        var lines = text.Split(new[] { "\r\n", "\n" },
             StringSplitOptions.None
         );
         foreach (var line in lines)
@@ -80,7 +80,7 @@ public class TagUtils
 
         return tags;
     }
-    
+
     public static Stream GetResourceInputStream(string resourceName)
     {
         return _asm.GetManifestResourceStream(string.Format("{0}.{1}", _asm.GetName().Name, resourceName));
@@ -88,12 +88,12 @@ public class TagUtils
 
     public static string GetResourceInputString(string resourceName)
     {
-        string result = string.Empty;
-        using (StreamReader sr = new StreamReader(GetResourceInputStream(resourceName)))
+        var result = string.Empty;
+        using (var sr = new StreamReader(GetResourceInputStream(resourceName)))
         {
             result = sr.ReadToEnd();
             sr.Close();
         }
         return result;
-    } 
+    }
 }

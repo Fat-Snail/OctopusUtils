@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -9,7 +9,7 @@ using NewLife;
 
 namespace Octopus.Tools;
 
-public class AIClient:IDisposable
+public class AIClient : IDisposable
 {
     #region >配置实例，简单粗暴<
     private static string _aiApiDomain = "https://api.openai.com";
@@ -21,15 +21,15 @@ public class AIClient:IDisposable
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    private static DictionaryCache<string,AIClient> _clientCache = new DictionaryCache<string,AIClient>() ;
+    private static DictionaryCache<string, AIClient> _clientCache = new DictionaryCache<string, AIClient>();
     #endregion
-    
+
     private HttpClient _httpClient = null;
 
     public AIClient(string name)
     {
         _httpClient = new HttpClient();
-        _httpClient.BaseAddress=new Uri(_aiApiDomain);
+        _httpClient.BaseAddress = new Uri(_aiApiDomain);
         if (!_aiApiKey.IsNullOrEmpty())
         {
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_aiApiKey}");
@@ -38,9 +38,9 @@ public class AIClient:IDisposable
 
     public async Task<CompletionResponse> CreateChatCompletionAsync(CompletionRequest request)
     {
-        var sc = new StringContent(JsonSerializer.Serialize(request, _jsonOptions),Encoding.UTF8,
+        var sc = new StringContent(JsonSerializer.Serialize(request, _jsonOptions), Encoding.UTF8,
             "application/json");
-        var response = await _httpClient.PostAsync("/v1/chat/completions",sc);
+        var response = await _httpClient.PostAsync("/v1/chat/completions", sc);
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();
@@ -59,13 +59,13 @@ public class AIClient:IDisposable
         var request = new CompletionRequest()
         {
             FrequencyPenalty = 0,
-            Model =_aiModel,
+            Model = _aiModel,
             Temperature = 0.5,
             PresencePenalty = 0,
             Stream = false,
             Messages = new List<CompletionMessage>()
         };
-        
+
         reqAct.Invoke(request);
 
         return request;
@@ -100,7 +100,7 @@ public class AIClient:IDisposable
     {
         _httpClient?.Dispose();
     }
-    
+
     public class AISetting
     {
         public string ApiDomain { get; set; }
@@ -161,7 +161,7 @@ public class CompletionRequest
 
     [JsonPropertyName("user")]
     public string User { get; set; } = string.Empty;
-    
+
 
 }
 

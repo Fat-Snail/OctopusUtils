@@ -1,4 +1,4 @@
-using Octopus.SearchCore.Interfaces;
+﻿using Octopus.SearchCore.Interfaces;
 
 namespace Octopus.SearchCore;
 

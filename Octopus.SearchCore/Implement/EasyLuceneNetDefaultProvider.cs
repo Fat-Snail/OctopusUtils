@@ -1,4 +1,4 @@
-// using System.Reflection;
+﻿// using System.Reflection;
 // using JiebaNet.Segmenter;
 // using Lucene.Net.Analysis;
 // using Lucene.Net.Analysis.Jieba;
