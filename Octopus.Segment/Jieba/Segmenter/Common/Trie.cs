@@ -7,11 +7,11 @@ namespace JiebaNet.Segmenter.Common
     // Refer to: https://github.com/brianfromoregon/trie
     public class TrieNode
     {
-        public char Char { get; set; }
-        public int Frequency { get; set; }
-        public Dictionary<char, TrieNode> Children { get; set; }
+        public Char Char { get; set; }
+        public Int32 Frequency { get; set; }
+        public Dictionary<Char, TrieNode> Children { get; set; }
 
-        public TrieNode(char ch)
+        public TrieNode(Char ch)
         {
             Char = ch;
             Frequency = 0;
@@ -20,16 +20,16 @@ namespace JiebaNet.Segmenter.Common
             //Children = null;
         }
 
-        public int Insert(string s, int pos, int freq = 1)
+        public Int32 Insert(String s, Int32 pos, Int32 freq = 1)
         {
-            if (string.IsNullOrEmpty(s) || pos >= s.Length)
+            if (String.IsNullOrEmpty(s) || pos >= s.Length)
             {
                 return 0;
             }
 
             if (Children == null)
             {
-                Children = new Dictionary<char, TrieNode>();
+                Children = new Dictionary<Char, TrieNode>();
             }
 
             var c = s[pos];
@@ -48,9 +48,9 @@ namespace JiebaNet.Segmenter.Common
             return curNode.Insert(s, pos + 1, freq);
         }
 
-        public TrieNode Search(string s, int pos)
+        public TrieNode Search(String s, Int32 pos)
         {
-            if (string.IsNullOrEmpty(s))
+            if (String.IsNullOrEmpty(s))
             {
                 return null;
             }
@@ -73,22 +73,22 @@ namespace JiebaNet.Segmenter.Common
     public interface ITrie
     {
         //string BestMatch(string word, long maxTime);
-        bool Contains(string word);
-        int Frequency(string word);
-        int Insert(string word, int freq = 1);
+        Boolean Contains(String word);
+        Int32 Frequency(String word);
+        Int32 Insert(String word, Int32 freq = 1);
         //bool Remove(string word);
-        int Count { get; }
-        int TotalFrequency { get; }
+        Int32 Count { get; }
+        Int32 TotalFrequency { get; }
     }
 
     public class Trie : ITrie
     {
-        private static readonly char RootChar = '\0';
+        private static readonly Char RootChar = '\0';
 
         internal TrieNode Root;
 
-        public int Count { get; private set; }
-        public int TotalFrequency { get; private set; }
+        public Int32 Count { get; private set; }
+        public Int32 TotalFrequency { get; private set; }
 
         public Trie()
         {
@@ -96,7 +96,7 @@ namespace JiebaNet.Segmenter.Common
             Count = 0;
         }
 
-        public bool Contains(string word)
+        public Boolean Contains(String word)
         {
             CheckWord(word);
 
@@ -104,7 +104,7 @@ namespace JiebaNet.Segmenter.Common
             return node.IsNotNull() && node.Frequency > 0;
         }
 
-        public bool ContainsPrefix(string word)
+        public Boolean ContainsPrefix(String word)
         {
             CheckWord(word);
 
@@ -112,7 +112,7 @@ namespace JiebaNet.Segmenter.Common
             return node.IsNotNull();
         }
 
-        public int Frequency(string word)
+        public Int32 Frequency(String word)
         {
             CheckWord(word);
 
@@ -120,7 +120,7 @@ namespace JiebaNet.Segmenter.Common
             return node.IsNull() ? 0 : node.Frequency;
         }
 
-        public int Insert(string word, int freq = 1)
+        public Int32 Insert(String word, Int32 freq = 1)
         {
             CheckWord(word);
 
@@ -134,15 +134,15 @@ namespace JiebaNet.Segmenter.Common
             return i;
         }
 
-        public IEnumerable<char> ChildChars(string prefix)
+        public IEnumerable<Char> ChildChars(String prefix)
         {
             var node = Root.Search(prefix.Trim(), 0);
             return node.IsNull() || node.Children.IsNull() ? null : node.Children.Select(p => p.Key);
         }
 
-        private void CheckWord(string word)
+        private void CheckWord(String word)
         {
-            if (string.IsNullOrWhiteSpace(word))
+            if (String.IsNullOrWhiteSpace(word))
             {
                 throw new ArgumentException("word must not be null or whitespace");
             }

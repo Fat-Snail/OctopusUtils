@@ -1,39 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <LangVersion>12</LangVersion>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>12</LangVersion>
+    <AssemblyName>Octopus.Segment</AssemblyName>
+    <RootNamespace>Octopus</RootNamespace>
+    <AssemblyTitle>Octopus分词(基于结巴分词)</AssemblyTitle>
+    <Description>分词组件，公共类。</Description>
+    <Company>Fatty Coder</Company>
+    <Copyright>©2024-2025 Fatty Coder</Copyright>
+    <VersionPrefix>1.0</VersionPrefix>
+    <VersionSuffix>$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</VersionSuffix>
+    <Version>$(VersionPrefix).$(VersionSuffix)</Version>
+    <FileVersion>$(Version)</FileVersion>
+    <AssemblyVersion>$(VersionPrefix).$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</AssemblyVersion>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <Folder Include="Jieba\" />
-    </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Jieba\"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="Jieba\Segmenter\Resources\char_state_tab.json" />
-      <EmbeddedResource Include="Jieba\Segmenter\Resources\char_state_tab.json" />
-      <None Remove="Jieba\Segmenter\Resources\dict.txt" />
-      <EmbeddedResource Include="Jieba\Segmenter\Resources\dict.txt" />
-      <None Remove="Jieba\Segmenter\Resources\pos_prob_emit.json" />
-      <EmbeddedResource Include="Jieba\Segmenter\Resources\pos_prob_emit.json" />
-      <None Remove="Jieba\Segmenter\Resources\pos_prob_start.json" />
-      <EmbeddedResource Include="Jieba\Segmenter\Resources\pos_prob_start.json" />
-      <None Remove="Jieba\Segmenter\Resources\pos_prob_trans.json" />
-      <EmbeddedResource Include="Jieba\Segmenter\Resources\pos_prob_trans.json" />
-      <None Remove="Jieba\Segmenter\Resources\prob_emit.json" />
-      <EmbeddedResource Include="Jieba\Segmenter\Resources\prob_emit.json" />
-      <None Remove="Jieba\Segmenter\Resources\prob_trans.json" />
-      <EmbeddedResource Include="Jieba\Segmenter\Resources\prob_trans.json" />
-      <None Remove="Jieba\Segmenter\Resources\stopwords.txt" />
-      <EmbeddedResource Include="Jieba\Segmenter\Resources\stopwords.txt" />
-      <None Remove="Jieba\Segmenter\Resources\idf.txt" />
-      <EmbeddedResource Include="Jieba\Segmenter\Resources\idf.txt" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Remove="Jieba\Segmenter\Resources\char_state_tab.json"/>
+    <EmbeddedResource Include="Jieba\Segmenter\Resources\char_state_tab.json"/>
+    <None Remove="Jieba\Segmenter\Resources\dict.txt"/>
+    <EmbeddedResource Include="Jieba\Segmenter\Resources\dict.txt"/>
+    <None Remove="Jieba\Segmenter\Resources\pos_prob_emit.json"/>
+    <EmbeddedResource Include="Jieba\Segmenter\Resources\pos_prob_emit.json"/>
+    <None Remove="Jieba\Segmenter\Resources\pos_prob_start.json"/>
+    <EmbeddedResource Include="Jieba\Segmenter\Resources\pos_prob_start.json"/>
+    <None Remove="Jieba\Segmenter\Resources\pos_prob_trans.json"/>
+    <EmbeddedResource Include="Jieba\Segmenter\Resources\pos_prob_trans.json"/>
+    <None Remove="Jieba\Segmenter\Resources\prob_emit.json"/>
+    <EmbeddedResource Include="Jieba\Segmenter\Resources\prob_emit.json"/>
+    <None Remove="Jieba\Segmenter\Resources\prob_trans.json"/>
+    <EmbeddedResource Include="Jieba\Segmenter\Resources\prob_trans.json"/>
+    <None Remove="Jieba\Segmenter\Resources\stopwords.txt"/>
+    <EmbeddedResource Include="Jieba\Segmenter\Resources\stopwords.txt"/>
+    <None Remove="Jieba\Segmenter\Resources\idf.txt"/>
+    <EmbeddedResource Include="Jieba\Segmenter\Resources\idf.txt"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="System.Text.Json" Version="10.0.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="10.0.0"/>
+  </ItemGroup>
 
 </Project>

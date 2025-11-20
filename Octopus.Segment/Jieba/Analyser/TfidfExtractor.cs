@@ -7,28 +7,21 @@ using JiebaNet.Segmenter.PosSeg;
 
 namespace JiebaNet.Analyser
 {
-    public class TfidfExtractor : KeywordExtractor
+    public sealed class TfidfExtractor : KeywordExtractor
     {
-        private static readonly string DefaultIdfFile = ConfigManager.IdfFile;
-        private static readonly int DefaultWordCount = 20;
+        private static readonly String DefaultIdfFile = ConfigManager.IdfFile;
+        private static readonly Int32 DefaultWordCount = 20;
 
         private JiebaSegmenter Segmenter { get; set; }
         private PosSegmenter PosSegmenter { get; set; }
         private IdfLoader Loader { get; set; }
 
-        private IDictionary<string, double> IdfFreq { get; set; }
-        private double MedianIdf { get; set; }
+        private IDictionary<String, Double> IdfFreq { get; set; }
+        private Double MedianIdf { get; set; }
 
         public TfidfExtractor(JiebaSegmenter segmenter = null)
         {
-            if (segmenter.IsNull())
-            {
-                Segmenter = new JiebaSegmenter();
-            }
-            else
-            {
-                Segmenter = segmenter;
-            }
+            Segmenter = segmenter.IsNull() ? new JiebaSegmenter() : segmenter;
             PosSegmenter = new PosSegmenter(Segmenter);
             SetStopWords(ConfigManager.StopWordsFile);
             if (StopWords.IsEmpty())
@@ -42,22 +35,22 @@ namespace JiebaNet.Analyser
             MedianIdf = Loader.MedianIdf;
         }
 
-        public void SetIdfPath(string idfPath)
+        public void SetIdfPath(String idfPath)
         {
             Loader.SetNewPath(idfPath);
             IdfFreq = Loader.IdfFreq;
             MedianIdf = Loader.MedianIdf;
         }
 
-        private IEnumerable<string> FilterCutByPos(string text, IEnumerable<string> allowPos)
+        private IEnumerable<String> FilterCutByPos(String text, IEnumerable<String> allowPos)
         {
             var posTags = PosSegmenter.Cut(text).Where(p => allowPos.Contains(p.Flag));
             return posTags.Select(p => p.Word);
         }
 
-        private IDictionary<string, double> GetWordIfidf(string text, IEnumerable<string> allowPos)
+        private IDictionary<String, Double> GetWordIfidf(String text, IEnumerable<String> allowPos)
         {
-            IEnumerable<string> words = null;
+            IEnumerable<String> words = null;
             if (allowPos.IsNotEmpty())
             {
                 words = FilterCutByPos(text, allowPos);
@@ -68,11 +61,11 @@ namespace JiebaNet.Analyser
             }
 
             // Calculate TF
-            var freq = new Dictionary<string, double>();
+            var freq = new Dictionary<String, Double>();
             foreach (var word in words)
             {
                 var w = word;
-                if (string.IsNullOrEmpty(w) || w.Trim().Length < 2 || StopWords.Contains(w.ToLower()))
+                if (String.IsNullOrEmpty(w) || w.Trim().Length < 2 || StopWords.Contains(w.ToLower()))
                 {
                     continue;
                 }
@@ -87,7 +80,7 @@ namespace JiebaNet.Analyser
             return freq;
         }
 
-        public override IEnumerable<string> ExtractTags(string text, int count = 20, IEnumerable<string> allowPos = null)
+        public override IEnumerable<String> ExtractTags(String text, Int32 count = 20, IEnumerable<String> allowPos = null)
         {
             if (count <= 0) { count = DefaultWordCount; }
 
@@ -95,7 +88,7 @@ namespace JiebaNet.Analyser
             return freq.OrderByDescending(p => p.Value).Select(p => p.Key).Take(count);
         }
 
-        public override IEnumerable<WordWeightPair> ExtractTagsWithWeight(string text, int count = 20, IEnumerable<string> allowPos = null)
+        public override IEnumerable<WordWeightPair> ExtractTagsWithWeight(String text, Int32 count = 20, IEnumerable<String> allowPos = null)
         {
             if (count <= 0) { count = DefaultWordCount; }
 
@@ -110,7 +103,7 @@ namespace JiebaNet.Analyser
 
     public class WordWeightPair
     {
-        public string Word { get; set; }
-        public double Weight { get; set; }
+        public String Word { get; set; }
+        public Double Weight { get; set; }
     }
 }

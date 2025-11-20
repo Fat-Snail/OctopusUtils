@@ -9,34 +9,34 @@ namespace JiebaNet.Analyser
 {
     public class IdfLoader
     {
-        internal string IdfFilePath { get; set; }
-        internal IDictionary<string, double> IdfFreq { get; set; }
-        internal double MedianIdf { get; set; }
+        internal String IdfFilePath { get; set; }
+        internal IDictionary<String, Double> IdfFreq { get; set; }
+        internal Double MedianIdf { get; set; }
 
-        public IdfLoader(string idfPath = null)
+        public IdfLoader(String idfPath = null)
         {
-            IdfFilePath = string.Empty;
-            IdfFreq = new Dictionary<string, double>();
+            IdfFilePath = String.Empty;
+            IdfFreq = new Dictionary<String, Double>();
             MedianIdf = 0.0;
-            if (!string.IsNullOrWhiteSpace(idfPath))
+            if (!String.IsNullOrWhiteSpace(idfPath))
             {
                 SetNewPath(idfPath);
             }
         }
 
-        public void SetNewPath(string newIdfPath)
+        public void SetNewPath(String newIdfPath)
         {
             var idfPath = newIdfPath;
             if (IdfFilePath != idfPath)
             {
                 IdfFilePath = idfPath;
                 var lines = FileExtension.ReadEmbeddedAllLines(idfPath, Encoding.UTF8);
-                IdfFreq = new Dictionary<string, double>();
+                IdfFreq = new Dictionary<String, Double>();
                 foreach (var line in lines)
                 {
                     var parts = line.Trim().Split(' ');
                     var word = parts[0];
-                    var freq = double.Parse(parts[1]);
+                    var freq = Double.Parse(parts[1]);
                     IdfFreq[word] = freq;
                 }
 

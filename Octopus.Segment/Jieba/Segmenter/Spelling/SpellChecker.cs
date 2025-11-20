@@ -4,7 +4,7 @@ namespace JiebaNet.Segmenter.Spelling
 {
     public interface ISpellChecker
     {
-        IEnumerable<string> Suggests(string word);
+        IEnumerable<String> Suggests(String word);
     }
 
     public class SpellChecker : ISpellChecker
@@ -12,13 +12,13 @@ namespace JiebaNet.Segmenter.Spelling
         internal static readonly WordDictionary WordDict = WordDictionary.Instance;
 
         internal readonly Trie WordTrie;
-        internal readonly Dictionary<char, HashSet<char>> FirstChars;
+        internal readonly Dictionary<Char, HashSet<Char>> FirstChars;
 
         public SpellChecker()
         {
             var wordDict = WordDictionary.Instance;
             WordTrie = new Trie();
-            FirstChars = new Dictionary<char, HashSet<char>>();
+            FirstChars = new Dictionary<Char, HashSet<Char>>();
 
             foreach (var wd in wordDict.Trie)
             {
@@ -32,7 +32,7 @@ namespace JiebaNet.Segmenter.Spelling
                         var first = wd.Key[0];
                         if (!FirstChars.ContainsKey(second))
                         {
-                            FirstChars[second] = new HashSet<char>();
+                            FirstChars[second] = new HashSet<Char>();
                         }
                         FirstChars[second].Add(first);
                     }
@@ -40,7 +40,7 @@ namespace JiebaNet.Segmenter.Spelling
             }
         }
 
-        internal ISet<string> GetEdits1(string word)
+        internal ISet<String> GetEdits1(String word)
         {
             var splits = new List<WordSplit>();
             for (var i = 0; i <= word.Length; i++)
@@ -49,14 +49,14 @@ namespace JiebaNet.Segmenter.Spelling
             }
 
             var deletes = splits
-                .Where(s => !string.IsNullOrEmpty(s.Right))
+                .Where(s => !String.IsNullOrEmpty(s.Right))
                 .Select(s => s.Left + s.Right.Substring(1));
 
             var transposes = splits
                 .Where(s => s.Right.Length > 1)
                 .Select(s => s.Left + s.Right[1] + s.Right[0] + s.Right.Substring(2));
 
-            var replaces = new HashSet<string>();
+            var replaces = new HashSet<String>();
             if (word.Length > 1)
             {
                 var firsts = FirstChars[word[1]];
@@ -79,7 +79,7 @@ namespace JiebaNet.Segmenter.Spelling
                 }
             }
 
-            var inserts = new HashSet<string>();
+            var inserts = new HashSet<String>();
             if (word.Length > 1)
             {
                 if (FirstChars.ContainsKey(word[0]))
@@ -106,7 +106,7 @@ namespace JiebaNet.Segmenter.Spelling
                 }
             }
 
-            var result = new HashSet<string>();
+            var result = new HashSet<String>();
             result.UnionWith(deletes);
             result.UnionWith(transposes);
             result.UnionWith(replaces);
@@ -115,9 +115,9 @@ namespace JiebaNet.Segmenter.Spelling
             return result;
         }
 
-        internal ISet<string> GetKnownEdits2(string word)
+        internal ISet<String> GetKnownEdits2(String word)
         {
-            var result = new HashSet<string>();
+            var result = new HashSet<String>();
             foreach (var e1 in GetEdits1(word))
             {
                 result.UnionWith(GetEdits1(e1).Where(e => WordDictionary.Instance.ContainsWord(e)));
@@ -125,12 +125,12 @@ namespace JiebaNet.Segmenter.Spelling
             return result;
         }
 
-        internal ISet<string> GetKnownWords(IEnumerable<string> words)
+        internal ISet<String> GetKnownWords(IEnumerable<String> words)
         {
-            return new HashSet<string>(words.Where(w => WordDictionary.Instance.ContainsWord(w)));
+            return new HashSet<String>(words.Where(w => WordDictionary.Instance.ContainsWord(w)));
         }
 
-        public IEnumerable<string> Suggests(string word)
+        public IEnumerable<String> Suggests(String word)
         {
             if (WordDict.ContainsWord(word))
             {
@@ -150,7 +150,7 @@ namespace JiebaNet.Segmenter.Spelling
 
     internal class WordSplit
     {
-        public string Left { get; set; }
-        public string Right { get; set; }
+        public String Left { get; set; }
+        public String Right { get; set; }
     }
 }

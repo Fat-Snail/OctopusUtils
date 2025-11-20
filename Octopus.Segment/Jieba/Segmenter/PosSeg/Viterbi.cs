@@ -11,10 +11,10 @@ namespace JiebaNet.Segmenter.PosSeg
     {
         private static readonly Lazy<Viterbi> Lazy = new Lazy<Viterbi>(() => new Viterbi());
 
-        private static IDictionary<string, double> _startProbs;
-        private static IDictionary<string, IDictionary<string, double>> _transProbs;
-        private static IDictionary<string, IDictionary<char, double>> _emitProbs;
-        private static IDictionary<char, List<string>> _stateTab;
+        private static IDictionary<String, Double> _startProbs;
+        private static IDictionary<String, IDictionary<String, Double>> _transProbs;
+        private static IDictionary<String, IDictionary<Char, Double>> _emitProbs;
+        private static IDictionary<Char, List<String>> _stateTab;
 
         private Viterbi()
         {
@@ -27,13 +27,13 @@ namespace JiebaNet.Segmenter.PosSeg
             get { return Lazy.Value; }
         }
 
-        public IEnumerable<Pair> Cut(string sentence)
+        public IEnumerable<Pair> Cut(String sentence)
         {
             var probPosList = ViterbiCut(sentence);
             var posList = probPosList.Item2;
 
             var tokens = new List<Pair>();
-            int begin = 0, next = 0;
+            Int32 begin = 0, next = 0;
             for (var i = 0; i < sentence.Length; i++)
             {
                 var parts = posList[i].Split('-');
@@ -66,49 +66,49 @@ namespace JiebaNet.Segmenter.PosSeg
         {
             var startJson = FileExtension.ReadEmbeddedAllLine(ConfigManager.PosProbStartFile);
             _startProbs = JsonSerializer
-                    .Deserialize<IDictionary<string, double>>(startJson);
+                    .Deserialize<IDictionary<String, Double>>(startJson);
 
             var transJson = FileExtension.ReadEmbeddedAllLine(ConfigManager.PosProbTransFile);
             _transProbs = JsonSerializer
-                .Deserialize<IDictionary<string, IDictionary<string, double>>>(transJson);
+                .Deserialize<IDictionary<String, IDictionary<String, Double>>>(transJson);
 
             var emitJson = FileExtension.ReadEmbeddedAllLine(ConfigManager.PosProbEmitFile);
             _emitProbs = JsonSerializer
-                .Deserialize<IDictionary<string, IDictionary<char, double>>>(emitJson);
+                .Deserialize<IDictionary<String, IDictionary<Char, Double>>>(emitJson);
 
             var tabJson = FileExtension.ReadEmbeddedAllLine(ConfigManager.CharStateTabFile);
             _stateTab = JsonSerializer
-                .Deserialize<IDictionary<char, List<string>>>(tabJson);
+                .Deserialize<IDictionary<Char, List<String>>>(tabJson);
         }
 
         // TODO: change sentence to obs?
-        private Tuple<double, List<string>> ViterbiCut(string sentence)
+        private Tuple<Double, List<String>> ViterbiCut(String sentence)
         {
-            var v = new List<IDictionary<string, double>>();
-            var memPath = new List<IDictionary<string, string>>();
+            var v = new List<IDictionary<String, Double>>();
+            var memPath = new List<IDictionary<String, String>>();
 
             var allStates = _transProbs.Keys.ToList();
 
             // Init weights and paths.
-            v.Add(new Dictionary<string, Double>());
-            memPath.Add(new Dictionary<string, string>());
+            v.Add(new Dictionary<String, Double>());
+            memPath.Add(new Dictionary<String, String>());
             foreach (var state in _stateTab.GetDefault(sentence[0], allStates))
             {
                 var emP = _emitProbs[state].GetDefault(sentence[0], Constants.MinProb);
                 v[0][state] = _startProbs[state] + emP;
-                memPath[0][state] = string.Empty;
+                memPath[0][state] = String.Empty;
             }
 
             // For each remaining char
             for (var i = 1; i < sentence.Length; ++i)
             {
-                v.Add(new Dictionary<string, double>());
-                memPath.Add(new Dictionary<string, string>());
+                v.Add(new Dictionary<String, Double>());
+                memPath.Add(new Dictionary<String, String>());
 
                 var prevStates = memPath[i - 1].Keys.Where(k => _transProbs[k].Count > 0);
-                var curPossibleStates = new HashSet<string>(prevStates.SelectMany(s => _transProbs[s].Keys));
+                var curPossibleStates = new HashSet<String>(prevStates.SelectMany(s => _transProbs[s].Keys));
 
-                IEnumerable<string> obsStates = _stateTab.GetDefault(sentence[i], allStates);
+                IEnumerable<String> obsStates = _stateTab.GetDefault(sentence[i], allStates);
                 obsStates = curPossibleStates.Intersect(obsStates);
 
                 if (!obsStates.Any())
@@ -127,17 +127,17 @@ namespace JiebaNet.Segmenter.PosSeg
                 {
                     var emp = _emitProbs[y].GetDefault(sentence[i], Constants.MinProb);
 
-                    var prob = double.MinValue;
-                    var state = string.Empty;
+                    var prob = Double.MinValue;
+                    var state = String.Empty;
 
                     foreach (var y0 in prevStates)
                     {
-                        var tranp = _transProbs[y0].GetDefault(y, double.MinValue);
+                        var tranp = _transProbs[y0].GetDefault(y, Double.MinValue);
                         tranp = v[i - 1][y0] + tranp + emp;
                         // TODO: compare two very small values;
                         // TODO: how to deal with negative infinity
                         if (prob < tranp ||
-                            (prob == tranp && string.Compare(state, y0, StringComparison.CurrentCultureIgnoreCase) < 0))
+                            (prob == tranp && String.Compare(state, y0, StringComparison.CurrentCultureIgnoreCase) < 0))
                         {
                             prob = tranp;
                             state = y0;
@@ -150,8 +150,8 @@ namespace JiebaNet.Segmenter.PosSeg
 
             var vLast = v.Last();
             var last = memPath.Last().Keys.Select(y => new { State = y, Prob = vLast[y] });
-            var endProb = double.MinValue;
-            var endState = string.Empty;
+            var endProb = Double.MinValue;
+            var endState = String.Empty;
             foreach (var endPoint in last)
             {
                 // TODO: compare two very small values;
@@ -163,7 +163,7 @@ namespace JiebaNet.Segmenter.PosSeg
                 }
             }
 
-            var route = new string[sentence.Length];
+            var route = new String[sentence.Length];
             var n = sentence.Length - 1;
             var curState = endState;
             while (n >= 0)
@@ -173,7 +173,7 @@ namespace JiebaNet.Segmenter.PosSeg
                 n--;
             }
 
-            return new Tuple<double, List<string>>(endProb, route.ToList());
+            return new Tuple<Double, List<String>>(endProb, route.ToList());
         }
 
         #endregion

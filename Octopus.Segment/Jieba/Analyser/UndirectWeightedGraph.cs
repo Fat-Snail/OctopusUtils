@@ -6,22 +6,22 @@ namespace JiebaNet.Analyser
 {
     public class Edge
     {
-        public string Start { get; set; }
-        public string End { get; set; }
-        public double Weight { get; set; }
+        public String Start { get; set; }
+        public String End { get; set; }
+        public Double Weight { get; set; }
     }
 
     public class UndirectWeightedGraph
     {
-        private static readonly double d = 0.85;
+        private static readonly Double d = 0.85;
 
-        public IDictionary<string, List<Edge>> Graph { get; set; }
+        public IDictionary<String, List<Edge>> Graph { get; set; }
         public UndirectWeightedGraph()
         {
-            Graph = new Dictionary<string, List<Edge>>();
+            Graph = new Dictionary<String, List<Edge>>();
         }
 
-        public void AddEdge(string start, string end, double weight)
+        public void AddEdge(String start, String end, Double weight)
         {
             if (!Graph.ContainsKey(start))
             {
@@ -37,10 +37,10 @@ namespace JiebaNet.Analyser
             Graph[end].Add(new Edge() { Start = end, End = start, Weight = weight });
         }
 
-        public IDictionary<string, double> Rank()
+        public IDictionary<String, Double> Rank()
         {
-            var ws = new Dictionary<string, double>();
-            var outSum = new Dictionary<string, double>();
+            var ws = new Dictionary<String, Double>();
+            var outSum = new Dictionary<String, Double>();
 
             // init scores
             var count = Graph.Count > 0 ? Graph.Count : 1;
@@ -67,8 +67,8 @@ namespace JiebaNet.Analyser
                 }
             }
 
-            var minRank = double.MaxValue;
-            var maxRank = double.MinValue;
+            var minRank = Double.MaxValue;
+            var maxRank = Double.MinValue;
 
             foreach (var w in ws.Values)
             {

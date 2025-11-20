@@ -14,7 +14,7 @@ namespace JiebaNet.Segmenter.PosSeg
         private static readonly Viterbi PosSeg = Viterbi.Instance;
 
         // TODO: 
-        private static readonly object locker = new object();
+        private static readonly Object locker = new Object();
 
         #region Regular Expressions
 
@@ -31,7 +31,7 @@ namespace JiebaNet.Segmenter.PosSeg
 
         #endregion
 
-        private static IDictionary<string, string> _wordTagTab;
+        private static IDictionary<String, String> _wordTagTab;
 
         static PosSegmenter()
         {
@@ -42,14 +42,14 @@ namespace JiebaNet.Segmenter.PosSeg
         {
             try
             {
-                _wordTagTab = new Dictionary<string, string>();
+                _wordTagTab = new Dictionary<String, String>();
                 var lines = FileExtension.ReadEmbeddedAllLines(ConfigManager.MainDictFile);
                 foreach (var line in lines)
                 {
                     var tokens = line.Split(' ');
                     if (tokens.Length < 2)
                     {
-                        Debug.Fail(string.Format("Invalid line: {0}", line));
+                        Debug.Fail(String.Format("Invalid line: {0}", line));
                         continue;
                     }
 
@@ -61,7 +61,7 @@ namespace JiebaNet.Segmenter.PosSeg
             }
             catch (System.IO.IOException e)
             {
-                Debug.Fail(string.Format("Word tag table load failure, reason: {0}", e.Message));
+                Debug.Fail(String.Format("Word tag table load failure, reason: {0}", e.Message));
             }
             catch (FormatException fe)
             {
@@ -86,23 +86,23 @@ namespace JiebaNet.Segmenter.PosSeg
             if (_segmenter.UserWordTagTab.IsNotEmpty())
             {
                 _wordTagTab.Update(_segmenter.UserWordTagTab);
-                _segmenter.UserWordTagTab = new Dictionary<string, string>();
+                _segmenter.UserWordTagTab = new Dictionary<String, String>();
             }
         }
 
-        public IEnumerable<Pair> Cut(string text, bool hmm = true)
+        public IEnumerable<Pair> Cut(String text, Boolean hmm = true)
         {
             return CutInternal(text, hmm);
         }
 
         #region Internal Cut Methods
 
-        internal IEnumerable<Pair> CutInternal(string text, bool hmm = true)
+        internal IEnumerable<Pair> CutInternal(String text, Boolean hmm = true)
         {
             CheckNewUserWordTags();
 
             var blocks = RegexChineseInternal.Split(text);
-            Func<string, IEnumerable<Pair>> cutMethod = null;
+            Func<String, IEnumerable<Pair>> cutMethod = null;
             if (hmm)
             {
                 cutMethod = CutDag;
@@ -155,7 +155,7 @@ namespace JiebaNet.Segmenter.PosSeg
             return tokens;
         }
 
-        internal IEnumerable<Pair> CutDag(string sentence)
+        internal IEnumerable<Pair> CutDag(String sentence)
         {
             var dag = _segmenter.GetDag(sentence);
             var route = _segmenter.Calc(sentence, dag);
@@ -164,7 +164,7 @@ namespace JiebaNet.Segmenter.PosSeg
 
             var x = 0;
             var n = sentence.Length;
-            var buf = string.Empty;
+            var buf = String.Empty;
             while (x < n)
             {
                 var y = route[x].Key + 1;
@@ -178,7 +178,7 @@ namespace JiebaNet.Segmenter.PosSeg
                     if (buf.Length > 0)
                     {
                         AddBufferToWordList(tokens, buf);
-                        buf = string.Empty;
+                        buf = String.Empty;
                     }
                     tokens.Add(new Pair(w, _wordTagTab.GetDefault(w, "x")));
                 }
@@ -193,7 +193,7 @@ namespace JiebaNet.Segmenter.PosSeg
             return tokens;
         }
 
-        internal IEnumerable<Pair> CutDagWithoutHmm(string sentence)
+        internal IEnumerable<Pair> CutDagWithoutHmm(String sentence)
         {
             var dag = _segmenter.GetDag(sentence);
             var route = _segmenter.Calc(sentence, dag);
@@ -201,7 +201,7 @@ namespace JiebaNet.Segmenter.PosSeg
             var tokens = new List<Pair>();
 
             var x = 0;
-            var buf = string.Empty;
+            var buf = String.Empty;
             var n = sentence.Length;
 
             var y = -1;
@@ -220,7 +220,7 @@ namespace JiebaNet.Segmenter.PosSeg
                     if (buf.Length > 0)
                     {
                         tokens.Add(new Pair(buf, "eng"));
-                        buf = string.Empty;
+                        buf = String.Empty;
                     }
                     tokens.Add(new Pair(w, _wordTagTab.GetDefault(w, "x")));
                     x = y;
@@ -235,7 +235,7 @@ namespace JiebaNet.Segmenter.PosSeg
             return tokens;
         }
 
-        internal IEnumerable<Pair> CutDetail(string text)
+        internal IEnumerable<Pair> CutDetail(String text)
         {
             var tokens = new List<Pair>();
             var blocks = RegexChineseDetail.Split(text);
@@ -250,7 +250,7 @@ namespace JiebaNet.Segmenter.PosSeg
                     var tmp = RegexSkipDetail.Split(blk);
                     foreach (var x in tmp)
                     {
-                        if (!string.IsNullOrWhiteSpace(x))
+                        if (!String.IsNullOrWhiteSpace(x))
                         {
                             if (RegexNumbers.IsMatch(x))
                             {
@@ -276,7 +276,7 @@ namespace JiebaNet.Segmenter.PosSeg
 
         #region Private Helpers
 
-        private void AddBufferToWordList(List<Pair> words, string buf)
+        private void AddBufferToWordList(List<Pair> words, String buf)
         {
             if (buf.Length == 1)
             {

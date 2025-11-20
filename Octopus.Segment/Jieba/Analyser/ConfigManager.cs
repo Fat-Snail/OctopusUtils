@@ -6,7 +6,7 @@ namespace JiebaNet.Analyser
     public class ConfigManager
     {
         // TODO: duplicate codes.
-        public static string ConfigFileBaseDir
+        public static String ConfigFileBaseDir
         {
             get
             {
@@ -14,12 +14,12 @@ namespace JiebaNet.Analyser
             }
         }
 
-        public static string IdfFile
+        public static String IdfFile
         {
             get { return Path.Combine(ConfigFileBaseDir, "idf.txt"); }
         }
 
-        public static string StopWordsFile
+        public static String StopWordsFile
         {
             get { return Path.Combine(ConfigFileBaseDir, "stopwords.txt"); }
         }

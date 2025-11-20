@@ -47,7 +47,7 @@ namespace JiebaNet.Segmenter
                 // using (var sr = new StreamReader(fileInfo.CreateReadStream(), Encoding.UTF8))
                 // {
 
-                var text = string.Empty;
+                var text = String.Empty;
 
                 // if (File.Exists(MainDict))
                 // {
@@ -78,12 +78,12 @@ namespace JiebaNet.Segmenter
                     var tokens = line.Split(' ');
                     if (tokens.Length < 2)
                     {
-                        Debug.Fail(string.Format("Invalid line: {0}", line));
+                        Debug.Fail(String.Format("Invalid line: {0}", line));
                         continue;
                     }
 
                     var word = tokens[0];
-                    var freq = int.Parse(tokens[1]);
+                    var freq = Int32.Parse(tokens[1]);
 
                     Trie[word] = freq;
                     Total += freq;
@@ -104,7 +104,7 @@ namespace JiebaNet.Segmenter
             }
             catch (IOException e)
             {
-                Debug.Fail(string.Format("{0} load failure, reason: {1}", MainDict, e.Message));
+                Debug.Fail(String.Format("{0} load failure, reason: {1}", MainDict, e.Message));
             }
             catch (FormatException fe)
             {
@@ -112,12 +112,12 @@ namespace JiebaNet.Segmenter
             }
         }
 
-        public bool ContainsWord(string word)
+        public Boolean ContainsWord(String word)
         {
             return Trie.ContainsKey(word) && Trie[word] > 0;
         }
 
-        public int GetFreqOrDefault(string key)
+        public Int32 GetFreqOrDefault(String key)
         {
             if (ContainsWord(key))
                 return Trie[key];
@@ -125,7 +125,7 @@ namespace JiebaNet.Segmenter
                 return 1;
         }
 
-        public void AddWord(string word, int freq, string tag = null)
+        public void AddWord(String word, Int32 freq, String tag = null)
         {
             if (ContainsWord(word))
             {
@@ -144,20 +144,20 @@ namespace JiebaNet.Segmenter
             }
         }
 
-        public void DeleteWord(string word)
+        public void DeleteWord(String word)
         {
             AddWord(word, 0);
         }
 
-        internal int SuggestFreq(string word, IEnumerable<string> segments)
+        internal Int32 SuggestFreq(String word, IEnumerable<String> segments)
         {
-            double freq = 1;
+            Double freq = 1;
             foreach (var seg in segments)
             {
                 freq *= GetFreqOrDefault(seg) / Total;
             }
 
-            return Math.Max((int)(freq * Total) + 1, GetFreqOrDefault(word));
+            return Math.Max((Int32)(freq * Total) + 1, GetFreqOrDefault(word));
         }
     }
 }

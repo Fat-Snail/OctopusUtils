@@ -32,14 +32,14 @@ internal class ResourceHelper
     /// </summary>
     /// <param name="resourceName">resourceName</param>
     /// <returns></returns>
-    public static Stream GetResourceInputStream(string resourceName)
+    public static Stream GetResourceInputStream(String resourceName)
     {
-        return Asm.GetManifestResourceStream(string.Format("{0}.{1}", Asm.GetName().Name, resourceName));
+        return Asm.GetManifestResourceStream(String.Format("{0}.{1}", Asm.GetName().Name, resourceName));
     }
 
-    public static string GetResourceInputString(string resourceName)
+    public static String GetResourceInputString(String resourceName)
     {
-        var result = string.Empty;
+        var result = String.Empty;
         using (var sr = new StreamReader(GetResourceInputStream(resourceName)))
         {
             result = sr.ReadToEnd();

@@ -8,7 +8,7 @@ namespace JiebaNet.Analyser
 {
     public class TextRankExtractor : KeywordExtractor
     {
-        private static readonly IEnumerable<string> DefaultPosFilter = new List<string>()
+        private static readonly IEnumerable<String> DefaultPosFilter = new List<String>()
         {
             "n", "ng", "nr", "nrfg", "nrt", "ns", "nt", "nz", "v", "vd", "vg", "vi", "vn", "vq"
         };
@@ -16,9 +16,9 @@ namespace JiebaNet.Analyser
         private JiebaSegmenter Segmenter { get; set; }
         private PosSegmenter PosSegmenter { get; set; }
 
-        public int Span { get; set; }
+        public Int32 Span { get; set; }
 
-        public bool PairFilter(Pair wp)
+        public Boolean PairFilter(Pair wp)
         {
             return DefaultPosFilter.Contains(wp.Flag)
                    && wp.Word.Trim().Length >= 2
@@ -38,14 +38,14 @@ namespace JiebaNet.Analyser
             }
         }
 
-        public override IEnumerable<string> ExtractTags(string text, int count = 20, IEnumerable<string> allowPos = null)
+        public override IEnumerable<String> ExtractTags(String text, Int32 count = 20, IEnumerable<String> allowPos = null)
         {
             var rank = ExtractTagRank(text, allowPos);
             if (count <= 0) { count = 20; }
             return rank.OrderByDescending(p => p.Value).Select(p => p.Key).Take(count);
         }
 
-        public override IEnumerable<WordWeightPair> ExtractTagsWithWeight(string text, int count = 20, IEnumerable<string> allowPos = null)
+        public override IEnumerable<WordWeightPair> ExtractTagsWithWeight(String text, Int32 count = 20, IEnumerable<String> allowPos = null)
         {
             var rank = ExtractTagRank(text, allowPos);
             if (count <= 0) { count = 20; }
@@ -58,7 +58,7 @@ namespace JiebaNet.Analyser
 
         #region Private Helpers
 
-        private IDictionary<string, double> ExtractTagRank(string text, IEnumerable<string> allowPos)
+        private IDictionary<String, Double> ExtractTagRank(String text, IEnumerable<String> allowPos)
         {
             if (allowPos.IsEmpty())
             {
@@ -66,7 +66,7 @@ namespace JiebaNet.Analyser
             }
 
             var g = new UndirectWeightedGraph();
-            var cm = new Dictionary<string, int>();
+            var cm = new Dictionary<String, Int32>();
             var words = PosSegmenter.Cut(text).ToList();
 
             for (var i = 0; i < words.Count(); i++)

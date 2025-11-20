@@ -13,15 +13,15 @@ namespace JiebaNet.Segmenter.FinalSeg
     public class Viterbi : IFinalSeg
     {
         private static readonly Lazy<Viterbi> Lazy = new Lazy<Viterbi>(() => new Viterbi());
-        private static readonly char[] States = { 'B', 'M', 'E', 'S' };
+        private static readonly Char[] States = { 'B', 'M', 'E', 'S' };
 
         private static readonly Regex RegexChinese = new Regex(@"([\u4E00-\u9FD5]+)", RegexOptions.Compiled);
         private static readonly Regex RegexSkip = new Regex(@"(\d+\.\d+|[a-zA-Z0-9]+)", RegexOptions.Compiled);
 
-        private static IDictionary<char, IDictionary<char, double>> _emitProbs;
-        private static IDictionary<char, double> _startProbs;
-        private static IDictionary<char, IDictionary<char, double>> _transProbs;
-        private static IDictionary<char, char[]> _prevStatus;
+        private static IDictionary<Char, IDictionary<Char, Double>> _emitProbs;
+        private static IDictionary<Char, Double> _startProbs;
+        private static IDictionary<Char, IDictionary<Char, Double>> _transProbs;
+        private static IDictionary<Char, Char[]> _prevStatus;
 
         private Viterbi()
         {
@@ -34,9 +34,9 @@ namespace JiebaNet.Segmenter.FinalSeg
             get { return Lazy.Value; }
         }
 
-        public IEnumerable<string> Cut(string sentence)
+        public IEnumerable<String> Cut(String sentence)
         {
-            var tokens = new List<string>();
+            var tokens = new List<String>();
             foreach (var blk in RegexChinese.Split(sentence))
             {
                 if (RegexChinese.IsMatch(blk))
@@ -45,7 +45,7 @@ namespace JiebaNet.Segmenter.FinalSeg
                 }
                 else
                 {
-                    var segments = RegexSkip.Split(blk).Where(seg => !string.IsNullOrEmpty(seg));
+                    var segments = RegexSkip.Split(blk).Where(seg => !String.IsNullOrEmpty(seg));
                     tokens.AddRange(segments);
                 }
             }
@@ -59,7 +59,7 @@ namespace JiebaNet.Segmenter.FinalSeg
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            _prevStatus = new Dictionary<char, char[]>()
+            _prevStatus = new Dictionary<Char, Char[]>()
             {
                 {'B', new []{'E', 'S'}},
                 {'M', new []{'M', 'B'}},
@@ -67,7 +67,7 @@ namespace JiebaNet.Segmenter.FinalSeg
                 {'E', new []{'B', 'M'}}
             };
 
-            _startProbs = new Dictionary<char, double>()
+            _startProbs = new Dictionary<Char, Double>()
             {
                 {'B', -0.26268660809250016},
                 {'E', -3.14e+100},
@@ -78,24 +78,24 @@ namespace JiebaNet.Segmenter.FinalSeg
             var transJson = FileExtension.ReadEmbeddedAllLine(ConfigManager.ProbTransFile);
             _transProbs = JsonSerializer
                 .Deserialize<
-                    IDictionary<char, IDictionary<char, double>>>(transJson);
+                    IDictionary<Char, IDictionary<Char, Double>>>(transJson);
 
             var emitJson = FileExtension.ReadEmbeddedAllLine(ConfigManager.ProbEmitFile);
             _emitProbs = JsonSerializer
                 .Deserialize<
-                    IDictionary<char, IDictionary<char, double>>>(emitJson);
+                    IDictionary<Char, IDictionary<Char, Double>>>(emitJson);
 
             stopWatch.Stop();
             Debug.WriteLine("model loading finished, time elapsed {0} ms.", stopWatch.ElapsedMilliseconds);
         }
 
-        private IEnumerable<string> ViterbiCut(string sentence)
+        private IEnumerable<String> ViterbiCut(String sentence)
         {
-            var v = new List<IDictionary<char, double>>();
-            IDictionary<char, Node> path = new Dictionary<char, Node>();
+            var v = new List<IDictionary<Char, Double>>();
+            IDictionary<Char, Node> path = new Dictionary<Char, Node>();
 
             // Init weights and paths.
-            v.Add(new Dictionary<char, double>());
+            v.Add(new Dictionary<Char, Double>());
             foreach (var state in States)
             {
                 var emP = _emitProbs[state].GetDefault(sentence[0], Constants.MinProb);
@@ -106,14 +106,14 @@ namespace JiebaNet.Segmenter.FinalSeg
             // For each remaining char
             for (var i = 1; i < sentence.Length; ++i)
             {
-                IDictionary<char, double> vv = new Dictionary<char, double>();
+                IDictionary<Char, Double> vv = new Dictionary<Char, Double>();
                 v.Add(vv);
-                IDictionary<char, Node> newPath = new Dictionary<char, Node>();
+                IDictionary<Char, Node> newPath = new Dictionary<Char, Node>();
                 foreach (var y in States)
                 {
                     var emp = _emitProbs[y].GetDefault(sentence[i], Constants.MinProb);
 
-                    var candidate = new Pair<char>('\0', double.MinValue);
+                    var candidate = new Pair<Char>('\0', Double.MinValue);
                     foreach (var y0 in _prevStatus[y])
                     {
                         var tranp = _transProbs[y0].GetDefault(y, Constants.MinProb);
@@ -134,7 +134,7 @@ namespace JiebaNet.Segmenter.FinalSeg
             var probS = v[sentence.Length - 1]['S'];
             var finalPath = probE < probS ? path['S'] : path['E'];
 
-            var posList = new List<char>(sentence.Length);
+            var posList = new List<Char>(sentence.Length);
             while (finalPath != null)
             {
                 posList.Add(finalPath.Value);
@@ -142,8 +142,8 @@ namespace JiebaNet.Segmenter.FinalSeg
             }
             posList.Reverse();
 
-            var tokens = new List<string>();
-            int begin = 0, next = 0;
+            var tokens = new List<String>();
+            Int32 begin = 0, next = 0;
             for (var i = 0; i < sentence.Length; i++)
             {
                 var pos = posList[i];

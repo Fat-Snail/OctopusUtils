@@ -12,12 +12,12 @@ namespace JiebaNet.Segmenter.Common
 
         #region Objects
 
-        public static bool IsNull(this object obj)
+        public static Boolean IsNull(this Object obj)
         {
             return obj == null;
         }
 
-        public static bool IsNotNull(this object obj)
+        public static Boolean IsNotNull(this Object obj)
         {
             return obj != null;
         }
@@ -27,12 +27,12 @@ namespace JiebaNet.Segmenter.Common
 
         #region Enumerable
 
-        public static bool IsEmpty<T>(this IEnumerable<T> enumerable)
+        public static Boolean IsEmpty<T>(this IEnumerable<T> enumerable)
         {
             return (enumerable == null) || !enumerable.Any();
         }
 
-        public static bool IsNotEmpty<T>(this IEnumerable<T> enumerable)
+        public static Boolean IsNotEmpty<T>(this IEnumerable<T> enumerable)
         {
             return (enumerable != null) && enumerable.Any();
         }
@@ -63,9 +63,9 @@ namespace JiebaNet.Segmenter.Common
 
         #region String & Text
 
-        public static string Left(this string s, int endIndex)
+        public static String Left(this String s, Int32 endIndex)
         {
-            if (string.IsNullOrEmpty(s))
+            if (String.IsNullOrEmpty(s))
             {
                 return s;
             }
@@ -73,9 +73,9 @@ namespace JiebaNet.Segmenter.Common
             return s.Substring(0, endIndex);
         }
 
-        public static string Right(this string s, int startIndex)
+        public static String Right(this String s, Int32 startIndex)
         {
-            if (string.IsNullOrEmpty(s))
+            if (String.IsNullOrEmpty(s))
             {
                 return s;
             }
@@ -84,27 +84,27 @@ namespace JiebaNet.Segmenter.Common
             return s.Substring(startIndex);
         }
 
-        public static string Sub(this string s, int startIndex, int endIndex)
+        public static String Sub(this String s, Int32 startIndex, Int32 endIndex)
         {
             return s.Substring(startIndex, endIndex - startIndex);
         }
 
-        public static bool IsInt32(this string s)
+        public static Boolean IsInt32(this String s)
         {
             return RegexDigits.IsMatch(s);
         }
 
-        public static string[] SplitLines(this string s)
+        public static String[] SplitLines(this String s)
         {
             return RegexNewline.Split(s);
         }
 
-        public static string Join(this IEnumerable<string> inputs, string separator = ", ")
+        public static String Join(this IEnumerable<String> inputs, String separator = ", ")
         {
-            return string.Join(separator, inputs);
+            return String.Join(separator, inputs);
         }
 
-        public static IEnumerable<string> SubGroupValues(this GroupCollection groups)
+        public static IEnumerable<String> SubGroupValues(this GroupCollection groups)
         {
             var result = from Group g in groups
                          select g.Value;
@@ -115,14 +115,14 @@ namespace JiebaNet.Segmenter.Common
 
         #region Conversion
 
-        public static int ToInt32(this char ch)
+        public static Int32 ToInt32(this Char ch)
         {
             return ch;
         }
 
-        public static char ToChar(this int i)
+        public static Char ToChar(this Int32 i)
         {
-            return (char)i;
+            return (Char)i;
         }
 
         #endregion

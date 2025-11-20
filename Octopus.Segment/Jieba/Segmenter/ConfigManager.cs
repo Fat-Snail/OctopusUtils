@@ -5,7 +5,7 @@ namespace JiebaNet.Segmenter
 {
     public class ConfigManager
     {
-        public static string ConfigFileBaseDir
+        public static String ConfigFileBaseDir
         {
             get
             {
@@ -14,37 +14,37 @@ namespace JiebaNet.Segmenter
             }
         }
 
-        public static string MainDictFile
+        public static String MainDictFile
         {
             get { return Path.Combine(ConfigFileBaseDir, "dict.txt"); }
         }
 
-        public static string ProbTransFile
+        public static String ProbTransFile
         {
             get { return Path.Combine(ConfigFileBaseDir, "prob_trans.json"); }
         }
 
-        public static string ProbEmitFile
+        public static String ProbEmitFile
         {
             get { return Path.Combine(ConfigFileBaseDir, "prob_emit.json"); }
         }
 
-        public static string PosProbStartFile
+        public static String PosProbStartFile
         {
             get { return Path.Combine(ConfigFileBaseDir, "pos_prob_start.json"); }
         }
 
-        public static string PosProbTransFile
+        public static String PosProbTransFile
         {
             get { return Path.Combine(ConfigFileBaseDir, "pos_prob_trans.json"); }
         }
 
-        public static string PosProbEmitFile
+        public static String PosProbEmitFile
         {
             get { return Path.Combine(ConfigFileBaseDir, "pos_prob_emit.json"); }
         }
 
-        public static string CharStateTabFile
+        public static String CharStateTabFile
         {
             get { return Path.Combine(ConfigFileBaseDir, "char_state_tab.json"); }
         }

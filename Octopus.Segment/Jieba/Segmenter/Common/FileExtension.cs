@@ -9,9 +9,9 @@ namespace JiebaNet.Segmenter.Common
 {
     public static class FileExtension
     {
-        private static string _embeddedRoot = "Jieba.Segmenter";
+        private static String _embeddedRoot = "Jieba.Segmenter";
 
-        public static string ReadEmbeddedAllLine(string path)
+        public static String ReadEmbeddedAllLine(String path)
         {
             if (File.Exists(path))
             {
@@ -37,28 +37,28 @@ namespace JiebaNet.Segmenter.Common
         //     // }
         // }
 
-        public static List<string> ReadEmbeddedAllLines(string path, Encoding encoding)
+        public static List<String> ReadEmbeddedAllLines(String path, Encoding encoding)
         {
             var assmbly = typeof(FileExtension).GetTypeInfo().Assembly;
             return ReadEmbeddedAllLines(assmbly, path, encoding);
         }
 
-        public static List<string> ReadEmbeddedAllLines(string path)
+        public static List<String> ReadEmbeddedAllLines(String path)
         {
             return ReadEmbeddedAllLines(path, Encoding.UTF8);
         }
 
-        public static List<string> ReadAllLines(string path)
+        public static List<String> ReadAllLines(String path)
         {
             return ReadAllLines(path, Encoding.UTF8);
         }
 
-        public static List<string> ReadAllLines(string path, Encoding encoding)
+        public static List<String> ReadAllLines(String path, Encoding encoding)
         {
-            var list = new List<string>();
+            var list = new List<String>();
             using (var streamReader = new StreamReader(path, encoding))
             {
-                string item;
+                String item;
                 while ((item = streamReader.ReadLine()) != null)
                 {
                     list.Add(item);
@@ -67,12 +67,12 @@ namespace JiebaNet.Segmenter.Common
             return list;
         }
 
-        public static List<string> ReadEmbeddedAllLines(Assembly assembly, string path)
+        public static List<String> ReadEmbeddedAllLines(Assembly assembly, String path)
         {
             return ReadEmbeddedAllLines(assembly, path, Encoding.UTF8);
         }
 
-        public static List<string> ReadEmbeddedAllLines(Assembly assembly, string path, Encoding encoding)
+        public static List<String> ReadEmbeddedAllLines(Assembly assembly, String path, Encoding encoding)
         {
             // var provider = new EmbeddedFileProvider(assembly);
             // var fileInfo = provider.GetFileInfo(path);
@@ -87,7 +87,7 @@ namespace JiebaNet.Segmenter.Common
             // }
             var text = ReadEmbeddedAllLine(path);
             var lines = System.Text.RegularExpressions.Regex.Split(text, @"\n");
-            return new List<string>(lines);
+            return new List<String>(lines);
         }
     }
 }
