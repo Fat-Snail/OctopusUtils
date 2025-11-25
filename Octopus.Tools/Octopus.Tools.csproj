@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>12</LangVersion>
-    <AssemblyName>Octopus.Tools</AssemblyName>
+    <AssemblyName>OctopusEx.Tools</AssemblyName>
     <RootNamespace>Octopus</RootNamespace>
     <AssemblyTitle>Octopus核心库</AssemblyTitle>
     <Description>核心基础组件，公共类。</Description>
@@ -18,7 +18,33 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- 程序集签名配置 -->
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../octopus-key.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
+
+  <!-- NuGet 包元数据 -->
+  <PropertyGroup>
+    <PackageId>$(AssemblyName)</PackageId>
+    <Authors>$(Company)</Authors>
+    <RepositoryUrl>https://github.com/Fat-Snail/OctopusUtils</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Octopus核心库;$(AssemblyName)</PackageTags>
+    <PackageReleaseNotes>Octopus核心库；谷歌云盘下载工具类；</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="/"/>
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="10.0.0"/>
