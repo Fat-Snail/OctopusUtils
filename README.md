@@ -23,6 +23,64 @@ Octopus组件库，聚合一些有用的代码、工具类
 
 [使用说明](ConsoleShow.md)
 
+## 异步彩色控制台输出 (ConsoleEx)
+
+- 🎨 支持彩色控制台输出，提升应用界面美观度
+- ⚡ 异步非阻塞写入，提高应用性能
+- 🔄 优雅关闭机制，确保所有消息正确处理
+- 📝 完整的XML文档注释，支持智能提示
+
+### 基本使用示例
+
+```csharp
+using Octopus;
+
+// 基本彩色输出
+ConsoleEx.WriteLine("成功消息", ConsoleColor.Green);
+ConsoleEx.WriteLine("警告消息", ConsoleColor.Yellow);
+ConsoleEx.WriteLine("错误消息", ConsoleColor.Red);
+ConsoleEx.WriteLine("信息消息", ConsoleColor.Blue);
+
+// 不换行输出
+ConsoleEx.Write("处理中... ", ConsoleColor.Cyan);
+ConsoleEx.WriteLine("完成!", ConsoleColor.Green);
+
+// 应用程序结束时优雅关闭异步控制台
+await ConsoleEx.ShutdownAsync();
+```
+
+### 高级用法
+
+```csharp
+using Octopus;
+
+// 批量彩色输出示例
+var colors = new[] { 
+    ConsoleColor.Red, ConsoleColor.Yellow, ConsoleColor.Green, 
+    ConsoleColor.Blue, ConsoleColor.Magenta, ConsoleColor.Cyan 
+};
+
+var messages = new[] { "错误", "警告", "成功", "信息", "提示", "处理中" };
+
+for (int i = 0; i < messages.Length; i++)
+{
+    ConsoleEx.WriteLine($"[{messages[i]}] 这是一条{messages[i]}消息", colors[i]);
+    await Task.Delay(500); // 模拟处理过程
+}
+
+ConsoleEx.WriteLine("所有消息处理完成", ConsoleColor.White);
+
+// 应用程序退出前等待所有消息写入完成
+await ConsoleEx.ShutdownAsync(timeout: 3000);
+```
+
+### 性能优势
+
+- **非阻塞输出**：控制台写入操作在独立线程中执行，不阻塞主线程
+- **队列缓冲**：内置消息队列，支持高频率输出场景
+- **异常安全**：内置异常处理，确保应用稳定性
+- **资源管理**：支持优雅关闭，避免资源泄露
+
 ## AI客户端（支持OpenAI、Llama）
 
 - 简易的AI交互客户端
@@ -60,6 +118,7 @@ dotnet build
 - [AI客户端使用](AIClient.md)
 - [谷歌云盘下载](Google.md)
 - [控制台进度条](ConsoleShow.md)
+- **异步彩色控制台输出 (ConsoleEx)** - 内置文档注释和智能提示支持
 
 ## 🤝 贡献
 
