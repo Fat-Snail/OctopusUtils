@@ -32,6 +32,7 @@
     <RepositoryUrl>https://github.com/Fat-Snail/OctopusUtils</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Octopus核心库;$(AssemblyName)</PackageTags>
+    <PackageIcon>favicon.png</PackageIcon>
     <PackageReleaseNotes>Octopus核心库；谷歌云盘下载工具类；</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -41,6 +42,9 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="..\favicon.png" Link="favicon.png" PackagePath="\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="../README.md" Pack="true" PackagePath="/"/>
   </ItemGroup>

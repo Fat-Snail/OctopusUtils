@@ -28,6 +28,7 @@
     <RepositoryUrl>https://github.com/Fat-Snail/OctopusUtils</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Octopus分词(基于结巴分词);$(AssemblyName)</PackageTags>
+    <PackageIcon>favicon.png</PackageIcon>
     <PackageReleaseNotes>Octopus分词(基于结巴分词)</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -61,7 +62,9 @@
     <None Remove="Jieba\Segmenter\Resources\idf.txt"/>
     <EmbeddedResource Include="Jieba\Segmenter\Resources\idf.txt"/>
   </ItemGroup>
-
+  <ItemGroup>
+    <Content Include="..\favicon.png" Link="favicon.png" PackagePath="\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="../README.md" Pack="true" PackagePath="/"/>
   </ItemGroup>
