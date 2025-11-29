@@ -1,4 +1,4 @@
-﻿using Octopus.Tools;
+﻿using System;
 
 namespace Octopus;
 
@@ -12,21 +12,49 @@ public static class ConsoleEx
     /// </summary>
     /// <param name="message">要写入的消息内容</param>
     /// <param name="consoleColor">控制台文本颜色，默认为绿色</param>
-    public static void Write(string message, System.ConsoleColor consoleColor = System.ConsoleColor.Green) =>
-        AsyncConsole.Write(ConsoleMessage.Write(message, consoleColor));
+    public static void Write(string message, ConsoleColor consoleColor = ConsoleColor.Green) =>
+        Octopus.Tools.AsyncConsole.Write(Octopus.Tools.ConsoleMessage.Write(message, consoleColor));
 
     /// <summary>
     /// 向控制台写入指定颜色的消息（换行）
     /// </summary>
     /// <param name="message">要写入的消息内容</param>
     /// <param name="consoleColor">控制台文本颜色，默认为绿色</param>
-    public static void WriteLine(string message, System.ConsoleColor consoleColor = System.ConsoleColor.Green) =>
-        AsyncConsole.Write(ConsoleMessage.WriteLine(message, consoleColor));
+    public static void WriteLine(string message, ConsoleColor consoleColor = ConsoleColor.Green) =>
+        Octopus.Tools.AsyncConsole.Write(Octopus.Tools.ConsoleMessage.WriteLine(message, consoleColor));
+
+    /// <summary>
+    /// 输出信息级别日志消息（绿色）
+    /// </summary>
+    /// <param name="message">日志消息内容</param>
+    public static void Info(string message) =>
+        WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [INFO] {message}", ConsoleColor.Green);
+
+    /// <summary>
+    /// 输出调试级别日志消息（蓝色）
+    /// </summary>
+    /// <param name="message">日志消息内容</param>
+    public static void Debug(string message) =>
+        WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [DEBUG] {message}", ConsoleColor.Blue);
+
+    /// <summary>
+    /// 输出警告级别日志消息（黄色）
+    /// </summary>
+    /// <param name="message">日志消息内容</param>
+    public static void Warn(string message) =>
+        WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [WARN] {message}", ConsoleColor.Yellow);
+
+    /// <summary>
+    /// 输出错误级别日志消息（红色）
+    /// </summary>
+    /// <param name="message">日志消息内容</param>
+    public static void Error(string message) =>
+        WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [ERROR] {message}", ConsoleColor.Red);
 
     /// <summary>
     /// 优雅关闭异步控制台，等待所有消息处理完成
     /// </summary>
     /// <param name="timeout">等待超时时间（毫秒），默认为5秒</param>
-    public static Task ShutdownAsync(int timeout = 5000) =>
-        AsyncConsole.ShutdownAsync(timeout);
+    public static System.Threading.Tasks.Task ShutdownAsync(int timeout = 5000) =>
+        Octopus.Tools.AsyncConsole.ShutdownAsync(timeout);
 }

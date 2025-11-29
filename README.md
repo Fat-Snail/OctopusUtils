@@ -49,6 +49,24 @@ ConsoleEx.WriteLine("完成!", ConsoleColor.Green);
 await ConsoleEx.ShutdownAsync();
 ```
 
+### 日志级别输出（带时间戳）
+
+```csharp
+using Octopus;
+
+// 带时间戳的日志输出
+ConsoleEx.Info("应用程序启动成功");
+ConsoleEx.Debug("调试信息：用户ID = 12345");
+ConsoleEx.Warn("磁盘空间不足，请及时清理");
+ConsoleEx.Error("数据库连接失败，请检查配置");
+
+// 输出示例：
+// 2023-10-27 14:30:15 [INFO] 应用程序启动成功
+// 2023-10-27 14:30:16 [DEBUG] 调试信息：用户ID = 12345
+// 2023-10-27 14:30:17 [WARN] 磁盘空间不足，请及时清理
+// 2023-10-27 14:30:18 [ERROR] 数据库连接失败，请检查配置
+```
+
 ### 高级用法
 
 ```csharp
