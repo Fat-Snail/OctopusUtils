@@ -99,6 +99,96 @@ await ConsoleEx.ShutdownAsync(timeout: 3000);
 - **异常安全**：内置异常处理，确保应用稳定性
 - **资源管理**：支持优雅关闭，避免资源泄露
 
+## 智能重试机制 (Utils.RetryMethod)
+
+- 🔄 自动重试失败的操作，提高应用稳定性
+- ⚡ 支持同步和异步操作
+- 🔧 可配置重试次数、间隔时间
+- 📊 提供重试回调，实时监控重试过程
+- ✅ 异常安全，失败时提供详细错误信息
+
+### 有返回值的方法重试
+
+```csharp
+using Octopus;
+
+// 基本重试 - 返回结果
+var result = Utils.RetryMethod(() => 
+{
+    // 可能会失败的操作
+    return SomeMethodThatMightFail();
+});
+
+// 带重试回调
+var data = Utils.RetryMethod(() => 
+{
+    return DownloadDataFromRemote();
+}, 
+maxRetryCount: 5, 
+sleepTime: 500,
+onRetry: (attempt, ex) => 
+{
+    ConsoleEx.Warn($"第{attempt}次重试失败: {ex.Message}");
+});
+
+// 失败时抛出异常
+try
+{
+    var criticalResult = Utils.RetryMethod(() => 
+    {
+        return CriticalOperation();
+    }, throwOnFailure: true);
+}
+catch (Exception ex)
+{
+    ConsoleEx.Error(ex);
+}
+```
+
+### 无返回值的方法重试
+
+```csharp
+using Octopus;
+
+// 基本重试 - 无返回值
+Utils.RetryMethod(() => 
+{
+    // 可能会失败的操作
+    SomeActionThatMightFail();
+});
+
+// 带重试回调的重试
+Utils.RetryMethod(() => 
+{
+    UploadFileToServer();
+}, 
+maxRetryCount: 3,
+onRetry: (attempt, ex) => 
+{
+    ConsoleEx.Info($"正在重试第{attempt}次...");
+});
+
+// 异步操作重试
+await Utils.RetryMethodAsync(async () => 
+{
+    await ProcessDataAsync();
+});
+
+// 异步操作带返回值
+var asyncResult = await Utils.RetryMethodAsync(async () => 
+{
+    return await FetchDataFromApiAsync();
+});
+```
+
+### 使用场景
+
+- **网络请求**：HTTP请求失败时自动重试
+- **数据库操作**：连接失败时重试连接
+- **文件操作**：文件被占用时等待重试
+- **外部服务**：调用第三方服务失败时重试
+- **资源竞争**：处理多线程环境下的资源竞争
+
 ## AI客户端（支持OpenAI、Llama）
 
 - 简易的AI交互客户端

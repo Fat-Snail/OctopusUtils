@@ -72,7 +72,7 @@ public class AIClient : IDisposable
     }
 
 
-    public static AIClient CreateAiChat(string name)
+    public static AIClient CreateAiChat(String name)
     {
         return _clientCache.GetItem(name, k => new AIClient(k));
     }
@@ -103,19 +103,19 @@ public class AIClient : IDisposable
 
     public class AISetting
     {
-        public string ApiDomain { get; set; }
-        public string ApiKey { get; set; }
-        public string DefaultModel { get; set; }
+        public String ApiDomain { get; set; }
+        public String ApiKey { get; set; }
+        public String DefaultModel { get; set; }
     }
 }
 
 public class CompletionRequest
 {
     [JsonPropertyName("model")]
-    public string Model { get; set; }
+    public String Model { get; set; }
 
     [JsonPropertyName("prompt")]
-    public string[] Prompts { get; set; } //= new string[0];
+    public String[] Prompts { get; set; } //= new string[0];
     [JsonPropertyName("messages")]
     public List<CompletionMessage> Messages { get; set; } = new List<CompletionMessage>();
 
@@ -147,20 +147,20 @@ public class CompletionRequest
     public String[] Stop { get; set; } = null;
 
     [JsonPropertyName("presence_penalty")]
-    public double PresencePenalty { get; set; } = 0;
+    public Double PresencePenalty { get; set; } = 0;
 
     [JsonPropertyName("frequency_penalty")]
-    public double FrequencyPenalty { get; set; } = 0;
+    public Double FrequencyPenalty { get; set; } = 0;
 
     [JsonPropertyName("best_of")]
-    public int BestOf { get; set; } = 1;
+    public Int32 BestOf { get; set; } = 1;
 
     [JsonPropertyName("logit_bias")]
-    public Dictionary<string, int> LogitBias { get; set; } =
-        new Dictionary<string, int>();
+    public Dictionary<String, Int32> LogitBias { get; set; } =
+        new Dictionary<String, Int32>();
 
     [JsonPropertyName("user")]
-    public string User { get; set; } = string.Empty;
+    public String User { get; set; } = String.Empty;
 
 
 }
@@ -168,16 +168,16 @@ public class CompletionRequest
 public class CompletionResponse
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public String Id { get; set; }
 
     [JsonPropertyName("_object")]
-    public string Object { get; set; }
+    public String Object { get; set; }
 
     [JsonPropertyName("created")]
-    public int Created { get; set; }
+    public Int32 Created { get; set; }
 
     [JsonPropertyName("model")]
-    public string Model { get; set; }
+    public String Model { get; set; }
 
     [JsonPropertyName("choices")]
     public CompletionChoice[] Choices { get; set; }
@@ -189,31 +189,31 @@ public class CompletionResponse
 public class CompletionMessage
 {
     [JsonPropertyName("role")]
-    public string Role { get; set; }
+    public String Role { get; set; }
     [JsonPropertyName("content")]
-    public string Content { get; set; }
+    public String Content { get; set; }
 }
 
 public class CompletionChoice
 {
     [JsonPropertyName("index")]
-    public int Index { get; set; }
+    public Int32 Index { get; set; }
 
     [JsonPropertyName("message")]
     public CompletionMessage Message { get; set; }
 
     [JsonPropertyName("finish_reason")]
-    public string FinishReason { get; set; }
+    public String FinishReason { get; set; }
 }
 
 public class CompletionUsage
 {
     [JsonPropertyName("prompt_tokens")]
-    public int PromptTokens { get; set; }
+    public Int32 PromptTokens { get; set; }
 
     [JsonPropertyName("completion_tokens")]
-    public int CompletionTokens { get; set; }
+    public Int32 CompletionTokens { get; set; }
 
     [JsonPropertyName("total_tokens")]
-    public int TotalTokens { get; set; }
+    public Int32 TotalTokens { get; set; }
 }

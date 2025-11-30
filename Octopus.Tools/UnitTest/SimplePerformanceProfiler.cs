@@ -11,14 +11,14 @@ public class SimplePerformanceProfiler : IDisposable
 {
     private readonly Stopwatch _stopwatch;
     private readonly List<PerformanceStep> _steps;
-    private readonly string _name;
-    private bool _disposed;
+    private readonly String _name;
+    private Boolean _disposed;
 
-    public string Name => _name;
+    public String Name => _name;
     public TimeSpan Duration => _stopwatch.Elapsed;
     public IReadOnlyList<PerformanceStep> Steps => _steps.AsReadOnly();
 
-    private SimplePerformanceProfiler(string name)
+    private SimplePerformanceProfiler(String name)
     {
         _name = name;
         _stopwatch = Stopwatch.StartNew();
@@ -28,7 +28,7 @@ public class SimplePerformanceProfiler : IDisposable
     /// <summary>
     /// 开始一个新的性能分析会话
     /// </summary>
-    public static SimplePerformanceProfiler StartNew(string name = "Root")
+    public static SimplePerformanceProfiler StartNew(String name = "Root")
     {
         return new SimplePerformanceProfiler(name);
     }
@@ -36,7 +36,7 @@ public class SimplePerformanceProfiler : IDisposable
     /// <summary>
     /// 创建一个性能分析步骤
     /// </summary>
-    public PerformanceStep Step(string stepName)
+    public PerformanceStep Step(String stepName)
     {
         var step = new PerformanceStep(stepName);
         _steps.Add(step);
@@ -67,12 +67,12 @@ public class SimplePerformanceProfiler : IDisposable
 public class PerformanceStep : IDisposable
 {
     private readonly Stopwatch _stopwatch;
-    private bool _disposed;
+    private Boolean _disposed;
 
-    public string Name { get; }
+    public String Name { get; }
     public TimeSpan Duration => _stopwatch.Elapsed;
 
-    public PerformanceStep(string name)
+    public PerformanceStep(String name)
     {
         Name = name;
         _stopwatch = Stopwatch.StartNew();
@@ -93,10 +93,10 @@ public class PerformanceStep : IDisposable
 /// </summary>
 public class PerformanceReport
 {
-    public string Name { get; }
+    public String Name { get; }
     public TimeSpan TotalDuration { get; }
     public IReadOnlyList<PerformanceStep> Steps { get; }
-    public string HierarchyTree { get; }
+    public String HierarchyTree { get; }
 
     public PerformanceReport(SimplePerformanceProfiler profiler)
     {
@@ -106,7 +106,7 @@ public class PerformanceReport
         HierarchyTree = BuildHierarchyTree(profiler);
     }
 
-    private string BuildHierarchyTree(SimplePerformanceProfiler profiler)
+    private String BuildHierarchyTree(SimplePerformanceProfiler profiler)
     {
         var sb = new StringBuilder();
         sb.AppendLine($"├─ {profiler.Name}: {profiler.Duration.TotalMilliseconds:F2}ms");
@@ -119,7 +119,7 @@ public class PerformanceReport
         return sb.ToString();
     }
 
-    public override string ToString()
+    public override String ToString()
     {
         var sb = new StringBuilder();
         sb.AppendLine($"性能分析报告: {Name}");
@@ -138,7 +138,7 @@ public static class ProfilerHelper
     /// <summary>
     /// 分析指定方法的执行性能
     /// </summary>
-    public static T Profile<T>(string operationName, Func<T> operation)
+    public static T Profile<T>(String operationName, Func<T> operation)
     {
         using var profiler = SimplePerformanceProfiler.StartNew(operationName);
         return operation();
@@ -147,7 +147,7 @@ public static class ProfilerHelper
     /// <summary>
     /// 分析指定方法的执行性能（无返回值）
     /// </summary>
-    public static void Profile(string operationName, Action operation)
+    public static void Profile(String operationName, Action operation)
     {
         using var profiler = SimplePerformanceProfiler.StartNew(operationName);
         operation();

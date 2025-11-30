@@ -90,7 +90,7 @@ public static class AsyncConsole
     /// 优雅关闭异步控制台，等待所有消息处理完成
     /// </summary>
     /// <param name="timeout">等待超时时间（毫秒），默认为5秒</param>
-    public static async Task ShutdownAsync(int timeout = 5000)
+    public static async Task ShutdownAsync(Int32 timeout = 5000)
     {
         _messageQueue.CompleteAdding();
         
@@ -143,7 +143,7 @@ public readonly struct ConsoleMessage
     /// <summary>
     /// 消息文本内容
     /// </summary>
-    public string Text { get; }
+    public String Text { get; }
 
     /// <summary>
     /// 控制台文本颜色
@@ -153,7 +153,7 @@ public readonly struct ConsoleMessage
     /// <summary>
     /// 是否在消息后添加换行符
     /// </summary>
-    public bool NewLine { get; }
+    public Boolean NewLine { get; }
 
     /// <summary>
     /// 初始化控制台消息
@@ -161,9 +161,9 @@ public readonly struct ConsoleMessage
     /// <param name="text">消息文本</param>
     /// <param name="color">文本颜色</param>
     /// <param name="newLine">是否换行</param>
-    public ConsoleMessage(string text, ConsoleColor color, bool newLine = true)
+    public ConsoleMessage(String text, ConsoleColor color, Boolean newLine = true)
     {
-        Text = text ?? string.Empty;
+        Text = text ?? String.Empty;
         Color = color;
         NewLine = newLine;
     }
@@ -174,7 +174,7 @@ public readonly struct ConsoleMessage
     /// <param name="text">消息文本</param>
     /// <param name="color">文本颜色</param>
     /// <returns>控制台消息实例</returns>
-    public static ConsoleMessage WriteLine(string text, ConsoleColor color) => new(text, color, true);
+    public static ConsoleMessage WriteLine(String text, ConsoleColor color) => new(text, color, true);
 
     /// <summary>
     /// 创建不带换行的控制台消息
@@ -182,5 +182,5 @@ public readonly struct ConsoleMessage
     /// <param name="text">消息文本</param>
     /// <param name="color">文本颜色</param>
     /// <returns>控制台消息实例</returns>
-    public static ConsoleMessage Write(string text, ConsoleColor color) => new(text, color, false);
+    public static ConsoleMessage Write(String text, ConsoleColor color) => new(text, color, false);
 }

@@ -4,18 +4,18 @@ using System.Threading;
 
 namespace Octopus.Tools;
 
-public class ConsoleProgressBar : IDisposable, IProgress<double>
+public class ConsoleProgressBar : IDisposable, IProgress<Double>
 {
-    private const int blockCount = 10;
+    private const Int32 blockCount = 10;
     private readonly TimeSpan animationInterval = TimeSpan.FromSeconds(1.0 / 8);
-    private const string animation = @"|/-\";
+    private const String animation = @"|/-\";
 
     private readonly Timer timer;
 
-    private double currentProgress = 0;
-    private string currentText = string.Empty;
-    private bool disposed = false;
-    private int animationIndex = 0;
+    private Double currentProgress = 0;
+    private String currentText = String.Empty;
+    private Boolean disposed = false;
+    private Int32 animationIndex = 0;
 
     public ConsoleProgressBar()
     {
@@ -30,23 +30,23 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
         }
     }
 
-    public void Report(double value)
+    public void Report(Double value)
     {
         // Make sure value is in [0..1] range
         value = Math.Max(0, Math.Min(1, value));
         Interlocked.Exchange(ref currentProgress, value);
     }
 
-    private void TimerHandler(object state)
+    private void TimerHandler(Object state)
     {
         lock (timer)
         {
             if (disposed) return;
 
-            var progressBlockCount = (int)(currentProgress * blockCount);
-            var percent = (int)(currentProgress * 100);
-            var text = string.Format("[{0}{1}] {2,3}% {3}",
-                new string('#', progressBlockCount), new string('-', blockCount - progressBlockCount),
+            var progressBlockCount = (Int32)(currentProgress * blockCount);
+            var percent = (Int32)(currentProgress * 100);
+            var text = String.Format("[{0}{1}] {2,3}% {3}",
+                new String('#', progressBlockCount), new String('-', blockCount - progressBlockCount),
                 percent,
                 animation[animationIndex++ % animation.Length]);
             UpdateText(text);
@@ -55,7 +55,7 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
         }
     }
 
-    private void UpdateText(string text)
+    private void UpdateText(String text)
     {
         // Get length of common portion
         var commonPrefixLength = 0;
@@ -94,7 +94,7 @@ public class ConsoleProgressBar : IDisposable, IProgress<double>
         lock (timer)
         {
             disposed = true;
-            UpdateText(string.Empty);
+            UpdateText(String.Empty);
         }
     }
 }

@@ -43,7 +43,7 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
         /// <summary>数值</summary>
         public TValue Value;
 
-        public CacheItem(TValue value, int seconds)
+        public CacheItem(TValue value, Int32 seconds)
         {
             Value = value;
             if (seconds > 0) ExpiredTime = DateTime.Now.AddSeconds(seconds);
@@ -53,7 +53,7 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
         public DateTime ExpiredTime { get; set; }
 
         /// <summary>是否过期</summary>
-        public bool Expired => ExpiredTime <= DateTime.Now;
+        public Boolean Expired => ExpiredTime <= DateTime.Now;
     }
 
     #endregion
@@ -61,22 +61,22 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
     #region 属性
 
     /// <summary>过期时间。单位是秒，默认0秒，表示永不过期</summary>
-    public int Expire { get; set; }
+    public Int32 Expire { get; set; }
 
     /// <summary>过期清理时间，缓存项过期后达到这个时间时，将被移除缓存。单位是秒，默认0秒，表示不清理过期项</summary>
-    public int ClearPeriod { get; set; }
+    public Int32 ClearPeriod { get; set; }
 
     /// <summary>异步更新。默认false</summary>
-    public bool Asynchronous { get; set; }
+    public Boolean Asynchronous { get; set; }
 
     /// <summary>移除过期缓存项时，自动调用其Dispose。默认false</summary>
-    public bool AutoDispose { get; set; }
+    public Boolean AutoDispose { get; set; }
 
     /// <summary>是否缓存默认值，有时候委托返回默认值不希望被缓存，而是下一次尽快进行再次计算。默认true</summary>
-    public bool CacheDefault { get; set; }
+    public Boolean CacheDefault { get; set; }
 
     /// <summary>延迟加锁，字典没有数据时，先计算结果再加锁加入字典，避免大量不同键的插入操作形成排队影响性能。默认false</summary>
-    public bool DelayLock { get; set; }
+    public Boolean DelayLock { get; set; }
 
     private readonly ConcurrentDictionary<TKey, CacheItem> _items;
 
@@ -337,7 +337,7 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
     }
 
     /// <summary>移除过期的缓存项</summary>
-    private void RemoveNotAlive(object state)
+    private void RemoveNotAlive(Object state)
     {
         var expriod = ClearPeriod;
         if (expriod <= 0) return;
@@ -383,7 +383,7 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
     /// <summary></summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public bool ContainsKey(TKey key)
+    public Boolean ContainsKey(TKey key)
     {
         return _items.ContainsKey(key);
     }
@@ -394,7 +394,7 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
     /// <summary></summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public bool Remove(TKey key)
+    public Boolean Remove(TKey key)
     {
         CacheItem temp;
         var result = _items.TryRemove(key, out temp);
@@ -406,7 +406,7 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
     /// <param name="key"></param>
     /// <param name="value">数值</param>
     /// <returns></returns>
-    public bool TryGetValue(TKey key, out TValue value)
+    public Boolean TryGetValue(TKey key, out TValue value)
     {
         CacheItem item = null;
         var rs = _items.TryGetValue(key, out item);
@@ -440,7 +440,7 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
     /// <summary></summary>
     /// <param name="item"></param>
     /// <returns></returns>
-    public bool Contains(KeyValuePair<TKey, TValue> item)
+    public Boolean Contains(KeyValuePair<TKey, TValue> item)
     {
         return ContainsKey(item.Key);
     }
@@ -448,21 +448,21 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
     /// <summary></summary>
     /// <param name="array"></param>
     /// <param name="arrayIndex"></param>
-    public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+    public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
     {
         throw new NotImplementedException();
     }
 
     /// <summary></summary>
-    public int Count => _items.Count;
+    public Int32 Count => _items.Count;
 
     /// <summary></summary>
-    public bool IsReadOnly => (_items as ICollection<KeyValuePair<TKey, CacheItem>>).IsReadOnly;
+    public Boolean IsReadOnly => (_items as ICollection<KeyValuePair<TKey, CacheItem>>).IsReadOnly;
 
     /// <summary></summary>
     /// <param name="item"></param>
     /// <returns></returns>
-    public bool Remove(KeyValuePair<TKey, TValue> item)
+    public Boolean Remove(KeyValuePair<TKey, TValue> item)
     {
         return Remove(item.Key);
     }

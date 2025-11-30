@@ -10,29 +10,29 @@ namespace Octopus.Tools;
 
 public class GoogleFileDownloader : IDisposable
 {
-    private const string GOOGLE_DRIVE_DOMAIN = "drive.google.com";
-    private const string GOOGLE_DRIVE_DOMAIN2 = "https://drive.google.com";
+    private const String GOOGLE_DRIVE_DOMAIN = "drive.google.com";
+    private const String GOOGLE_DRIVE_DOMAIN2 = "https://drive.google.com";
 
     // In the worst case, it is necessary to send 3 download requests to the Drive address
     //   1. an NID cookie is returned instead of a download_warning cookie
     //   2. download_warning cookie returned
     //   3. the actual file is downloaded
-    private const int GOOGLE_DRIVE_MAX_DOWNLOAD_ATTEMPT = 3;
+    private const Int32 GOOGLE_DRIVE_MAX_DOWNLOAD_ATTEMPT = 3;
 
-    public delegate void DownloadProgressChangedEventHandler(object sender, DownloadProgress progress);
+    public delegate void DownloadProgressChangedEventHandler(Object sender, DownloadProgress progress);
 
     // Custom download progress reporting (needed for Google Drive)
     public class DownloadProgress
     {
-        public long BytesReceived, TotalBytesToReceive;
-        public object UserState;
+        public Int64 BytesReceived, TotalBytesToReceive;
+        public Object UserState;
 
-        public int ProgressPercentage
+        public Int32 ProgressPercentage
         {
             get
             {
                 if (TotalBytesToReceive > 0L)
-                    return (int)(((double)BytesReceived / TotalBytesToReceive) * 100);
+                    return (Int32)(((Double)BytesReceived / TotalBytesToReceive) * 100);
 
                 return 0;
             }
@@ -44,13 +44,13 @@ public class GoogleFileDownloader : IDisposable
     {
         private class CookieContainer
         {
-            private readonly Dictionary<string, string> cookies = new Dictionary<string, string>();
+            private readonly Dictionary<String, String> cookies = new Dictionary<String, String>();
 
-            public string this[Uri address]
+            public String this[Uri address]
             {
                 get
                 {
-                    string cookie;
+                    String cookie;
                     if (cookies.TryGetValue(address.Host, out cookie))
                         return cookie;
 
@@ -113,8 +113,8 @@ public class GoogleFileDownloader : IDisposable
                     var splitIndex = rangeLengthHeader[0].LastIndexOf('/');
                     if (splitIndex >= 0 && splitIndex < rangeLengthHeader[0].Length - 1)
                     {
-                        long length;
-                        if (long.TryParse(rangeLengthHeader[0].Substring(splitIndex + 1), out length))
+                        Int64 length;
+                        if (Int64.TryParse(rangeLengthHeader[0].Substring(splitIndex + 1), out length))
                             ContentRangeTarget.TotalBytesToReceive = length;
                     }
                 }
@@ -128,13 +128,13 @@ public class GoogleFileDownloader : IDisposable
     private readonly DownloadProgress downloadProgress;
 
     private Uri downloadAddress;
-    private string downloadPath;
+    private String downloadPath;
 
-    private bool asyncDownload;
-    private object userToken;
+    private Boolean asyncDownload;
+    private Object userToken;
 
-    private bool downloadingDriveFile;
-    private int driveDownloadAttempt;
+    private Boolean downloadingDriveFile;
+    private Int32 driveDownloadAttempt;
 
     public event DownloadProgressChangedEventHandler DownloadProgressChanged;
     public event AsyncCompletedEventHandler DownloadFileCompleted;
@@ -148,17 +148,17 @@ public class GoogleFileDownloader : IDisposable
         downloadProgress = new DownloadProgress();
     }
 
-    public void DownloadFile(string address, string fileName)
+    public void DownloadFile(String address, String fileName)
     {
         DownloadFile(address, fileName, false, null);
     }
 
-    public void DownloadFileAsync(string address, string fileName, object userToken = null)
+    public void DownloadFileAsync(String address, String fileName, Object userToken = null)
     {
         DownloadFile(address, fileName, true, userToken);
     }
 
-    private void DownloadFile(string address, string fileName, bool asyncDownload, object userToken)
+    private void DownloadFile(String address, String fileName, Boolean asyncDownload, Object userToken)
     {
         downloadingDriveFile = address.StartsWith(GOOGLE_DRIVE_DOMAIN) || address.StartsWith(GOOGLE_DRIVE_DOMAIN2);
         if (downloadingDriveFile)
@@ -198,7 +198,7 @@ public class GoogleFileDownloader : IDisposable
             webClient.DownloadFileAsync(downloadAddress, downloadPath, userToken);
     }
 
-    private void DownloadProgressChangedCallback(object sender, DownloadProgressChangedEventArgs e)
+    private void DownloadProgressChangedCallback(Object sender, DownloadProgressChangedEventArgs e)
     {
         if (DownloadProgressChanged != null)
         {
@@ -210,7 +210,7 @@ public class GoogleFileDownloader : IDisposable
         }
     }
 
-    private void DownloadFileCompletedCallback(object sender, AsyncCompletedEventArgs e)
+    private void DownloadFileCompletedCallback(Object sender, AsyncCompletedEventArgs e)
     {
         if (!downloadingDriveFile)
         {
@@ -233,7 +233,7 @@ public class GoogleFileDownloader : IDisposable
     // Downloading large files from Google Drive prompts a warning screen and requires manual confirmation
     // Consider that case and try to confirm the download automatically if warning prompt occurs
     // Returns true, if no more download requests are necessary
-    private bool ProcessDriveDownload()
+    private Boolean ProcessDriveDownload()
     {
         var downloadedFile = new FileInfo(downloadPath);
         if (downloadedFile == null)
@@ -244,13 +244,13 @@ public class GoogleFileDownloader : IDisposable
             return true;
 
         // Downloaded file might be the confirmation page, check it
-        string content;
+        String content;
         using (var reader = downloadedFile.OpenText())
         {
             // Confirmation page starts with <!DOCTYPE html>, which can be preceeded by a newline
-            var header = new char[20];
+            var header = new Char[20];
             var readCount = reader.ReadBlock(header, 0, 20);
-            if (readCount < 20 || !(new string(header).Contains("<!DOCTYPE html>")))
+            if (readCount < 20 || !(new String(header).Contains("<!DOCTYPE html>")))
                 return true;
 
             content = reader.ReadToEnd();
@@ -300,10 +300,10 @@ public class GoogleFileDownloader : IDisposable
     // - drive.google.com/open?id=FILEID&resourcekey=RESOURCEKEY
     // - drive.google.com/file/d/FILEID/view?usp=sharing&resourcekey=RESOURCEKEY
     // - drive.google.com/uc?id=FILEID&export=download&resourcekey=RESOURCEKEY
-    private string GetGoogleDriveDownloadAddress(string address)
+    private String GetGoogleDriveDownloadAddress(String address)
     {
         var index = address.IndexOf("id=");
-        int closingIndex;
+        Int32 closingIndex;
         if (index > 0)
         {
             index += 3;
@@ -315,7 +315,7 @@ public class GoogleFileDownloader : IDisposable
         {
             index = address.IndexOf("file/d/");
             if (index < 0) // address is not in any of the supported forms
-                return string.Empty;
+                return String.Empty;
 
             index += 7;
 
@@ -339,11 +339,11 @@ public class GoogleFileDownloader : IDisposable
                 closingIndex = address.Length;
 
             var resourceKey = address.Substring(index, closingIndex - index);
-            return string.Concat("https://drive.google.com/uc?id=", fileID, "&export=download&resourcekey=",
+            return String.Concat("https://drive.google.com/uc?id=", fileID, "&export=download&resourcekey=",
                 resourceKey, "&confirm=t");
         }
         else
-            return string.Concat("https://drive.google.com/uc?id=", fileID, "&export=download&confirm=t");
+            return String.Concat("https://drive.google.com/uc?id=", fileID, "&export=download&confirm=t");
     }
 
     public void Dispose()
