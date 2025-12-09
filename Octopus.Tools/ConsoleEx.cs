@@ -56,7 +56,7 @@ public static class ConsoleEx
     /// </summary>
     /// <param name="exception">异常对象</param>
     public static void Error(Exception exception) =>
-        WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [ERROR] {exception.GetType().Name}: {exception.Message}\nStackTrace: {exception.StackTrace}", ConsoleColor.Red);
+        Error($"{exception.GetType().Name}: {exception.Message}\nStackTrace: {exception.StackTrace}");
 
     /// <summary>
     /// 优雅关闭异步控制台，等待所有消息处理完成
