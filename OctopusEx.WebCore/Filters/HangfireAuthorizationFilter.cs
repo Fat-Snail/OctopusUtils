@@ -7,6 +7,9 @@ namespace OctopusEx.WebCore.Filters;
 
 public class HangfireAuthorizationFilter: IDashboardAuthorizationFilter
 {
+    public string Username { get; set; } = "admin";
+    public string Password { get; set; } = "password";
+    
     public bool Authorize([NotNull] DashboardContext context)
     {
         var httpContext = context.GetHttpContext();
@@ -45,7 +48,7 @@ public class HangfireAuthorizationFilter: IDashboardAuthorizationFilter
             return false;
         }
 
-        if (username == "admin" && password == "admin")
+        if (username == Username && password == Password)
         {
             return true;
         }
