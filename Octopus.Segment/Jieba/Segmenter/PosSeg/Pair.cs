@@ -2,9 +2,9 @@
 {
     public class Pair
     {
-    public String Word { get; set; }
-    public String Flag { get; set; }
-    public Pair(String word, String flag)
+        public String Word { get; set; }
+        public String Flag { get; set; }
+        public Pair(String word, String flag)
         {
             Word = word;
             Flag = flag;

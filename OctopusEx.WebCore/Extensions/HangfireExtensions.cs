@@ -1,7 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OctopusEx.WebCore.Extensions;
 
@@ -13,14 +13,14 @@ public static class HangfireExtensions
     /// <param name="services">服务集合</param>
     /// <param name="configureAction">配置动作</param>
     /// <returns>服务集合</returns>
-    public static IServiceCollection AddHangfireConfiguration(this IServiceCollection services, 
+    public static IServiceCollection AddHangfireConfiguration(this IServiceCollection services,
         Action<Microsoft.Extensions.DependencyInjection.IServiceCollection>? configureAction = null)
     {
         if (configureAction != null)
         {
             configureAction(services);
         }
-        
+
         return services;
     }
 
@@ -53,7 +53,7 @@ public static class HangfireExtensions
     /// <param name="jobName">作业名称</param>
     /// <param name="action">作业动作</param>
     /// <returns>作业标识符</returns>
-    public static string AddBackgroundJob(this IServiceProvider serviceProvider, 
+    public static string AddBackgroundJob(this IServiceProvider serviceProvider,
         string jobName, Expression<Action> action)
     {
         try
@@ -79,7 +79,7 @@ public static class HangfireExtensions
     /// <param name="action">作业动作</param>
     /// <param name="delay">延迟时间</param>
     /// <returns>作业标识符</returns>
-    public static string AddDelayedJob(this IServiceProvider serviceProvider, 
+    public static string AddDelayedJob(this IServiceProvider serviceProvider,
         string jobName, Expression<Action> action, TimeSpan delay)
     {
         try
@@ -105,7 +105,7 @@ public static class HangfireExtensions
     /// <param name="action">作业动作</param>
     /// <param name="cronExpression">Cron表达式</param>
     /// <returns>作业标识符</returns>
-    public static string AddRecurringJob(this IServiceProvider serviceProvider, 
+    public static string AddRecurringJob(this IServiceProvider serviceProvider,
         string jobId, Expression<Action> action, string cronExpression)
     {
         try
@@ -152,7 +152,7 @@ public static class HangfireExtensions
         if (cronExpression == "0 * * * *") return TimeSpan.FromHours(1);   // 每小时
         if (cronExpression == "0 0 * * *") return TimeSpan.FromDays(1);    // 每天
         if (cronExpression == "0 */6 * * *") return TimeSpan.FromHours(6); // 每6小时
-        
+
         return TimeSpan.FromMinutes(1); // 默认每分钟
     }
 }

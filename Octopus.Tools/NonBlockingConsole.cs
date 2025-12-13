@@ -93,10 +93,10 @@ public static class AsyncConsole
     public static async Task ShutdownAsync(Int32 timeout = 5000)
     {
         _messageQueue.CompleteAdding();
-        
+
         var timeoutTask = Task.Delay(TimeSpan.FromMilliseconds(timeout));
         var completedTask = Task.WhenAny(_processingTask, timeoutTask);
-        
+
         try
         {
             await completedTask;

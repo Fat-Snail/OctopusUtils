@@ -1,15 +1,15 @@
-using Hangfire.Annotations;
+﻿using Hangfire.Annotations;
 using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Http;
 
 namespace OctopusEx.WebCore.Filters;
 
 
-public class HangfireAuthorizationFilter: IDashboardAuthorizationFilter
+public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
 {
     public string Username { get; set; } = "admin";
     public string Password { get; set; } = "password";
-    
+
     public bool Authorize([NotNull] DashboardContext context)
     {
         var httpContext = context.GetHttpContext();

@@ -1,9 +1,9 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry.Trace;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace OctopusEx.WebCore.Extensions;
 
@@ -17,7 +17,7 @@ public static class AspireExtensions
 
     private static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
     {
-        
+
         builder.Services.AddOpenTelemetry()
             .ConfigureResource(resource => resource
                 .AddService(serviceName: builder.Environment.ApplicationName,
@@ -56,5 +56,5 @@ public static class AspireExtensions
 
         return builder;
     }
-    
+
 }
