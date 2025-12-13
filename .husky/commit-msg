@@ -1,0 +1,34 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# 使用 Husky 的内置功能来验证提交信息
+commit_msg=$(cat "$1")
+
+# 检查是否是合并提交、回滚提交或其他特殊提交
+if echo "$commit_msg" | grep -E "^(Merge|Revert|Initial commit)" > /dev/null; then
+  echo "🔀 检测到特殊提交类型（合并/回滚/初始提交），跳过格式验证"
+  exit 0
+fi
+
+# 检查是否是合并冲突解决后的提交
+if [ -f .git/MERGE_HEAD ]; then
+  echo "🔀 检测到合并提交，跳过格式验证"
+  exit 0
+fi
+
+# 检查是否是交互式变基过程中的提交
+if [ -f .git/rebase-merge/interactive ] || [ -f .git/rebase-apply/rebasing ]; then
+  echo "🔄 检测到变基提交，跳过格式验证"
+  exit 0
+fi
+
+# 对普通提交进行格式验证
+if ! echo "$commit_msg" | grep -E "^(feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert)(\(.+\))?[:：].{1,}" > /dev/null; then
+  echo "❌ 错误：提交信息格式不正确。"
+  echo "📝 请使用以下格式：<类型>(<范围>): <描述>"
+  echo "🏷️  类型可以是：feat, fix, chore, docs, style, refactor, perf, test, build, ci, revert"
+  echo "💡 示例：feat(auth): 添加登录功能"
+  exit 1
+fi
+
+echo "✅ 提交信息格式验证通过！"

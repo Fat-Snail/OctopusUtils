@@ -1,0 +1,82 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# 检查是否正在进行合并操作
+if [ -f .git/MERGE_HEAD ]; then
+    echo "🔄 检测到正在进行合并操作，跳过提交前检查..."
+    exit 0
+fi
+
+echo "🔍 正在执行提交前检查..."
+
+# 检查是否有最新的远程代码
+echo "🔄 检查代码是否为最新版本..."
+
+# 获取当前分支名
+CURRENT_BRANCH=$(git branch --show-current)
+
+if [ -z "$CURRENT_BRANCH" ]; then
+    echo "❌ 无法获取当前分支信息！"
+    exit 1
+fi
+
+echo "📍 当前分支: $CURRENT_BRANCH"
+
+# 是否跳过远程检查的标志
+SKIP_REMOTE_CHECK=0
+
+# 获取远程及判断分支是否存在
+if git remote | grep -q '^origin$'; then
+    echo "🌐 正在获取远程分支信息..."
+    if ! git fetch origin --quiet; then
+        echo "❌ 无法获取远程分支信息！请检查网络连接。"
+        exit 1
+    fi
+
+    if ! git ls-remote --exit-code origin "refs/heads/$CURRENT_BRANCH" >/dev/null 2>&1; then
+        echo "⚠️  远程不存在分支，跳过远程同步检查。"
+        SKIP_REMOTE_CHECK=1
+    fi
+else
+    echo "⚠️  未配置 origin 远程仓库，跳过远程同步检查。"
+    SKIP_REMOTE_CHECK=1
+fi
+
+# 仅当远程分支存在时才做同步检查
+if [ "$SKIP_REMOTE_CHECK" -eq 0 ]; then
+    LOCAL_COMMIT=$(git rev-parse HEAD)
+    REMOTE_COMMIT=$(git rev-parse origin/$CURRENT_BRANCH 2>/dev/null)
+
+    if [ "$LOCAL_COMMIT" != "$REMOTE_COMMIT" ]; then
+        if git merge-base --is-ancestor HEAD origin/$CURRENT_BRANCH; then
+            echo "❌ 本地代码落后于远程分支！"
+            echo "💡 请先执行: git pull origin $CURRENT_BRANCH"
+            exit 1
+        else
+            echo "⚠️  本地与远程有差异(非简单落后)，请确认同步策略。"
+        fi
+    else
+        echo "✅ 代码已是最新版本！"
+    fi
+fi
+
+# 运行格式检查
+echo "📝 检查代码格式..."
+# 使用项目实际的目录结构
+if ! dotnet format --verify-no-changes --verbosity quiet --exclude "XY.UserRoleManager"; then
+    echo "❌ 代码格式检查失败! 请修复格式问题后再提交。"
+    exit 1
+fi
+
+echo "✅ 代码格式检查通过！"
+
+# 构建时间太久, 考虑暂时注释
+# 运行构建检查
+#echo "🔨 检查项目构建..."
+#if ! dotnet build --configuration Release --no-restore --verbosity quiet --nologo /clp:ErrorsOnly; then
+#    echo "❌ 项目构建失败！请修复构建错误后再提交。"
+#    exit 1
+#fi
+#
+#echo "✅ 项目构建检查通过！"
+
