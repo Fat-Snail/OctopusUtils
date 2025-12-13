@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
 using Hangfire;
+using Hangfire.MemoryStorage;
 
 namespace OctopusEx.WebCore.Extensions;
 
@@ -20,6 +21,28 @@ public static class HangfireExtensions
             configureAction(services);
         }
         
+        return services;
+    }
+
+    /// <summary>
+    /// 添加简化的 Hangfire 配置（使用内存存储）
+    /// </summary>
+    /// <param name="services">服务集合</param>
+    /// <param name="workerCount">工作进程数量，默认为 1</param>
+    /// <returns>服务集合</returns>
+    public static IServiceCollection AddSimpleHangfire(this IServiceCollection services, int workerCount = 1)
+    {
+        services.AddHangfire(configuration => configuration
+            .SetDataCompatibilityLevel(Hangfire.CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseMemoryStorage());
+
+        services.AddHangfireServer(options =>
+        {
+            options.WorkerCount = workerCount;
+        });
+
         return services;
     }
 
