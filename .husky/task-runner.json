@@ -2,13 +2,18 @@
    "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
    "tasks": [
       {
-         "name": "welcome-message-example",
-         "command": "bash",
-         "args": [ "-c", "echo Husky.Net is awesome!" ],
-         "windows": {
-            "command": "cmd",
-            "args": ["/c", "echo Husky.Net is awesome!" ]
-         }
+         "name": "build-check",
+         "command": "dotnet",
+         "args": [ "build", "--no-restore", "--verbosity", "quiet" ],
+         "include": ["*.sln"],
+         "continueOnError": false
+      },
+      {
+         "name": "format-check",
+         "command": "dotnet",
+         "args": [ "format", "--verify-no-changes", "--verbosity", "quiet", "--exclude", "**/bin/**", "--exclude", "**/obj/**" ],
+         "include": ["*.sln"],
+         "continueOnError": true
       }
    ]
 }

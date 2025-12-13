@@ -226,6 +226,7 @@ dotnet build
 - [AI客户端使用](AIClient.md)
 - [谷歌云盘下载](Google.md)
 - [控制台进度条](ConsoleShow.md)
+- [代码质量检查 (Husky.NET)](HUSKY.md)
 - **异步彩色控制台输出 (ConsoleEx)** - 内置文档注释和智能提示支持
 
 ## 🤝 贡献

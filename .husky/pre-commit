@@ -60,15 +60,16 @@ if [ "$SKIP_REMOTE_CHECK" -eq 0 ]; then
     fi
 fi
 
-# 运行格式检查
-echo "📝 检查代码格式..."
-# 使用项目实际的目录结构
-if ! dotnet format --verify-no-changes --verbosity quiet --exclude "XY.UserRoleManager"; then
-    echo "❌ 代码格式检查失败! 请修复格式问题后再提交。"
+# 运行 Husky.NET 任务
+echo "🔍 运行代码质量检查..."
+
+# 使用 Husky.NET 运行配置的任务
+if ! dotnet husky run; then
+    echo "❌ 代码质量检查失败！请修复问题后再提交。"
     exit 1
 fi
 
-echo "✅ 代码格式检查通过！"
+echo "✅ 代码质量检查通过！"
 
 # 构建时间太久, 考虑暂时注释
 # 运行构建检查
