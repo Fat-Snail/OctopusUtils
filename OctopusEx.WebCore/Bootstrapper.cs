@@ -46,7 +46,7 @@ public class Bootstrapper
     public virtual void Start() {
         ConfigureServices();
         ResolveServiceRegistrar();
-        //ExecuteServiceActions();
+        ExecuteServiceActions();
     }
 
     /// <summary>
@@ -67,6 +67,12 @@ public class Bootstrapper
         var types = _typeFinder.Find<IServiceRegistrar>();
         var instances = types.Select( type => Reflection.CreateInstance<IServiceRegistrar>( type ) ).Where( t => t.Enabled ).OrderBy( t => t.OrderId ).ToList();
         var context = new ServiceContext( _hostBuilder, _assemblyFinder, _typeFinder );
+
+        // foreach (var t in instances)
+        // {
+        //     _serviceActions.Add( t.Register( context ) );
+        // }
+        
         instances.ForEach( t => _serviceActions.Add( t.Register( context ) ) );
     }
 
