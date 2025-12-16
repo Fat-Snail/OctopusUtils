@@ -108,15 +108,15 @@ public static class Reflection
 
     #region CreateInstance(动态创建实例)
 
-    // /// <summary>
-    // /// 动态创建实例
-    // /// </summary>
-    // /// <typeparam name="T">目标类型</typeparam>
-    // /// <param name="type">类型</param>
-    // /// <param name="parameters">传递给构造函数的参数</param>        
-    // public static T CreateInstance<T>( Type type, params object[] parameters ) {
-    //     return Convert.To<T>( Activator.CreateInstance( type, parameters ) );
-    // }
+    /// <summary>
+    /// 动态创建实例
+    /// </summary>
+    /// <typeparam name="T">目标类型</typeparam>
+    /// <param name="type">类型</param>
+    /// <param name="parameters">传递给构造函数的参数</param>        
+    public static T CreateInstance<T>( Type type, params object[] parameters ) {
+        return Convert.To<T>( Activator.CreateInstance( type, parameters ) );
+    }
 
     #endregion
 

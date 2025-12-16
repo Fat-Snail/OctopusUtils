@@ -1,4 +1,6 @@
-﻿namespace Util.Helpers;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Util.Helpers;
 
 /// <summary>
 /// 公共操作
@@ -89,5 +91,57 @@ public static class Common
         }
 
         return path;
+    }
+    
+    /// <summary>
+    /// 获取环境名称
+    /// </summary>
+    public static string GetEnvironmentName() {
+        var environment = GetEnvironmentVariable( "ASPNETCORE_ENVIRONMENT" );
+        if ( environment.IsEmpty() == false )
+            return environment;
+        return GetEnvironmentVariable( "DOTNET_ENVIRONMENT" );
+    }
+    
+    /// <summary>
+    /// 获取环境变量
+    /// </summary>
+    /// <param name="name">环境变量名</param>
+    public static string GetEnvironmentVariable( string name ) {
+        return System.Environment.GetEnvironmentVariable( name );
+    }
+
+    /// <summary>
+    /// 获取环境变量
+    /// </summary>
+    /// <param name="name">环境变量名</param>
+    public static T GetEnvironmentVariable<T>( string name ) {
+        return Convert.To<T>( GetEnvironmentVariable( name ) );
+    }
+    
+    /// <summary>
+    /// 是否为空
+    /// </summary>
+    /// <param name="value">值</param>
+    public static bool IsEmpty( [NotNullWhen( false )] this string? value ) {
+        return string.IsNullOrWhiteSpace( value );
+    }
+
+    /// <summary>
+    /// 是否为空
+    /// </summary>
+    /// <param name="value">值</param>
+    public static bool IsEmpty( this Guid value ) {
+        return value == Guid.Empty;
+    }
+
+    /// <summary>
+    /// 是否为空
+    /// </summary>
+    /// <param name="value">值</param>
+    public static bool IsEmpty( [NotNullWhen( false )] this Guid? value ) {
+        if( value == null )
+            return true;
+        return value == Guid.Empty;
     }
 }
