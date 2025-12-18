@@ -19,6 +19,9 @@ public static class ApiUIExtensions
         string version = "v1", 
         string description = "ASP.NET Core Web API")
     {
+        // 添加OpenAPI服务 (使用.NET 10的OpenAPI)
+        services.AddOpenApi();
+        
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc(version, new OpenApiInfo 
@@ -35,7 +38,7 @@ public static class ApiUIExtensions
     /// <summary>
     /// 只配置 Swagger UI
     /// </summary>
-    public static WebApplication UseOnlySwaggerUI(this WebApplication app, 
+    public static WebApplication UseSwaggerUI(this WebApplication app, 
         string swaggerVersion = "v1", 
         string routePrefix = "swagger")
     {
@@ -55,13 +58,16 @@ public static class ApiUIExtensions
     /// <summary>
     /// 只配置 Scalar UI
     /// </summary>
-    public static WebApplication UseOnlyScalarUI(this WebApplication app, 
+    public static WebApplication UseScalarUI(this WebApplication app, 
         string title = "API Documentation",
         ScalarTheme theme = ScalarTheme.Default,
         ScalarLayout layout = ScalarLayout.Modern)
     {
         if (app.Environment.IsDevelopment())
         {
+            // 添加 OpenAPI 端点
+            app.MapOpenApi();
+            
             app.MapScalarApiReference(options =>
             {
                 options
@@ -93,35 +99,9 @@ public static class ApiUIExtensions
         ScalarTheme scalarTheme = ScalarTheme.Default,
         ScalarLayout scalarLayout = ScalarLayout.Modern)
     {
-        if (app.Environment.IsDevelopment())
-        {
-            // 配置 Scalar UI
-            app.MapScalarApiReference(options =>
-            {
-                options
-                    .WithTitle(title)
-                    .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
-                    .WithTheme(scalarTheme)
-                    .WithDarkModeToggle(true)
-                    .WithLayout(scalarLayout)
-                    .WithCustomCss(@"
-                        .scalar-api-reference {
-                            --scalar-font-family: 'Segoe UI', system-ui, sans-serif;
-                        }
-                        .scalar-header {
-                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        }
-                    ");
-            });
-            
-            // 配置 Swagger UI
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint($"/swagger/{swaggerVersion}/swagger.json", $"{app.Environment.ApplicationName} {swaggerVersion}");
-                c.RoutePrefix = "swagger";
-            });
-        }
+        app.UseSwaggerUI(swaggerVersion, "swagger");
+        app.UseScalarUI(title, scalarTheme, scalarLayout);
+ 
 
         return app;
     }
