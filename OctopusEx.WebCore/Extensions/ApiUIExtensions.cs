@@ -51,7 +51,7 @@ public static class ApiUIExtensions
                 c.IncludeXmlComments(file, true);
             }
 
-            c.AddAutoApiDescriptions();
+            //c.AddAutoApiDescriptions();
             
             c.SwaggerDoc(version, new OpenApiInfo { Title = title, Version = version, Description = description });
         });
@@ -91,8 +91,9 @@ public static class ApiUIExtensions
         if (app.Environment.IsDevelopment())
         {
             // 添加 OpenAPI 端点
+            //app.MapOpenApi("/swagger/v1/swagger.json");//不行，他依然要请求/openapi/v1.json
             app.MapOpenApi();
-
+            
             app.MapScalarApiReference(options =>
             {
                 options
@@ -109,7 +110,10 @@ public static class ApiUIExtensions
                             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                         }
                     ");
+                
             });
+            
+            
         }
 
         return app;
@@ -126,8 +130,26 @@ public static class ApiUIExtensions
     {
         app.UseSwaggerUI(swaggerVersion, "swagger");
         app.UseScalarUI(title, scalarTheme, scalarLayout);
+        
+        // 添加 OpenAPI 重定向
+        app.AddOpenApiRedirect(swaggerVersion);
 
+        return app;
+    }
 
+    /// <summary>
+    /// 添加 OpenAPI 重定向
+    /// </summary>
+    public static WebApplication AddOpenApiRedirect(this WebApplication app, String version = "v1")
+    {
+        // 添加 OpenAPI 重定向：/openapi/{version}.json -> /swagger/{version}/swagger.json
+        app.MapGet($"/openapi/{version}.json", async context =>
+        {
+            context.Response.StatusCode = 302; // 临时重定向
+            context.Response.Headers["Location"] = $"/swagger/{version}/swagger.json";
+            await context.Response.CompleteAsync();
+        });
+        
         return app;
     }
 
@@ -148,112 +170,12 @@ public static class ApiUIExtensions
 
         endpoints.Add("openapi", "/openapi/v1.json");
 
+        // 添加 OpenAPI 重定向
+        app.AddOpenApiRedirect();
+
         app.MapGet("/", () => new { message = "Welcome to API Documentation", endpoints = endpoints });
 
         return app;
     }
 }
 
-/// <summary>
-/// 自动 API 描述扩展
-/// </summary>
-public static class ApiDescriptionExtensions
-{
-    /// <summary>
-    /// 配置自动 API 描述
-    /// </summary>
-    public static void AddAutoApiDescriptions(this SwaggerGenOptions options)
-    {
-        options.OperationFilter<AutoEndpointDescriptionFilter>();
-    }
-}
-
-/// <summary>
-/// 自动端点描述过滤器
-/// </summary>
-public class AutoEndpointDescriptionFilter : IOperationFilter
-{
-    public void Apply(OpenApiOperation operation, OperationFilterContext context)
-    {
-        if (context.ApiDescription.ActionDescriptor.EndpointMetadata == null)
-            return;
-
-        // 如果已经有 EndpointSummary 或 EndpointDescription，跳过
-        var hasExistingDescription = context.ApiDescription.ActionDescriptor.EndpointMetadata
-            .Any(em => em.GetType().Name.Contains("EndpointSummary") ||
-                       em.GetType().Name.Contains("EndpointDescription"));
-
-        if (hasExistingDescription)
-            return;
-
-        // 基于控制器名和方法名自动生成描述
-        var controllerName = context.ApiDescription.ActionDescriptor.RouteValues["controller"];
-        var actionName = context.ApiDescription.ActionDescriptor.RouteValues["action"];
-        var method = context.ApiDescription.HttpMethod;
-
-        // 生成默认摘要和描述
-        var summary = GenerateSummary(controllerName, actionName, method);
-        var description = GenerateDescription(controllerName, actionName, method);
-
-        operation.Summary = summary;
-        operation.Description = description;
-    }
-
-    private string GenerateSummary(string controller, string action, string method)
-    {
-        var controllerMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-        {
-            { "Orders", "订单" },
-            { "Products", "产品" },
-            { "Users", "用户" },
-            { "Data", "数据" },
-            { "Jobs", "任务" }
-        };
-
-        var actionMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-        {
-            { "Get", "获取" },
-            { "Post", "创建" },
-            { "Put", "更新" },
-            { "Delete", "删除" },
-            { "GetOrders", "获取订单列表" },
-            { "GetProducts", "获取产品列表" },
-            { "GetDashboardData", "获取仪表板数据" },
-            { "GetCategoryStatistics", "获取分类销售统计" },
-            { "GetCustomerSummary", "获取客户购买统计" },
-            { "GetProductPerformance", "获取产品销售性能分析" },
-            { "GetComplexQuery", "执行复杂查询" },
-            { "GetSalesTrend", "获取销售趋势" }
-        };
-
-        if (actionMap.TryGetValue(action, out var actionDesc))
-        {
-            return actionDesc;
-        }
-
-        var controllerDesc = controllerMap.TryGetValue(controller, out var ctrlDesc) ? ctrlDesc : controller;
-        return $"{controllerDesc}操作";
-    }
-
-    private string GenerateDescription(string controller, string action, string method)
-    {
-        var summary = GenerateSummary(controller, action, method);
-        return $"{summary}的详细说明";
-    }
-}
-
-/// <summary>
-/// API 端点标记属性，用于简化重复的 EndpointSummary 和 EndpointDescription
-/// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-public class ApiEndpointAttribute : Attribute
-{
-    public string Summary { get; set; }
-    public string Description { get; set; }
-
-    public ApiEndpointAttribute(string summary, string description = null)
-    {
-        Summary = summary;
-        Description = description ?? summary;
-    }
-}
