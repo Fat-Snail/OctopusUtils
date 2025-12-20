@@ -10,7 +10,7 @@ public static class ValidationExtensions
     /// </summary>
     /// <param name="obj">对象</param>
     /// <param name="parameterName">参数名</param>
-    public static void CheckNull(this object obj, string parameterName)
+    public static void CheckNull(this Object obj, String parameterName)
     {
         if (obj == null)
             throw new ArgumentNullException(parameterName);

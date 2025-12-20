@@ -10,12 +10,12 @@ public static class Common
     /// <summary>
     /// 获取当前应用程序基路径
     /// </summary>
-    public static string ApplicationBaseDirectory => AppContext.BaseDirectory;
+    public static String ApplicationBaseDirectory => AppContext.BaseDirectory;
 
     /// <summary>
     /// 换行符
     /// </summary>
-    public static string Line => System.Environment.NewLine;
+    public static String Line => System.Environment.NewLine;
     // /// <summary>
     // /// 是否Linux操作系统
     // /// </summary>
@@ -48,7 +48,7 @@ public static class Common
     /// </summary>
     /// <param name="relativePath">相对路径,范例:"test/a.txt" 或 "/test/a.txt"</param>
     /// <param name="basePath">基路径,默认为AppContext.BaseDirectory</param>
-    public static string GetPhysicalPath(string relativePath, string basePath = null)
+    public static String GetPhysicalPath(String relativePath, String basePath = null)
     {
         if (relativePath.StartsWith("~"))
             relativePath = relativePath.TrimStart('~');
@@ -71,7 +71,7 @@ public static class Common
     /// <summary>
     /// 获取当前目录路径
     /// </summary>
-    public static string GetCurrentDirectory()
+    public static String GetCurrentDirectory()
     {
         return Directory.GetCurrentDirectory();
     }
@@ -80,10 +80,10 @@ public static class Common
     /// 获取当前目录的上级路径
     /// </summary>
     /// <param name="depth">向上钻取的深度</param>
-    public static string GetParentDirectory(int depth = 1)
+    public static String GetParentDirectory(Int32 depth = 1)
     {
         var path = Directory.GetCurrentDirectory();
-        for (int i = 0; i < depth; i++)
+        for (Int32 i = 0; i < depth; i++)
         {
             var parent = Directory.GetParent(path);
             if (parent is { Exists: true })
@@ -96,7 +96,7 @@ public static class Common
     /// <summary>
     /// 获取环境名称
     /// </summary>
-    public static string GetEnvironmentName() {
+    public static String GetEnvironmentName() {
         var environment = GetEnvironmentVariable( "ASPNETCORE_ENVIRONMENT" );
         if ( environment.IsEmpty() == false )
             return environment;
@@ -107,7 +107,7 @@ public static class Common
     /// 获取环境变量
     /// </summary>
     /// <param name="name">环境变量名</param>
-    public static string GetEnvironmentVariable( string name ) {
+    public static String GetEnvironmentVariable( String name ) {
         return System.Environment.GetEnvironmentVariable( name );
     }
 
@@ -115,7 +115,7 @@ public static class Common
     /// 获取环境变量
     /// </summary>
     /// <param name="name">环境变量名</param>
-    public static T GetEnvironmentVariable<T>( string name ) {
+    public static T GetEnvironmentVariable<T>( String name ) {
         return Convert.To<T>( GetEnvironmentVariable( name ) );
     }
     
@@ -123,15 +123,15 @@ public static class Common
     /// 是否为空
     /// </summary>
     /// <param name="value">值</param>
-    public static bool IsEmpty( [NotNullWhen( false )] this string? value ) {
-        return string.IsNullOrWhiteSpace( value );
+    public static Boolean IsEmpty( [NotNullWhen( false )] this String? value ) {
+        return String.IsNullOrWhiteSpace( value );
     }
 
     /// <summary>
     /// 是否为空
     /// </summary>
     /// <param name="value">值</param>
-    public static bool IsEmpty( this Guid value ) {
+    public static Boolean IsEmpty( this Guid value ) {
         return value == Guid.Empty;
     }
 
@@ -139,7 +139,7 @@ public static class Common
     /// 是否为空
     /// </summary>
     /// <param name="value">值</param>
-    public static bool IsEmpty( [NotNullWhen( false )] this Guid? value ) {
+    public static Boolean IsEmpty( [NotNullWhen( false )] this Guid? value ) {
         if( value == null )
             return true;
         return value == Guid.Empty;

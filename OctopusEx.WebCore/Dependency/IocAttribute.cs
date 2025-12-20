@@ -10,7 +10,7 @@ public class IocAttribute : Attribute
     /// 初始化依赖关系配置
     /// </summary>
     /// <param name="priority">优先级,值越大优先级越高</param>
-    public IocAttribute(int priority)
+    public IocAttribute(Int32 priority)
     {
         Priority = priority;
     }
@@ -18,5 +18,5 @@ public class IocAttribute : Attribute
     /// <summary>
     /// 优先级,值越大优先级越高
     /// </summary>
-    public int Priority { get; set; }
+    public Int32 Priority { get; set; }
 }

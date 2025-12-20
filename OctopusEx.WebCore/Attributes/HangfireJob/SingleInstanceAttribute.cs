@@ -6,7 +6,7 @@ namespace OctopusEx.WebCore.Attributes.HangfireJob;
 
 public class SingleInstanceAttribute : JobFilterAttribute, IServerFilter
 {
-    private static readonly ConcurrentDictionary<string, bool> RunningJobs = new();
+    private static readonly ConcurrentDictionary<String, Boolean> RunningJobs = new();
 
     public void OnPerforming(PerformingContext context)
     {

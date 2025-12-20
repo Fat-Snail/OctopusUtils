@@ -71,7 +71,7 @@ public class Container
     /// 获取服务
     /// </summary>
     /// <param name="type">对象类型</param>
-    public object GetService(Type type)
+    public Object GetService(Type type)
     {
         var provider = GetServiceProvider();
         return provider.GetService(type);

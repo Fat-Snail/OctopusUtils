@@ -7,16 +7,16 @@ namespace OctopusEx.WebCore.Filters;
 
 public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
 {
-    public string Username { get; set; } = "admin";
-    public string Password { get; set; } = "password";
+    public String Username { get; set; } = "admin";
+    public String Password { get; set; } = "password";
 
-    public bool Authorize([NotNull] DashboardContext context)
+    public Boolean Authorize([NotNull] DashboardContext context)
     {
         var httpContext = context.GetHttpContext();
 
         var header = httpContext.Request.Headers["Authorization"];
 
-        if (string.IsNullOrWhiteSpace(header))
+        if (String.IsNullOrWhiteSpace(header))
         {
             SetChallengeResponse(httpContext);
             return false;
@@ -42,7 +42,7 @@ public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
         var username = parts[0];
         var password = parts[1];
 
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        if (String.IsNullOrWhiteSpace(username) || String.IsNullOrWhiteSpace(password))
         {
             SetChallengeResponse(httpContext);
             return false;

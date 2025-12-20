@@ -10,7 +10,7 @@ public interface IAssemblyFinder
     /// <summary>
     /// 程序集过滤模式
     /// </summary>
-    public string AssemblySkipPattern { get; set; }
+    public String AssemblySkipPattern { get; set; }
 
     /// <summary>
     /// 查找程序集列表

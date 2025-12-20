@@ -31,7 +31,7 @@ public static class HangfireExtensions
     /// <param name="services">服务集合</param>
     /// <param name="workerCount">工作进程数量，默认为 1</param>
     /// <returns>服务集合</returns>
-    public static IServiceCollection AddSimpleHangfire(this IServiceCollection services, int workerCount = 1)
+    public static IServiceCollection AddSimpleHangfire(this IServiceCollection services, Int32 workerCount = 1)
     {
         services.AddHangfire(configuration => configuration
             .SetDataCompatibilityLevel(Hangfire.CompatibilityLevel.Version_180)
@@ -54,8 +54,8 @@ public static class HangfireExtensions
     /// <param name="jobName">作业名称</param>
     /// <param name="action">作业动作</param>
     /// <returns>作业标识符</returns>
-    public static string AddBackgroundJob(this IServiceProvider serviceProvider,
-        string jobName, Expression<Action> action)
+    public static String AddBackgroundJob(this IServiceProvider serviceProvider,
+        String jobName, Expression<Action> action)
     {
         try
         {
@@ -80,8 +80,8 @@ public static class HangfireExtensions
     /// <param name="action">作业动作</param>
     /// <param name="delay">延迟时间</param>
     /// <returns>作业标识符</returns>
-    public static string AddDelayedJob(this IServiceProvider serviceProvider,
-        string jobName, Expression<Action> action, TimeSpan delay)
+    public static String AddDelayedJob(this IServiceProvider serviceProvider,
+        String jobName, Expression<Action> action, TimeSpan delay)
     {
         try
         {
@@ -106,8 +106,8 @@ public static class HangfireExtensions
     /// <param name="action">作业动作</param>
     /// <param name="cronExpression">Cron表达式</param>
     /// <returns>作业标识符</returns>
-    public static string AddRecurringJob(this IServiceProvider serviceProvider,
-        string jobId, Expression<Action> action, string cronExpression)
+    public static String AddRecurringJob(this IServiceProvider serviceProvider,
+        String jobId, Expression<Action> action, String cronExpression)
     {
         try
         {
@@ -130,7 +130,7 @@ public static class HangfireExtensions
     /// </summary>
     /// <param name="serviceProvider">服务提供者</param>
     /// <param name="jobId">作业ID</param>
-    public static void RemoveRecurringJob(this IServiceProvider serviceProvider, string jobId)
+    public static void RemoveRecurringJob(this IServiceProvider serviceProvider, String jobId)
     {
         try
         {
@@ -147,7 +147,7 @@ public static class HangfireExtensions
     /// <summary>
     /// 简单的 Cron 表达式解析器
     /// </summary>
-    private static TimeSpan ParseCronToInterval(string cronExpression)
+    private static TimeSpan ParseCronToInterval(String cronExpression)
     {
         if (cronExpression == "* * * * *") return TimeSpan.FromMinutes(1); // 每分钟
         if (cronExpression == "0 * * * *") return TimeSpan.FromHours(1);   // 每小时
@@ -165,8 +165,8 @@ public static class HangfireExtensions
     /// <param name="action">作业动作</param>
     /// <param name="uniqueKey">唯一标识，相同标识的作业同时只能有一个在执行</param>
     /// <returns>作业标识符</returns>
-    public static string AddBackgroundJobWithLock(this IServiceProvider serviceProvider,
-        string jobName, Expression<Action> action, string? uniqueKey = null)
+    public static String AddBackgroundJobWithLock(this IServiceProvider serviceProvider,
+        String jobName, Expression<Action> action, String? uniqueKey = null)
     {
         try
         {
@@ -202,8 +202,8 @@ public static class HangfireExtensions
     /// <param name="delay">延迟时间</param>
     /// <param name="uniqueKey">唯一标识，相同标识的作业同时只能有一个在执行</param>
     /// <returns>作业标识符</returns>
-    public static string AddDelayedJobWithLock(this IServiceProvider serviceProvider,
-        string jobName, Expression<Action> action, TimeSpan delay, string? uniqueKey = null)
+    public static String AddDelayedJobWithLock(this IServiceProvider serviceProvider,
+        String jobName, Expression<Action> action, TimeSpan delay, String? uniqueKey = null)
     {
         try
         {
@@ -232,8 +232,8 @@ public static class HangfireExtensions
     /// <param name="cronExpression">Cron表达式</param>
     /// <param name="uniqueKey">唯一标识，用于防重复，默认使用jobId</param>
     /// <returns>作业标识符</returns>
-    public static string AddRecurringJobWithLock(this IServiceProvider serviceProvider,
-        string jobId, Expression<Action> action, string cronExpression, string? uniqueKey = null)
+    public static String AddRecurringJobWithLock(this IServiceProvider serviceProvider,
+        String jobId, Expression<Action> action, String cronExpression, String? uniqueKey = null)
     {
         try
         {
@@ -260,7 +260,7 @@ public static class HangfireExtensions
     /// <param name="serviceProvider">服务提供者</param>
     /// <param name="uniqueKey">唯一标识</param>
     /// <returns>是否正在执行中</returns>
-    public static bool IsJobRunning(this IServiceProvider serviceProvider, string uniqueKey)
+    public static Boolean IsJobRunning(this IServiceProvider serviceProvider, String uniqueKey)
     {
         try
         {
@@ -283,7 +283,7 @@ public static class HangfireExtensions
     /// <param name="serviceProvider">服务提供者</param>
     /// <param name="uniqueKey">唯一标识</param>
     /// <returns>正在执行的作业数量</returns>
-    public static int GetRunningJobCount(this IServiceProvider serviceProvider, string uniqueKey)
+    public static Int32 GetRunningJobCount(this IServiceProvider serviceProvider, String uniqueKey)
     {
         try
         {
@@ -309,8 +309,8 @@ public static class HangfireExtensions
     /// <param name="uniqueKey">唯一标识</param>
     /// <param name="lockTimeout">锁超时时间，默认5分钟</param>
     /// <returns>作业标识符</returns>
-    public static string AddBackgroundJobWithDistributedLock(this IServiceProvider serviceProvider,
-        string jobName, Expression<Action> action, string uniqueKey, TimeSpan? lockTimeout = null)
+    public static String AddBackgroundJobWithDistributedLock(this IServiceProvider serviceProvider,
+        String jobName, Expression<Action> action, String uniqueKey, TimeSpan? lockTimeout = null)
     {
         try
         {
@@ -340,7 +340,7 @@ public static class HangfireExtensions
     /// <param name="lockKey">锁键</param>
     /// <param name="lockTimeout">锁超时时间</param>
     /// <param name="action">作业方法</param>
-    private static void ExecuteWithLock<T>(string lockKey, TimeSpan lockTimeout, Expression<T> action) where T : Delegate
+    private static void ExecuteWithLock<T>(String lockKey, TimeSpan lockTimeout, Expression<T> action) where T : Delegate
     {
         try
         {
@@ -386,7 +386,7 @@ public static class HangfireExtensions
     /// 静态锁字典，用于跟踪正在执行的作业
     /// 注意：这仅适用于单实例环境，生产环境应使用分布式锁
     /// </summary>
-    private static readonly Dictionary<string, bool> _jobLocks = new Dictionary<string, bool>();
+    private static readonly Dictionary<String, Boolean> _jobLocks = new Dictionary<String, Boolean>();
 }
 
 /// <summary>
@@ -394,10 +394,10 @@ public static class HangfireExtensions
 /// </summary>
 public class HangfireDashboardOptions
 {
-    public string Path { get; set; } = "/hangfire";
-    public object? DashboardOptions { get; set; }
-    public string Username { get; set; } = "admin";
-    public string Password { get; set; } = "password";
+    public String Path { get; set; } = "/hangfire";
+    public Object? DashboardOptions { get; set; }
+    public String Username { get; set; } = "admin";
+    public String Password { get; set; } = "password";
 }
 
 /// <summary>
@@ -413,12 +413,12 @@ public class JobExecutionOptions
     /// <summary>
     /// 是否启用自动重试
     /// </summary>
-    public bool EnableRetry { get; set; } = true;
+    public Boolean EnableRetry { get; set; } = true;
 
     /// <summary>
     /// 最大重试次数
     /// </summary>
-    public int MaxRetryCount { get; set; } = 3;
+    public Int32 MaxRetryCount { get; set; } = 3;
 
     /// <summary>
     /// 重试间隔

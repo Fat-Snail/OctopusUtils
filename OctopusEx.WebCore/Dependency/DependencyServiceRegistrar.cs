@@ -14,17 +14,17 @@ public class DependencyServiceRegistrar : IServiceRegistrar
     /// <summary>
     /// 获取服务名
     /// </summary>
-    public static string ServiceName => "Util.Infrastructure.DependencyServiceRegistrar";
+    public static String ServiceName => "Util.Infrastructure.DependencyServiceRegistrar";
 
     /// <summary>
     /// 排序号
     /// </summary>
-    public int OrderId => 100;
+    public Int32 OrderId => 100;
 
     /// <summary>
     /// 是否启用
     /// </summary>
-    public bool Enabled => ServiceRegistrarConfig.IsEnabled(ServiceName);
+    public Boolean Enabled => ServiceRegistrarConfig.IsEnabled(ServiceName);
 
     /// <summary>
     /// 注册服务
@@ -98,7 +98,7 @@ public class DependencyServiceRegistrar : IServiceRegistrar
     /// </summary>
     private (Type, Type) GetTypesByPriority(IGrouping<Type, (Type, Type)> group)
     {
-        int? currentPriority = null;
+        Int32? currentPriority = null;
         Type classType = null;
         foreach (var item in group)
         {
@@ -116,7 +116,7 @@ public class DependencyServiceRegistrar : IServiceRegistrar
     /// <summary>
     /// 获取优先级
     /// </summary>
-    private int GetPriority(Type type)
+    private Int32 GetPriority(Type type)
     {
         var attribute = type.GetCustomAttribute<IocAttribute>();
         if (attribute == null)

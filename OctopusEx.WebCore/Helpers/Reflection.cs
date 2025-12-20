@@ -15,7 +15,7 @@ public static class Reflection
     /// 获取类型描述，使用DescriptionAttribute设置描述
     /// </summary>
     /// <typeparam name="T">类型</typeparam>
-    public static string GetDescription<T>()
+    public static String GetDescription<T>()
     {
         return GetDescription(Common.GetType<T>());
     }
@@ -25,7 +25,7 @@ public static class Reflection
     /// </summary>
     /// <typeparam name="T">类型</typeparam>
     /// <param name="memberName">成员名称</param>
-    public static string GetDescription<T>(string memberName)
+    public static String GetDescription<T>(String memberName)
     {
         return GetDescription(Common.GetType<T>(), memberName);
     }
@@ -35,12 +35,12 @@ public static class Reflection
     /// </summary>
     /// <param name="type">类型</param>
     /// <param name="memberName">成员名称</param>
-    public static string GetDescription(Type type, string memberName)
+    public static String GetDescription(Type type, String memberName)
     {
         if (type == null)
-            return string.Empty;
-        if (string.IsNullOrWhiteSpace(memberName))
-            return string.Empty;
+            return String.Empty;
+        if (String.IsNullOrWhiteSpace(memberName))
+            return String.Empty;
         return GetDescription(type.GetTypeInfo().GetMember(memberName).FirstOrDefault());
     }
 
@@ -48,10 +48,10 @@ public static class Reflection
     /// 获取类型成员描述，使用DescriptionAttribute设置描述
     /// </summary>
     /// <param name="member">成员</param>
-    public static string GetDescription(MemberInfo member)
+    public static String GetDescription(MemberInfo member)
     {
         if (member == null)
-            return string.Empty;
+            return String.Empty;
         return member.GetCustomAttribute<DescriptionAttribute>() is { } attribute ? attribute.Description : member.Name;
     }
 
@@ -63,7 +63,7 @@ public static class Reflection
     /// 获取显示名称，使用DisplayNameAttribute设置显示名称
     /// </summary>
     /// <typeparam name="T">类型</typeparam>
-    public static string GetDisplayName<T>()
+    public static String GetDisplayName<T>()
     {
         return GetDisplayName(Common.GetType<T>());
     }
@@ -71,15 +71,15 @@ public static class Reflection
     /// <summary>
     /// 获取显示名称，使用DisplayAttribute或DisplayNameAttribute设置显示名称
     /// </summary>
-    public static string GetDisplayName(MemberInfo member)
+    public static String GetDisplayName(MemberInfo member)
     {
         if (member == null)
-            return string.Empty;
+            return String.Empty;
         if (member.GetCustomAttribute<DisplayAttribute>() is { } displayAttribute)
             return displayAttribute.Name;
         if (member.GetCustomAttribute<DisplayNameAttribute>() is { } displayNameAttribute)
             return displayNameAttribute.DisplayName;
-        return string.Empty;
+        return String.Empty;
     }
 
     #endregion
@@ -90,7 +90,7 @@ public static class Reflection
     /// 获取显示名称或描述,使用DisplayNameAttribute设置显示名称,使用DescriptionAttribute设置描述
     /// </summary>
     /// <typeparam name="T">类型</typeparam>
-    public static string GetDisplayNameOrDescription<T>()
+    public static String GetDisplayNameOrDescription<T>()
     {
         return GetDisplayNameOrDescription(Common.GetType<T>());
     }
@@ -98,10 +98,10 @@ public static class Reflection
     /// <summary>
     /// 获取属性显示名称或描述,使用DisplayAttribute或DisplayNameAttribute设置显示名称,使用DescriptionAttribute设置描述
     /// </summary>
-    public static string GetDisplayNameOrDescription(MemberInfo member)
+    public static String GetDisplayNameOrDescription(MemberInfo member)
     {
         var result = GetDisplayName(member);
-        return string.IsNullOrWhiteSpace(result) ? GetDescription(member) : result;
+        return String.IsNullOrWhiteSpace(result) ? GetDescription(member) : result;
     }
 
     #endregion
@@ -114,7 +114,7 @@ public static class Reflection
     /// <typeparam name="T">目标类型</typeparam>
     /// <param name="type">类型</param>
     /// <param name="parameters">传递给构造函数的参数</param>        
-    public static T CreateInstance<T>( Type type, params object[] parameters ) {
+    public static T CreateInstance<T>( Type type, params Object[] parameters ) {
         return Convert.To<T>( Activator.CreateInstance( type, parameters ) );
     }
 
@@ -183,7 +183,7 @@ public static class Reflection
     /// <summary>
     /// 泛型匹配
     /// </summary>
-    private static bool MatchGeneric(Type findType, Type type)
+    private static Boolean MatchGeneric(Type findType, Type type)
     {
         if (findType.IsGenericTypeDefinition == false)
             return false;
@@ -283,7 +283,7 @@ public static class Reflection
     /// 是否集合
     /// </summary>
     /// <param name="type">类型</param>
-    public static bool IsCollection(Type type)
+    public static Boolean IsCollection(Type type)
     {
         if (type.IsArray)
             return true;
@@ -298,7 +298,7 @@ public static class Reflection
     /// 是否泛型集合
     /// </summary>
     /// <param name="type">类型</param>
-    public static bool IsGenericCollection(Type type)
+    public static Boolean IsGenericCollection(Type type)
     {
         if (!type.IsGenericType)
             return false;
@@ -319,7 +319,7 @@ public static class Reflection
     /// 是否布尔类型
     /// </summary>
     /// <param name="member">成员</param>
-    public static bool IsBool(MemberInfo member)
+    public static Boolean IsBool(MemberInfo member)
     {
         if (member == null)
             return false;
@@ -337,9 +337,9 @@ public static class Reflection
     /// <summary>
     /// 是否布尔类型
     /// </summary>
-    private static bool IsBool(PropertyInfo property)
+    private static Boolean IsBool(PropertyInfo property)
     {
-        return property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?);
+        return property.PropertyType == typeof(Boolean) || property.PropertyType == typeof(Boolean?);
     }
 
     #endregion
@@ -350,7 +350,7 @@ public static class Reflection
     /// 是否枚举类型
     /// </summary>
     /// <param name="member">成员</param>
-    public static bool IsEnum(MemberInfo member)
+    public static Boolean IsEnum(MemberInfo member)
     {
         if (member == null)
             return false;
@@ -368,7 +368,7 @@ public static class Reflection
     /// <summary>
     /// 是否枚举类型
     /// </summary>
-    private static bool IsEnum(PropertyInfo property)
+    private static Boolean IsEnum(PropertyInfo property)
     {
         if (property.PropertyType.GetTypeInfo().IsEnum)
             return true;
@@ -386,7 +386,7 @@ public static class Reflection
     /// 是否日期类型
     /// </summary>
     /// <param name="member">成员</param>
-    public static bool IsDate(MemberInfo member)
+    public static Boolean IsDate(MemberInfo member)
     {
         if (member == null)
             return false;
@@ -404,7 +404,7 @@ public static class Reflection
     /// <summary>
     /// 是否日期类型
     /// </summary>
-    private static bool IsDate(PropertyInfo property)
+    private static Boolean IsDate(PropertyInfo property)
     {
         if (property.PropertyType == typeof(DateTime))
             return true;
@@ -421,7 +421,7 @@ public static class Reflection
     /// 是否整型
     /// </summary>
     /// <param name="member">成员</param>
-    public static bool IsInt(MemberInfo member)
+    public static Boolean IsInt(MemberInfo member)
     {
         if (member == null)
             return false;
@@ -440,19 +440,19 @@ public static class Reflection
     /// <summary>
     /// 是否整型
     /// </summary>
-    private static bool IsInt(PropertyInfo property)
+    private static Boolean IsInt(PropertyInfo property)
     {
-        if (property.PropertyType == typeof(int))
+        if (property.PropertyType == typeof(Int32))
             return true;
-        if (property.PropertyType == typeof(int?))
+        if (property.PropertyType == typeof(Int32?))
             return true;
-        if (property.PropertyType == typeof(short))
+        if (property.PropertyType == typeof(Int16))
             return true;
-        if (property.PropertyType == typeof(short?))
+        if (property.PropertyType == typeof(Int16?))
             return true;
-        if (property.PropertyType == typeof(long))
+        if (property.PropertyType == typeof(Int64))
             return true;
-        if (property.PropertyType == typeof(long?))
+        if (property.PropertyType == typeof(Int64?))
             return true;
         return false;
     }
@@ -465,7 +465,7 @@ public static class Reflection
     /// 是否浮点型
     /// </summary>
     /// <param name="member">成员</param>
-    public static bool IsNumber(MemberInfo member)
+    public static Boolean IsNumber(MemberInfo member)
     {
         if (member == null)
             return false;
@@ -486,19 +486,19 @@ public static class Reflection
     /// <summary>
     /// 是否数值类型
     /// </summary>
-    private static bool IsNumber(PropertyInfo property)
+    private static Boolean IsNumber(PropertyInfo property)
     {
-        if (property.PropertyType == typeof(double))
+        if (property.PropertyType == typeof(Double))
             return true;
-        if (property.PropertyType == typeof(double?))
+        if (property.PropertyType == typeof(Double?))
             return true;
-        if (property.PropertyType == typeof(decimal))
+        if (property.PropertyType == typeof(Decimal))
             return true;
-        if (property.PropertyType == typeof(decimal?))
+        if (property.PropertyType == typeof(Decimal?))
             return true;
-        if (property.PropertyType == typeof(float))
+        if (property.PropertyType == typeof(Single))
             return true;
-        if (property.PropertyType == typeof(float?))
+        if (property.PropertyType == typeof(Single?))
             return true;
         return false;
     }
@@ -546,7 +546,7 @@ public static class Reflection
             return null;
         if (type.IsInterface)
             return type;
-        if (type.BaseType == typeof(object))
+        if (type.BaseType == typeof(Object))
             return type;
         return GetTopBaseType(type.BaseType);
     }
@@ -560,7 +560,7 @@ public static class Reflection
     /// </summary>
     /// <param name="instance">实例</param>
     /// <param name="propertyName">属性名</param>
-    public static object GetPropertyValue(object instance, string propertyName)
+    public static Object GetPropertyValue(Object instance, String propertyName)
     {
         if (instance == null)
             return null;

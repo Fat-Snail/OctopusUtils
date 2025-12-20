@@ -11,7 +11,7 @@ public class AppDomainAssemblyFinder : IAssemblyFinder
     /// <summary>
     /// 程序集过滤模式
     /// </summary>
-    public string AssemblySkipPattern { get; set; }
+    public String AssemblySkipPattern { get; set; }
 
     /// <summary>
     /// 程序集列表
@@ -43,14 +43,14 @@ public class AppDomainAssemblyFinder : IAssemblyFinder
     protected virtual void LoadAssemblies()
     {
         var currentDomainAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-        foreach (string file in GetLoadAssemblyFiles())
+        foreach (String file in GetLoadAssemblyFiles())
             LoadAssembly(file, currentDomainAssemblies);
     }
 
     /// <summary>
     /// 获取需要加载的程序集文件列表
     /// </summary>
-    protected virtual string[] GetLoadAssemblyFiles()
+    protected virtual String[] GetLoadAssemblyFiles()
     {
         return Directory.GetFiles(AppContext.BaseDirectory, "*.dll");
     }
@@ -58,7 +58,7 @@ public class AppDomainAssemblyFinder : IAssemblyFinder
     /// <summary>
     /// 加载程序集到当前应用程序域
     /// </summary>
-    protected void LoadAssembly(string file, Assembly[] currentDomainAssemblies)
+    protected void LoadAssembly(String file, Assembly[] currentDomainAssemblies)
     {
         try
         {
@@ -77,14 +77,14 @@ public class AppDomainAssemblyFinder : IAssemblyFinder
     /// <summary>
     /// 是否过滤程序集
     /// </summary>
-    protected bool IsSkip(string assemblyName)
+    protected Boolean IsSkip(String assemblyName)
     {
         var applicationName = Assembly.GetEntryAssembly()?.GetName().Name;
         if (assemblyName.StartsWith($"{applicationName}.Views"))
             return true;
         if (assemblyName.StartsWith($"{applicationName}.PrecompiledViews"))
             return true;
-        if (string.IsNullOrWhiteSpace(AssemblySkipPattern))
+        if (String.IsNullOrWhiteSpace(AssemblySkipPattern))
             return false;
         return Regex.IsMatch(assemblyName, AssemblySkipPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
     }
@@ -92,7 +92,7 @@ public class AppDomainAssemblyFinder : IAssemblyFinder
     /// <summary>
     /// 是否过滤程序集
     /// </summary>
-    private bool IsSkip(Assembly assembly)
+    private Boolean IsSkip(Assembly assembly)
     {
         return IsSkip(assembly.FullName);
     }

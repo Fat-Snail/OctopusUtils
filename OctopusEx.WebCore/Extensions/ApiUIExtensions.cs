@@ -15,15 +15,22 @@ public static class ApiUIExtensions
     /// 添加 Swagger UI 服务
     /// </summary>
     public static IServiceCollection AddSwaggerUIServices(this IServiceCollection services, 
-        string title = "API", 
-        string version = "v1", 
-        string description = "ASP.NET Core Web API")
+        String title = "API", 
+        String version = "v1", 
+        String description = "ASP.NET Core Web API",
+        String xmlSearchPattern = "*.xml")
     {
         // 添加OpenAPI服务 (使用.NET 10的OpenAPI)
         services.AddOpenApi();
         
         services.AddSwaggerGen(c =>
         {
+            var files = Directory.GetFiles(AppContext.BaseDirectory, xmlSearchPattern);
+            foreach (var file in files)
+            {
+                c.IncludeXmlComments(file, true);
+            }
+            
             c.SwaggerDoc(version, new OpenApiInfo 
             { 
                 Title = title, 
@@ -39,8 +46,8 @@ public static class ApiUIExtensions
     /// 只配置 Swagger UI
     /// </summary>
     public static WebApplication UseSwaggerUI(this WebApplication app, 
-        string swaggerVersion = "v1", 
-        string routePrefix = "swagger")
+        String swaggerVersion = "v1", 
+        String routePrefix = "swagger")
     {
         if (app.Environment.IsDevelopment())
         {
@@ -59,7 +66,7 @@ public static class ApiUIExtensions
     /// 只配置 Scalar UI
     /// </summary>
     public static WebApplication UseScalarUI(this WebApplication app, 
-        string title = "API Documentation",
+        String title = "API Documentation",
         ScalarTheme theme = ScalarTheme.Default,
         ScalarLayout layout = ScalarLayout.Modern)
     {
@@ -94,8 +101,8 @@ public static class ApiUIExtensions
     /// 同时配置 Swagger UI 和 Scalar UI
     /// </summary>
     public static WebApplication UseBothApiUIs(this WebApplication app, 
-        string title = "API Documentation",
-        string swaggerVersion = "v1",
+        String title = "API Documentation",
+        String swaggerVersion = "v1",
         ScalarTheme scalarTheme = ScalarTheme.Default,
         ScalarLayout scalarLayout = ScalarLayout.Modern)
     {
@@ -110,10 +117,10 @@ public static class ApiUIExtensions
     /// 添加 API 文档导航页面
     /// </summary>
     public static WebApplication AddApiDocumentationNavigation(this WebApplication app, 
-        bool enableSwagger = true, 
-        bool enableScalar = true)
+        Boolean enableSwagger = true, 
+        Boolean enableScalar = true)
     {
-        var endpoints = new Dictionary<string, string>();
+        var endpoints = new Dictionary<String, String>();
         
         if (enableSwagger)
             endpoints.Add("swagger", "/swagger");

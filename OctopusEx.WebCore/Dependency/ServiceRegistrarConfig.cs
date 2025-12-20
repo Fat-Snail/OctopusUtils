@@ -14,7 +14,7 @@ public class ServiceRegistrarConfig
     /// 禁用服务注册器
     /// </summary>
     /// <param name="serviceName">服务注册器名称</param>
-    public static void Disable(string serviceName)
+    public static void Disable(String serviceName)
     {
         AppContext.SetSwitch(serviceName, false);
     }
@@ -23,7 +23,7 @@ public class ServiceRegistrarConfig
     /// 启用服务注册器
     /// </summary>
     /// <param name="serviceName">服务注册器名称</param>
-    public static void Enable(string serviceName)
+    public static void Enable(String serviceName)
     {
         AppContext.SetSwitch(serviceName, true);
     }
@@ -32,9 +32,9 @@ public class ServiceRegistrarConfig
     /// 是否启用
     /// </summary>
     /// <param name="serviceName">服务注册器名称</param>
-    public static bool IsEnabled(string serviceName)
+    public static Boolean IsEnabled(String serviceName)
     {
-        var result = AppContext.TryGetSwitch(serviceName, out bool isEnabled);
+        var result = AppContext.TryGetSwitch(serviceName, out Boolean isEnabled);
         if (result && isEnabled == false)
             return false;
         return true;

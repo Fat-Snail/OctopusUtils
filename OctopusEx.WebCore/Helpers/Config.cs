@@ -23,15 +23,15 @@ public static class Config {
     /// 获取配置值
     /// </summary>
     /// <param name="key">配置键</param>
-    public static string GetValue( string key ) {
-        return GetValue<string>( key );
+    public static String GetValue( String key ) {
+        return GetValue<String>( key );
     }
 
     /// <summary>
     /// 获取配置值
     /// </summary>
     /// <param name="key">配置键</param>
-    public static T GetValue<T>( string key ) {
+    public static T GetValue<T>( String key ) {
         return GetConfiguration().GetValue<T>( key );
     }
 
@@ -40,7 +40,7 @@ public static class Config {
     /// </summary>
     /// <typeparam name="TOptions">配置选项类型</typeparam>
     /// <param name="section">配置节</param>
-    public static TOptions Get<TOptions>( string section ) {
+    public static TOptions Get<TOptions>( String section ) {
         return GetSection( section ).Get<TOptions>();
     }
 
@@ -48,7 +48,7 @@ public static class Config {
     /// 获取配置节
     /// </summary>
     /// <param name="section">配置节</param>
-    public static IConfigurationSection GetSection( string section ) {
+    public static IConfigurationSection GetSection( String section ) {
         return GetConfiguration().GetSection( section );
     }
 
@@ -64,7 +64,7 @@ public static class Config {
     /// </summary>
     /// <param name="basePath">配置文件目录绝对路径</param>
     /// <param name="jsonFiles">配置文件列表,默认已包含appsettings.json</param>
-    public static IConfiguration CreateConfiguration( string basePath = null,params string[] jsonFiles ) {
+    public static IConfiguration CreateConfiguration( String basePath = null,params String[] jsonFiles ) {
         basePath ??= Common.ApplicationBaseDirectory;
         var builder = new ConfigurationBuilder()
             .SetBasePath( basePath )
@@ -84,7 +84,7 @@ public static class Config {
     /// 获取数据库连接字符串
     /// </summary>
     /// <param name="name">数据库连接字符串键名</param>
-    public static string GetConnectionString( string name ) {
+    public static String GetConnectionString( String name ) {
         return GetConfiguration().GetConnectionString( name );
     }
 }

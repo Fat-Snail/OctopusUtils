@@ -8,12 +8,12 @@ public interface IServiceRegistrar
     /// <summary>
     /// 排序号
     /// </summary>
-    int OrderId { get; }
+    Int32 OrderId { get; }
 
     /// <summary>
     /// 是否启用
     /// </summary>
-    bool Enabled
+    Boolean Enabled
     {
         get;
     }
