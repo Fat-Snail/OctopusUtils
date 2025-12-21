@@ -70,13 +70,13 @@ namespace JiebaNet.Segmenter
                 var lines = text.Split(new[] { "\r\n", "\n" },
                     StringSplitOptions.None
                 );
-                foreach (var line in lines)
+                foreach ( var line in lines )
                 {
                     // string line = null;
                     // while ((line = sr.ReadLine()) != null)
                     // {
                     var tokens = line.Split(' ');
-                    if (tokens.Length < 2)
+                    if ( tokens.Length < 2 )
                     {
                         Debug.Fail(String.Format("Invalid line: {0}", line));
                         continue;
@@ -88,10 +88,10 @@ namespace JiebaNet.Segmenter
                     Trie[word] = freq;
                     Total += freq;
 
-                    foreach (var ch in Enumerable.Range(0, word.Length))
+                    foreach ( var ch in Enumerable.Range(0, word.Length) )
                     {
                         var wfrag = word.Sub(0, ch + 1);
-                        if (!Trie.ContainsKey(wfrag))
+                        if ( !Trie.ContainsKey(wfrag) )
                         {
                             Trie[wfrag] = 0;
                         }
@@ -102,11 +102,11 @@ namespace JiebaNet.Segmenter
                 stopWatch.Stop();
                 Debug.WriteLine("main dict load finished, time elapsed {0} ms", stopWatch.ElapsedMilliseconds);
             }
-            catch (IOException e)
+            catch ( IOException e )
             {
                 Debug.Fail(String.Format("{0} load failure, reason: {1}", MainDict, e.Message));
             }
-            catch (FormatException fe)
+            catch ( FormatException fe )
             {
                 Debug.Fail(fe.Message);
             }
@@ -119,7 +119,7 @@ namespace JiebaNet.Segmenter
 
         public Int32 GetFreqOrDefault(String key)
         {
-            if (ContainsWord(key))
+            if ( ContainsWord(key) )
                 return Trie[key];
             else
                 return 1;
@@ -127,17 +127,17 @@ namespace JiebaNet.Segmenter
 
         public void AddWord(String word, Int32 freq, String tag = null)
         {
-            if (ContainsWord(word))
+            if ( ContainsWord(word) )
             {
                 Total -= Trie[word];
             }
 
             Trie[word] = freq;
             Total += freq;
-            for (var i = 0; i < word.Length; i++)
+            for ( var i = 0; i < word.Length; i++ )
             {
                 var wfrag = word.Substring(0, i + 1);
-                if (!Trie.ContainsKey(wfrag))
+                if ( !Trie.ContainsKey(wfrag) )
                 {
                     Trie[wfrag] = 0;
                 }
@@ -152,12 +152,12 @@ namespace JiebaNet.Segmenter
         internal Int32 SuggestFreq(String word, IEnumerable<String> segments)
         {
             Double freq = 1;
-            foreach (var seg in segments)
+            foreach ( var seg in segments )
             {
                 freq *= GetFreqOrDefault(seg) / Total;
             }
 
-            return Math.Max((Int32)(freq * Total) + 1, GetFreqOrDefault(word));
+            return Math.Max(( Int32 )(freq * Total) + 1, GetFreqOrDefault(word));
         }
     }
 }

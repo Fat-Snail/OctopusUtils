@@ -37,9 +37,9 @@ namespace JiebaNet.Segmenter.FinalSeg
         public IEnumerable<String> Cut(String sentence)
         {
             var tokens = new List<String>();
-            foreach (var blk in RegexChinese.Split(sentence))
+            foreach ( var blk in RegexChinese.Split(sentence) )
             {
-                if (RegexChinese.IsMatch(blk))
+                if ( RegexChinese.IsMatch(blk) )
                 {
                     tokens.AddRange(ViterbiCut(blk));
                 }
@@ -96,7 +96,7 @@ namespace JiebaNet.Segmenter.FinalSeg
 
             // Init weights and paths.
             v.Add(new Dictionary<Char, Double>());
-            foreach (var state in States)
+            foreach ( var state in States )
             {
                 var emP = _emitProbs[state].GetDefault(sentence[0], Constants.MinProb);
                 v[0][state] = _startProbs[state] + emP;
@@ -104,21 +104,21 @@ namespace JiebaNet.Segmenter.FinalSeg
             }
 
             // For each remaining char
-            for (var i = 1; i < sentence.Length; ++i)
+            for ( var i = 1; i < sentence.Length; ++i )
             {
                 IDictionary<Char, Double> vv = new Dictionary<Char, Double>();
                 v.Add(vv);
                 IDictionary<Char, Node> newPath = new Dictionary<Char, Node>();
-                foreach (var y in States)
+                foreach ( var y in States )
                 {
                     var emp = _emitProbs[y].GetDefault(sentence[i], Constants.MinProb);
 
                     var candidate = new Pair<Char>('\0', Double.MinValue);
-                    foreach (var y0 in _prevStatus[y])
+                    foreach ( var y0 in _prevStatus[y] )
                     {
                         var tranp = _transProbs[y0].GetDefault(y, Constants.MinProb);
                         tranp = v[i - 1][y0] + tranp + emp;
-                        if (candidate.Freq <= tranp)
+                        if ( candidate.Freq <= tranp )
                         {
                             candidate.Freq = tranp;
                             candidate.Key = y0;
@@ -135,7 +135,7 @@ namespace JiebaNet.Segmenter.FinalSeg
             var finalPath = probE < probS ? path['S'] : path['E'];
 
             var posList = new List<Char>(sentence.Length);
-            while (finalPath != null)
+            while ( finalPath != null )
             {
                 posList.Add(finalPath.Value);
                 finalPath = finalPath.Parent;
@@ -144,23 +144,23 @@ namespace JiebaNet.Segmenter.FinalSeg
 
             var tokens = new List<String>();
             Int32 begin = 0, next = 0;
-            for (var i = 0; i < sentence.Length; i++)
+            for ( var i = 0; i < sentence.Length; i++ )
             {
                 var pos = posList[i];
-                if (pos == 'B')
+                if ( pos == 'B' )
                     begin = i;
-                else if (pos == 'E')
+                else if ( pos == 'E' )
                 {
                     tokens.Add(sentence.Sub(begin, i + 1));
                     next = i + 1;
                 }
-                else if (pos == 'S')
+                else if ( pos == 'S' )
                 {
                     tokens.Add(sentence.Sub(i, i + 1));
                     next = i + 1;
                 }
             }
-            if (next < sentence.Length)
+            if ( next < sentence.Length )
             {
                 tokens.Add(sentence.Substring(next));
             }

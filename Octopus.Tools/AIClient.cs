@@ -30,7 +30,7 @@ public class AIClient : IDisposable
     {
         _httpClient = new HttpClient();
         _httpClient.BaseAddress = new Uri(_aiApiDomain);
-        if (!_aiApiKey.IsNullOrEmpty())
+        if ( !_aiApiKey.IsNullOrEmpty() )
         {
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_aiApiKey}");
         }
@@ -41,7 +41,7 @@ public class AIClient : IDisposable
         var sc = new StringContent(JsonSerializer.Serialize(request, _jsonOptions), Encoding.UTF8,
             "application/json");
         var response = await _httpClient.PostAsync("/v1/chat/completions", sc);
-        if (response.IsSuccessStatusCode)
+        if ( response.IsSuccessStatusCode )
         {
             var content = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<CompletionResponse>(content);
@@ -51,7 +51,7 @@ public class AIClient : IDisposable
 
     public CompletionRequest CreateNormalRequest(Action<CompletionRequest> reqAct)
     {
-        if (_aiModel.IsNullOrEmpty())
+        if ( _aiModel.IsNullOrEmpty() )
         {
             throw new Exception("必须指定默认的model");
         }
@@ -82,15 +82,15 @@ public class AIClient : IDisposable
         var set = new AISetting();
         setting.Invoke(set);
 
-        if (!set.ApiDomain.IsNullOrEmpty() && set.ApiDomain != _aiApiDomain)
+        if ( !set.ApiDomain.IsNullOrEmpty() && set.ApiDomain != _aiApiDomain )
         {
             _aiApiDomain = set.ApiDomain;
         }
-        if (!set.ApiKey.IsNullOrEmpty() && set.ApiKey != _aiApiKey)
+        if ( !set.ApiKey.IsNullOrEmpty() && set.ApiKey != _aiApiKey )
         {
             _aiApiKey = set.ApiKey;
         }
-        if (!set.DefaultModel.IsNullOrEmpty() && set.DefaultModel != _aiModel)
+        if ( !set.DefaultModel.IsNullOrEmpty() && set.DefaultModel != _aiModel )
         {
             _aiModel = set.DefaultModel;
         }

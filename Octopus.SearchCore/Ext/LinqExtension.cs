@@ -21,7 +21,7 @@ public static class LinqExtension
 
     private static Expression<Func<T, bool>> CombineLambdas<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right, ExpressionType expressionType)
     {
-        if (IsExpressionBodyConstant(left))
+        if ( IsExpressionBodyConstant(left) )
         {
             return right;
         }

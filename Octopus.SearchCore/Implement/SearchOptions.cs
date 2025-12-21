@@ -36,7 +36,7 @@ public class SearchOptions
     {
         get
         {
-            foreach (var f in Fields.Where(f => _boosts.All(x => x.Key.ToUpper() != f.ToUpper())))
+            foreach ( var f in Fields.Where(f => _boosts.All(x => x.Key.ToUpper() != f.ToUpper())) )
             {
                 _boosts.Add(f, 2.0f);
             }
@@ -88,7 +88,7 @@ public class SearchOptions
     /// <param name="take">取多少条</param>
     public SearchOptions(String keywords, String fields, Int32 maximumNumberOfHits = 1000, Dictionary<String, Single> boosts = null, Type type = null, String orderBy = null, Int32? skip = null, Int32? take = null)
     {
-        if (String.IsNullOrWhiteSpace(keywords))
+        if ( String.IsNullOrWhiteSpace(keywords) )
         {
             throw new ArgumentException("搜索关键词不能为空！");
         }
@@ -106,14 +106,14 @@ public class SearchOptions
             };
 
         // 添加被检索字段
-        if (!String.IsNullOrEmpty(fields))
+        if ( !String.IsNullOrEmpty(fields) )
         {
             fields = fields.RemoveCharacters(" ");
             Fields.AddRange(fields.Split(',').ToList());
         }
 
         // 添加排序规则
-        if (!string.IsNullOrEmpty(orderBy))
+        if ( !string.IsNullOrEmpty(orderBy) )
         {
             orderBy = orderBy.RemoveCharacters(" ");
             OrderBy.AddRange(orderBy.Split(',').Select(sortField => new SortField(sortField, SortFieldType.STRING)));
@@ -129,11 +129,11 @@ public class SearchOptions
     /// <param name="page">第几页</param>
     public SearchOptions(string keywords, int page, int size, string fields) : this(keywords, fields, int.MaxValue, null, null, null, (page - 1) * size, size)
     {
-        if (page < 1)
+        if ( page < 1 )
         {
             page = 1;
         }
-        if (size < 1)
+        if ( size < 1 )
         {
             size = 1;
         }
@@ -150,11 +150,11 @@ public class SearchOptions
     /// <param name="t">需要被全文检索的类型</param>
     public SearchOptions(String keywords, Int32 page, Int32 size, Type t) : this(keywords, String.Join(",", t.GetProperties().Where(p => p.GetCustomAttributes<LuceneIndexAttribute>().Any()).Select(p => p.Name)), Int32.MaxValue, null, null, null, (page - 1) * size, size)
     {
-        if (page < 1)
+        if ( page < 1 )
         {
             page = 1;
         }
-        if (size < 1)
+        if ( size < 1 )
         {
             size = 1;
         }

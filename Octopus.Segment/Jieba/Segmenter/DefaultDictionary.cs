@@ -12,7 +12,7 @@ namespace JiebaNet.Segmenter
         {
             get
             {
-                if (!ContainsKey(key))
+                if ( !ContainsKey(key) )
                 {
                     Add(key, default(TValue));
                 }

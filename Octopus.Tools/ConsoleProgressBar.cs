@@ -24,7 +24,7 @@ public class ConsoleProgressBar : IDisposable, IProgress<Double>
         // A progress bar is only for temporary display in a console window.
         // If the console output is redirected to a file, draw nothing.
         // Otherwise, we'll end up with a lot of garbage in the target file.
-        if (!Console.IsOutputRedirected)
+        if ( !Console.IsOutputRedirected )
         {
             ResetTimer();
         }
@@ -39,12 +39,12 @@ public class ConsoleProgressBar : IDisposable, IProgress<Double>
 
     private void TimerHandler(Object state)
     {
-        lock (timer)
+        lock ( timer )
         {
-            if (disposed) return;
+            if ( disposed ) return;
 
-            var progressBlockCount = (Int32)(currentProgress * blockCount);
-            var percent = (Int32)(currentProgress * 100);
+            var progressBlockCount = ( Int32 )(currentProgress * blockCount);
+            var percent = ( Int32 )(currentProgress * 100);
             var text = String.Format("[{0}{1}] {2,3}% {3}",
                 new String('#', progressBlockCount), new String('-', blockCount - progressBlockCount),
                 percent,
@@ -60,7 +60,7 @@ public class ConsoleProgressBar : IDisposable, IProgress<Double>
         // Get length of common portion
         var commonPrefixLength = 0;
         var commonLength = Math.Min(currentText.Length, text.Length);
-        while (commonPrefixLength < commonLength && text[commonPrefixLength] == currentText[commonPrefixLength])
+        while ( commonPrefixLength < commonLength && text[commonPrefixLength] == currentText[commonPrefixLength] )
         {
             commonPrefixLength++;
         }
@@ -74,7 +74,7 @@ public class ConsoleProgressBar : IDisposable, IProgress<Double>
 
         // If the new text is shorter than the old one: delete overlapping characters
         var overlapCount = currentText.Length - text.Length;
-        if (overlapCount > 0)
+        if ( overlapCount > 0 )
         {
             outputBuilder.Append(' ', overlapCount);
             outputBuilder.Append('\b', overlapCount);
@@ -91,7 +91,7 @@ public class ConsoleProgressBar : IDisposable, IProgress<Double>
 
     public void Dispose()
     {
-        lock (timer)
+        lock ( timer )
         {
             disposed = true;
             UpdateText(String.Empty);

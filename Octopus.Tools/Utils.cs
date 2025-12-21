@@ -20,29 +20,29 @@ public static class Utils
     public static T RetryMethod<T>(Func<T> func, Int32 maxRetryCount = 3, Int32 sleepTime = 100,
         Boolean throwOnFailure = false, Action<Int32, Exception> onRetry = null)
     {
-        if (func == null)
+        if ( func == null )
             throw new ArgumentNullException(nameof(func));
 
-        if (maxRetryCount < 0)
+        if ( maxRetryCount < 0 )
             throw new ArgumentOutOfRangeException(nameof(maxRetryCount), "重试次数不能为负数");
 
         Exception lastException = null;
 
-        for (var attempt = 0; attempt <= maxRetryCount; attempt++)
+        for ( var attempt = 0; attempt <= maxRetryCount; attempt++ )
         {
             try
             {
                 return func();
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
                 lastException = ex;
 
-                if (attempt < maxRetryCount)
+                if ( attempt < maxRetryCount )
                 {
                     onRetry?.Invoke(attempt + 1, ex);
 
-                    if (sleepTime > 0)
+                    if ( sleepTime > 0 )
                         Thread.Sleep(sleepTime);
                 }
             }
@@ -51,10 +51,10 @@ public static class Utils
         // 所有重试都失败
         ConsoleEx.Error($"方法执行失败，已重试{maxRetryCount}次");
 
-        if (lastException != null)
+        if ( lastException != null )
             ConsoleEx.Error(lastException);
 
-        if (throwOnFailure)
+        if ( throwOnFailure )
             throw lastException ?? new Exception("重试机制执行失败");
 
         return default!;
@@ -70,7 +70,7 @@ public static class Utils
     public static void RetryMethod(Action action, Int32 maxRetryCount = 3, Int32 sleepTime = 100,
         Action<Int32, Exception> onRetry = null)
     {
-        if (action == null)
+        if ( action == null )
             throw new ArgumentNullException(nameof(action));
 
         RetryMethod(() =>
@@ -93,29 +93,29 @@ public static class Utils
     public static async Task<T> RetryMethodAsync<T>(Func<Task<T>> asyncFunc, Int32 maxRetryCount = 3,
         Int32 sleepTime = 100, Boolean throwOnFailure = false, Action<Int32, Exception> onRetry = null)
     {
-        if (asyncFunc == null)
+        if ( asyncFunc == null )
             throw new ArgumentNullException(nameof(asyncFunc));
 
-        if (maxRetryCount < 0)
+        if ( maxRetryCount < 0 )
             throw new ArgumentOutOfRangeException(nameof(maxRetryCount), "重试次数不能为负数");
 
         Exception lastException = null;
 
-        for (var attempt = 0; attempt <= maxRetryCount; attempt++)
+        for ( var attempt = 0; attempt <= maxRetryCount; attempt++ )
         {
             try
             {
                 return await asyncFunc().ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
                 lastException = ex;
 
-                if (attempt < maxRetryCount)
+                if ( attempt < maxRetryCount )
                 {
                     onRetry?.Invoke(attempt + 1, ex);
 
-                    if (sleepTime > 0)
+                    if ( sleepTime > 0 )
                         await Task.Delay(sleepTime).ConfigureAwait(false);
                 }
             }
@@ -124,10 +124,10 @@ public static class Utils
         // 所有重试都失败
         ConsoleEx.Error($"异步方法执行失败，已重试{maxRetryCount}次");
 
-        if (lastException != null)
+        if ( lastException != null )
             ConsoleEx.Error(lastException);
 
-        if (throwOnFailure)
+        if ( throwOnFailure )
             throw lastException ?? new Exception("异步重试机制执行失败");
 
         return default!;
@@ -143,7 +143,7 @@ public static class Utils
     public static async Task RetryMethodAsync(Func<Task> asyncAction, Int32 maxRetryCount = 3,
         Int32 sleepTime = 100, Action<Int32, Exception> onRetry = null)
     {
-        if (asyncAction == null)
+        if ( asyncAction == null )
             throw new ArgumentNullException(nameof(asyncAction));
 
         await RetryMethodAsync(async () =>

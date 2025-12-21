@@ -23,12 +23,12 @@ namespace JiebaNet.Analyser
 
         public void AddEdge(String start, String end, Double weight)
         {
-            if (!Graph.ContainsKey(start))
+            if ( !Graph.ContainsKey(start) )
             {
                 Graph[start] = new List<Edge>();
             }
 
-            if (!Graph.ContainsKey(end))
+            if ( !Graph.ContainsKey(end) )
             {
                 Graph[end] = new List<Edge>();
             }
@@ -46,7 +46,7 @@ namespace JiebaNet.Analyser
             var count = Graph.Count > 0 ? Graph.Count : 1;
             var wsdef = 1.0 / count;
 
-            foreach (var pair in Graph)
+            foreach ( var pair in Graph )
             {
                 ws[pair.Key] = wsdef;
                 outSum[pair.Key] = pair.Value.Sum(e => e.Weight);
@@ -54,12 +54,12 @@ namespace JiebaNet.Analyser
 
             // TODO: 10 iterations?
             var sortedKeys = Graph.Keys.OrderBy(k => k);
-            for (var i = 0; i < 10; i++)
+            for ( var i = 0; i < 10; i++ )
             {
-                foreach (var n in sortedKeys)
+                foreach ( var n in sortedKeys )
                 {
                     var s = 0d;
-                    foreach (var edge in Graph[n])
+                    foreach ( var edge in Graph[n] )
                     {
                         s += edge.Weight / outSum[edge.End] * ws[edge.End];
                     }
@@ -70,19 +70,19 @@ namespace JiebaNet.Analyser
             var minRank = Double.MaxValue;
             var maxRank = Double.MinValue;
 
-            foreach (var w in ws.Values)
+            foreach ( var w in ws.Values )
             {
-                if (w < minRank)
+                if ( w < minRank )
                 {
                     minRank = w;
                 }
-                if (w > maxRank)
+                if ( w > maxRank )
                 {
                     maxRank = w;
                 }
             }
 
-            foreach (var pair in ws.ToList())
+            foreach ( var pair in ws.ToList() )
             {
                 ws[pair.Key] = (pair.Value - minRank / 10.0) / (maxRank - minRank / 10.0);
             }

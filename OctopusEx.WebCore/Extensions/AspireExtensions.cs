@@ -40,7 +40,7 @@ public static class AspireExtensions
                         // Check if OTLP endpoint is configured (Aspire will set this automatically)
                         var otlpEndpoint = builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"];
 
-                        if (!String.IsNullOrWhiteSpace(otlpEndpoint))
+                        if ( !String.IsNullOrWhiteSpace(otlpEndpoint) )
                         {
                             options.Endpoint = new Uri(otlpEndpoint);
                         }

@@ -35,7 +35,7 @@ public static class StringHelpers
     /// <param name="values"></param>
     public static void AddRange<T>(this ICollection<T> @this, IEnumerable<T> values)
     {
-        foreach (var obj in values)
+        foreach ( var obj in values )
         {
             @this.Add(obj);
         }
@@ -49,7 +49,7 @@ public static class StringHelpers
     /// <param name="where"></param>
     public static void RemoveWhere<T>(this ICollection<T> @this, Func<T, bool> @where)
     {
-        foreach (var obj in @this.Where(where).ToList())
+        foreach ( var obj in @this.Where(where).ToList() )
         {
             @this.Remove(obj);
         }

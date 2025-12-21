@@ -43,7 +43,7 @@ public class LuceneIndexSearcher : ILuceneIndexSearcher
     /// <returns></returns>
     public List<String> CutKeywords(String keyword)
     {
-        if (keyword.Length <= 2)
+        if ( keyword.Length <= 2 )
         {
             return new List<String>
                 {
@@ -106,15 +106,15 @@ public class LuceneIndexSearcher : ILuceneIndexSearcher
     {
         var finalQuery = new BooleanQuery();
         var terms = CutKeywords(keywords);
-        foreach (var term in terms)
+        foreach ( var term in terms )
         {
             try
             {
-                if (term.StartsWith("\""))
+                if ( term.StartsWith("\"") )
                 {
                     finalQuery.Add(parser.Parse(term.Trim('"')), Occur.MUST);
                 }
-                else if (term.StartsWith("-"))
+                else if ( term.StartsWith("-") )
                 {
                     finalQuery.Add(parser.Parse(term), Occur.MUST_NOT);
                 }
@@ -123,7 +123,7 @@ public class LuceneIndexSearcher : ILuceneIndexSearcher
                     finalQuery.Add(parser.Parse(term.Replace("~", "") + "~"), Occur.SHOULD);
                 }
             }
-            catch (ParseException)
+            catch ( ParseException )
             {
                 finalQuery.Add(parser.Parse(Regex.Replace(term, @"\p{P}|\p{S}", "")), Occur.SHOULD);
             }
@@ -147,12 +147,12 @@ public class LuceneIndexSearcher : ILuceneIndexSearcher
         Query query;
 
         // 启用安全搜索
-        if (safeSearch)
+        if ( safeSearch )
         {
             options.Keywords = QueryParserBase.Escape(options.Keywords);
         }
 
-        if (options.Fields.Count == 1)
+        if ( options.Fields.Count == 1 )
         {
             // 单字段搜索
             var queryParser = new QueryParser(Lucene.Net.Util.LuceneVersion.LUCENE_48, options.Fields[0], _analyzer);
@@ -182,11 +182,11 @@ public class LuceneIndexSearcher : ILuceneIndexSearcher
         results.TotalHits = matches.Count();
 
         // 分页处理
-        if (options.Skip.HasValue)
+        if ( options.Skip.HasValue )
         {
             matches = matches.Skip(options.Skip.Value);
         }
-        if (options.Take.HasValue)
+        if ( options.Take.HasValue )
         {
             matches = matches.Take(options.Take.Value);
         }
@@ -194,7 +194,7 @@ public class LuceneIndexSearcher : ILuceneIndexSearcher
         var docs = matches.ToList();
 
         // 创建结果集
-        foreach (var match in docs)
+        foreach ( var match in docs )
         {
             var doc = searcher.Doc(match.Doc);
             results.Results.Add(new LuceneSearchResult()
@@ -232,7 +232,7 @@ public class LuceneIndexSearcher : ILuceneIndexSearcher
         {
             results = PerformSearch(options, false);
         }
-        catch (ParseException)
+        catch ( ParseException )
         {
             results = PerformSearch(options, true);
         }

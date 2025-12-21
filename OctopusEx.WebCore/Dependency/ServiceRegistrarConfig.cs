@@ -35,7 +35,7 @@ public class ServiceRegistrarConfig
     public static Boolean IsEnabled(String serviceName)
     {
         var result = AppContext.TryGetSwitch(serviceName, out Boolean isEnabled);
-        if (result && isEnabled == false)
+        if ( result && isEnabled == false )
             return false;
         return true;
     }

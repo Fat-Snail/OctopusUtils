@@ -50,11 +50,11 @@ public static class Common
     /// <param name="basePath">基路径,默认为AppContext.BaseDirectory</param>
     public static String GetPhysicalPath(String relativePath, String basePath = null)
     {
-        if (relativePath.StartsWith("~"))
+        if ( relativePath.StartsWith("~") )
             relativePath = relativePath.TrimStart('~');
-        if (relativePath.StartsWith("/"))
+        if ( relativePath.StartsWith("/") )
             relativePath = relativePath.TrimStart('/');
-        if (relativePath.StartsWith("\\"))
+        if ( relativePath.StartsWith("\\") )
             relativePath = relativePath.TrimStart('\\');
         basePath ??= ApplicationBaseDirectory;
         return Path.Combine(basePath, relativePath);
@@ -83,55 +83,60 @@ public static class Common
     public static String GetParentDirectory(Int32 depth = 1)
     {
         var path = Directory.GetCurrentDirectory();
-        for (Int32 i = 0; i < depth; i++)
+        for ( Int32 i = 0; i < depth; i++ )
         {
             var parent = Directory.GetParent(path);
-            if (parent is { Exists: true })
+            if ( parent is { Exists: true } )
                 path = parent.FullName;
         }
 
         return path;
     }
-    
+
     /// <summary>
     /// 获取环境名称
     /// </summary>
-    public static String GetEnvironmentName() {
-        var environment = GetEnvironmentVariable( "ASPNETCORE_ENVIRONMENT" );
+    public static String GetEnvironmentName()
+    {
+        var environment = GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         if ( environment.IsEmpty() == false )
             return environment;
-        return GetEnvironmentVariable( "DOTNET_ENVIRONMENT" );
-    }
-    
-    /// <summary>
-    /// 获取环境变量
-    /// </summary>
-    /// <param name="name">环境变量名</param>
-    public static String GetEnvironmentVariable( String name ) {
-        return System.Environment.GetEnvironmentVariable( name );
+        return GetEnvironmentVariable("DOTNET_ENVIRONMENT");
     }
 
     /// <summary>
     /// 获取环境变量
     /// </summary>
     /// <param name="name">环境变量名</param>
-    public static T GetEnvironmentVariable<T>( String name ) {
-        return Convert.To<T>( GetEnvironmentVariable( name ) );
+    public static String GetEnvironmentVariable(String name)
+    {
+        return System.Environment.GetEnvironmentVariable(name);
     }
-    
+
     /// <summary>
-    /// 是否为空
+    /// 获取环境变量
     /// </summary>
-    /// <param name="value">值</param>
-    public static Boolean IsEmpty( [NotNullWhen( false )] this String? value ) {
-        return String.IsNullOrWhiteSpace( value );
+    /// <param name="name">环境变量名</param>
+    public static T GetEnvironmentVariable<T>(String name)
+    {
+        return Convert.To<T>(GetEnvironmentVariable(name));
     }
 
     /// <summary>
     /// 是否为空
     /// </summary>
     /// <param name="value">值</param>
-    public static Boolean IsEmpty( this Guid value ) {
+    public static Boolean IsEmpty([NotNullWhen(false)] this String? value)
+    {
+        return String.IsNullOrWhiteSpace(value);
+    }
+
+    /// <summary>
+    /// 是否为空
+    /// </summary>
+    /// <param name="value">值</param>
+    public static Boolean IsEmpty(this Guid value)
+    {
         return value == Guid.Empty;
     }
 
@@ -139,8 +144,9 @@ public static class Common
     /// 是否为空
     /// </summary>
     /// <param name="value">值</param>
-    public static Boolean IsEmpty( [NotNullWhen( false )] this Guid? value ) {
-        if( value == null )
+    public static Boolean IsEmpty([NotNullWhen(false)] this Guid? value)
+    {
+        if ( value == null )
             return true;
         return value == Guid.Empty;
     }

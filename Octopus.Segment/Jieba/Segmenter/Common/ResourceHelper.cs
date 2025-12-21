@@ -21,7 +21,7 @@ internal class ResourceHelper
     {
         get
         {
-            if (asm == null)
+            if ( asm == null )
                 asm = Assembly.GetExecutingAssembly();
             return asm;
         }
@@ -40,7 +40,7 @@ internal class ResourceHelper
     public static String GetResourceInputString(String resourceName)
     {
         var result = String.Empty;
-        using (var sr = new StreamReader(GetResourceInputStream(resourceName)))
+        using ( var sr = new StreamReader(GetResourceInputStream(resourceName)) )
         {
             result = sr.ReadToEnd();
             sr.Close();

@@ -93,7 +93,7 @@ public class SearchEngine : ISearchEngine
     {
         var t = Type.GetType(doc.Get("Type"));
         var obj = Expression.Lambda<Func<ILuceneIndexable>>(Expression.New(t.GetConstructors()[0])).Compile()();
-        foreach (var p in t.GetProperties().Where(p => p.GetCustomAttributes<LuceneIndexAttribute>().Any()))
+        foreach ( var p in t.GetProperties().Where(p => p.GetCustomAttributes<LuceneIndexAttribute>().Any()) )
         {
             p.SetValue(obj, doc.Get(p.Name, p.PropertyType));
         }
@@ -154,7 +154,7 @@ public class SearchEngine : ISearchEngine
     /// </summary>
     public void CreateIndex()
     {
-        if (LuceneIndexer == null)
+        if ( LuceneIndexer == null )
         {
             return;
         }
@@ -177,7 +177,7 @@ public class SearchEngine : ISearchEngine
     /// </summary>
     public void CreateIndex(List<String> tables)
     {
-        if (LuceneIndexer == null)
+        if ( LuceneIndexer == null )
         {
             return;
         }
@@ -218,9 +218,9 @@ public class SearchEngine : ISearchEngine
         };
 
         var sw = Stopwatch.StartNew();
-        foreach (var indexResult in indexResults.Results)
+        foreach ( var indexResult in indexResults.Results )
         {
-            var entity = (T)GetConcreteFromDocument(indexResult.Document);
+            var entity = ( T )GetConcreteFromDocument(indexResult.Document);
             resultSet.Results.Add(entity);
         }
 
@@ -238,7 +238,7 @@ public class SearchEngine : ISearchEngine
     public IScoredSearchResultCollection<T> ScoredSearch<T>(SearchOptions options)
     {
         // 确保类型匹配
-        if (typeof(T) != typeof(ILuceneIndexable))
+        if ( typeof(T) != typeof(ILuceneIndexable) )
         {
             options.Type = typeof(T);
         }
@@ -247,11 +247,11 @@ public class SearchEngine : ISearchEngine
         IScoredSearchResultCollection<T> results = new ScoredSearchResultCollection<T>();
         results.TotalHits = indexResults.TotalHits;
         var sw = Stopwatch.StartNew();
-        foreach (var indexResult in indexResults.Results)
+        foreach ( var indexResult in indexResults.Results )
         {
             IScoredSearchResult<T> result = new ScoredSearchResult<T>();
             result.Score = indexResult.Score;
-            result.Entity = (T)GetConcreteFromDocument(indexResult.Document);
+            result.Entity = ( T )GetConcreteFromDocument(indexResult.Document);
             results.Results.Add(result);
         }
 
@@ -307,7 +307,7 @@ public class SearchEngine : ISearchEngine
     public void ImportCustomerKeywords(IEnumerable<String> words)
     {
         var segmenter = new JiebaSegmenter();
-        foreach (var word in words)
+        foreach ( var word in words )
         {
             segmenter.AddWord(word);
         }

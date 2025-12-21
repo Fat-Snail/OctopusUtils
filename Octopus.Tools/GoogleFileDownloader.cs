@@ -31,8 +31,8 @@ public class GoogleFileDownloader : IDisposable
         {
             get
             {
-                if (TotalBytesToReceive > 0L)
-                    return (Int32)(((Double)BytesReceived / TotalBytesToReceive) * 100);
+                if ( TotalBytesToReceive > 0L )
+                    return ( Int32 )((( Double )BytesReceived / TotalBytesToReceive) * 100);
 
                 return 0;
             }
@@ -51,7 +51,7 @@ public class GoogleFileDownloader : IDisposable
                 get
                 {
                     String cookie;
-                    if (cookies.TryGetValue(address.Host, out cookie))
+                    if ( cookies.TryGetValue(address.Host, out cookie) )
                         return cookie;
 
                     return null;
@@ -66,14 +66,14 @@ public class GoogleFileDownloader : IDisposable
         protected override WebRequest GetWebRequest(Uri address)
         {
             var request = base.GetWebRequest(address);
-            if (request is HttpWebRequest)
+            if ( request is HttpWebRequest )
             {
                 var cookie = cookies[address];
-                if (cookie != null)
-                    ((HttpWebRequest)request).Headers.Set("cookie", cookie);
+                if ( cookie != null )
+                    (( HttpWebRequest )request).Headers.Set("cookie", cookie);
 
-                if (ContentRangeTarget != null)
-                    ((HttpWebRequest)request).AddRange(0);
+                if ( ContentRangeTarget != null )
+                    (( HttpWebRequest )request).AddRange(0);
             }
 
             return request;
@@ -92,29 +92,29 @@ public class GoogleFileDownloader : IDisposable
         private WebResponse ProcessResponse(WebResponse response)
         {
             var cookies = response.Headers.GetValues("Set-Cookie");
-            if (cookies != null && cookies.Length > 0)
+            if ( cookies != null && cookies.Length > 0 )
             {
                 var length = 0;
-                for (var i = 0; i < cookies.Length; i++)
+                for ( var i = 0; i < cookies.Length; i++ )
                     length += cookies[i].Length;
 
                 var cookie = new StringBuilder(length);
-                for (var i = 0; i < cookies.Length; i++)
+                for ( var i = 0; i < cookies.Length; i++ )
                     cookie.Append(cookies[i]);
 
                 this.cookies[response.ResponseUri] = cookie.ToString();
             }
 
-            if (ContentRangeTarget != null)
+            if ( ContentRangeTarget != null )
             {
                 var rangeLengthHeader = response.Headers.GetValues("Content-Range");
-                if (rangeLengthHeader != null && rangeLengthHeader.Length > 0)
+                if ( rangeLengthHeader != null && rangeLengthHeader.Length > 0 )
                 {
                     var splitIndex = rangeLengthHeader[0].LastIndexOf('/');
-                    if (splitIndex >= 0 && splitIndex < rangeLengthHeader[0].Length - 1)
+                    if ( splitIndex >= 0 && splitIndex < rangeLengthHeader[0].Length - 1 )
                     {
                         Int64 length;
-                        if (Int64.TryParse(rangeLengthHeader[0].Substring(splitIndex + 1), out length))
+                        if ( Int64.TryParse(rangeLengthHeader[0].Substring(splitIndex + 1), out length) )
                             ContentRangeTarget.TotalBytesToReceive = length;
                     }
                 }
@@ -161,7 +161,7 @@ public class GoogleFileDownloader : IDisposable
     private void DownloadFile(String address, String fileName, Boolean asyncDownload, Object userToken)
     {
         downloadingDriveFile = address.StartsWith(GOOGLE_DRIVE_DOMAIN) || address.StartsWith(GOOGLE_DRIVE_DOMAIN2);
-        if (downloadingDriveFile)
+        if ( downloadingDriveFile )
         {
             address = GetGoogleDriveDownloadAddress(address);
             driveDownloadAttempt = 1;
@@ -185,14 +185,14 @@ public class GoogleFileDownloader : IDisposable
 
     private void DownloadFileInternal()
     {
-        if (!asyncDownload)
+        if ( !asyncDownload )
         {
             webClient.DownloadFile(downloadAddress, downloadPath);
 
             // This callback isn't triggered for synchronous downloads, manually trigger it
             DownloadFileCompletedCallback(webClient, new AsyncCompletedEventArgs(null, false, null));
         }
-        else if (userToken == null)
+        else if ( userToken == null )
             webClient.DownloadFileAsync(downloadAddress, downloadPath);
         else
             webClient.DownloadFileAsync(downloadAddress, downloadPath, userToken);
@@ -200,10 +200,10 @@ public class GoogleFileDownloader : IDisposable
 
     private void DownloadProgressChangedCallback(Object sender, DownloadProgressChangedEventArgs e)
     {
-        if (DownloadProgressChanged != null)
+        if ( DownloadProgressChanged != null )
         {
             downloadProgress.BytesReceived = e.BytesReceived;
-            if (e.TotalBytesToReceive > 0L)
+            if ( e.TotalBytesToReceive > 0L )
                 downloadProgress.TotalBytesToReceive = e.TotalBytesToReceive;
 
             DownloadProgressChanged(this, downloadProgress);
@@ -212,20 +212,20 @@ public class GoogleFileDownloader : IDisposable
 
     private void DownloadFileCompletedCallback(Object sender, AsyncCompletedEventArgs e)
     {
-        if (!downloadingDriveFile)
+        if ( !downloadingDriveFile )
         {
-            if (DownloadFileCompleted != null)
+            if ( DownloadFileCompleted != null )
                 DownloadFileCompleted(this, e);
         }
         else
         {
-            if (driveDownloadAttempt < GOOGLE_DRIVE_MAX_DOWNLOAD_ATTEMPT && !ProcessDriveDownload())
+            if ( driveDownloadAttempt < GOOGLE_DRIVE_MAX_DOWNLOAD_ATTEMPT && !ProcessDriveDownload() )
             {
                 // Try downloading the Drive file again
                 driveDownloadAttempt++;
                 DownloadFileInternal();
             }
-            else if (DownloadFileCompleted != null)
+            else if ( DownloadFileCompleted != null )
                 DownloadFileCompleted(this, e);
         }
     }
@@ -236,32 +236,32 @@ public class GoogleFileDownloader : IDisposable
     private Boolean ProcessDriveDownload()
     {
         var downloadedFile = new FileInfo(downloadPath);
-        if (downloadedFile == null)
+        if ( downloadedFile == null )
             return true;
 
         // Confirmation page is around 50KB, shouldn't be larger than 60KB
-        if (downloadedFile.Length > 60000L)
+        if ( downloadedFile.Length > 60000L )
             return true;
 
         // Downloaded file might be the confirmation page, check it
         String content;
-        using (var reader = downloadedFile.OpenText())
+        using ( var reader = downloadedFile.OpenText() )
         {
             // Confirmation page starts with <!DOCTYPE html>, which can be preceeded by a newline
             var header = new Char[20];
             var readCount = reader.ReadBlock(header, 0, 20);
-            if (readCount < 20 || !(new String(header).Contains("<!DOCTYPE html>")))
+            if ( readCount < 20 || !(new String(header).Contains("<!DOCTYPE html>")) )
                 return true;
 
             content = reader.ReadToEnd();
         }
 
         var linkIndex = content.LastIndexOf("href=\"/uc?");
-        if (linkIndex >= 0)
+        if ( linkIndex >= 0 )
         {
             linkIndex += 6;
             var linkEnd = content.IndexOf('"', linkIndex);
-            if (linkEnd >= 0)
+            if ( linkEnd >= 0 )
             {
                 downloadAddress = new Uri("https://drive.google.com" +
                                           content.Substring(linkIndex, linkEnd - linkIndex).Replace("&amp;", "&"));
@@ -270,14 +270,14 @@ public class GoogleFileDownloader : IDisposable
         }
 
         var formIndex = content.LastIndexOf("<form id=\"download-form\"");
-        if (formIndex >= 0)
+        if ( formIndex >= 0 )
         {
             var formEndIndex = content.IndexOf("</form>", formIndex + 10);
             var inputIndex = formIndex;
             var sb = new StringBuilder().Append("https://drive.usercontent.google.com/download");
             var isFirstArgument = true;
-            while ((inputIndex = content.IndexOf("<input type=\"hidden\"", inputIndex + 10)) >= 0 &&
-                   inputIndex < formEndIndex)
+            while ( (inputIndex = content.IndexOf("<input type=\"hidden\"", inputIndex + 10)) >= 0 &&
+                   inputIndex < formEndIndex )
             {
                 linkIndex = content.IndexOf("name=", inputIndex + 10) + 6;
                 sb.Append(isFirstArgument ? '?' : '&')
@@ -304,26 +304,26 @@ public class GoogleFileDownloader : IDisposable
     {
         var index = address.IndexOf("id=");
         Int32 closingIndex;
-        if (index > 0)
+        if ( index > 0 )
         {
             index += 3;
             closingIndex = address.IndexOf('&', index);
-            if (closingIndex < 0)
+            if ( closingIndex < 0 )
                 closingIndex = address.Length;
         }
         else
         {
             index = address.IndexOf("file/d/");
-            if (index < 0) // address is not in any of the supported forms
+            if ( index < 0 ) // address is not in any of the supported forms
                 return String.Empty;
 
             index += 7;
 
             closingIndex = address.IndexOf('/', index);
-            if (closingIndex < 0)
+            if ( closingIndex < 0 )
             {
                 closingIndex = address.IndexOf('?', index);
-                if (closingIndex < 0)
+                if ( closingIndex < 0 )
                     closingIndex = address.Length;
             }
         }
@@ -331,11 +331,11 @@ public class GoogleFileDownloader : IDisposable
         var fileID = address.Substring(index, closingIndex - index);
 
         index = address.IndexOf("resourcekey=");
-        if (index > 0)
+        if ( index > 0 )
         {
             index += 12;
             closingIndex = address.IndexOf('&', index);
-            if (closingIndex < 0)
+            if ( closingIndex < 0 )
                 closingIndex = address.Length;
 
             var resourceKey = address.Substring(index, closingIndex - index);

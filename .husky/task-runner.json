@@ -9,11 +9,11 @@
          "continueOnError": false
       },
       {
-         "name": "format-check",
+         "name": "auto-format",
          "command": "dotnet",
-         "args": [ "format", "--verify-no-changes", "--verbosity", "quiet", "--exclude", "**/bin/**", "--exclude", "**/obj/**" ],
+         "args": [ "format", "--verbosity", "minimal", "--exclude", "**/bin/**", "--exclude", "**/obj/**" ],
          "include": ["*.sln"],
-         "continueOnError": true
+         "continueOnError": false
       }
    ]
 }

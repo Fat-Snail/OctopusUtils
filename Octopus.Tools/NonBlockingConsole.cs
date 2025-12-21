@@ -24,16 +24,16 @@ public static class AsyncConsole
     {
         try
         {
-            foreach (var message in _messageQueue.GetConsumingEnumerable(_cancellationTokenSource.Token))
+            foreach ( var message in _messageQueue.GetConsumingEnumerable(_cancellationTokenSource.Token) )
             {
                 WriteMessage(message);
             }
         }
-        catch (OperationCanceledException)
+        catch ( OperationCanceledException )
         {
             // 正常取消，不需要处理
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             // 记录异常但不中断处理
             try
@@ -58,7 +58,7 @@ public static class AsyncConsole
         try
         {
             Console.ForegroundColor = message.Color;
-            if (message.NewLine)
+            if ( message.NewLine )
             {
                 Console.WriteLine(message.Text);
             }
@@ -80,7 +80,7 @@ public static class AsyncConsole
     /// <param name="message">要写入的控制台消息</param>
     public static void Write(ConsoleMessage message)
     {
-        if (!_cancellationTokenSource.IsCancellationRequested)
+        if ( !_cancellationTokenSource.IsCancellationRequested )
         {
             _messageQueue.Add(message);
         }
@@ -100,7 +100,7 @@ public static class AsyncConsole
         try
         {
             await completedTask;
-            if (completedTask.Result == timeoutTask)
+            if ( completedTask.Result == timeoutTask )
             {
                 // 超时强制取消
                 _cancellationTokenSource.Cancel();
@@ -114,7 +114,7 @@ public static class AsyncConsole
                 }
             }
         }
-        catch (Exception)
+        catch ( Exception )
         {
             // 其他异常，强制取消
             _cancellationTokenSource.Cancel();

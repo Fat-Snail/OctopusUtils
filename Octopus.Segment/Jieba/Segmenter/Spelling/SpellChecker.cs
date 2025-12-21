@@ -20,17 +20,17 @@ namespace JiebaNet.Segmenter.Spelling
             WordTrie = new Trie();
             FirstChars = new Dictionary<Char, HashSet<Char>>();
 
-            foreach (var wd in wordDict.Trie)
+            foreach ( var wd in wordDict.Trie )
             {
-                if (wd.Value > 0)
+                if ( wd.Value > 0 )
                 {
                     WordTrie.Insert(wd.Key, wd.Value);
 
-                    if (wd.Key.Length >= 2)
+                    if ( wd.Key.Length >= 2 )
                     {
                         var second = wd.Key[1];
                         var first = wd.Key[0];
-                        if (!FirstChars.ContainsKey(second))
+                        if ( !FirstChars.ContainsKey(second) )
                         {
                             FirstChars[second] = new HashSet<Char>();
                         }
@@ -43,7 +43,7 @@ namespace JiebaNet.Segmenter.Spelling
         internal ISet<String> GetEdits1(String word)
         {
             var splits = new List<WordSplit>();
-            for (var i = 0; i <= word.Length; i++)
+            for ( var i = 0; i <= word.Length; i++ )
             {
                 splits.Add(new WordSplit() { Left = word.Substring(0, i), Right = word.Substring(i) });
             }
@@ -57,21 +57,21 @@ namespace JiebaNet.Segmenter.Spelling
                 .Select(s => s.Left + s.Right[1] + s.Right[0] + s.Right.Substring(2));
 
             var replaces = new HashSet<String>();
-            if (word.Length > 1)
+            if ( word.Length > 1 )
             {
                 var firsts = FirstChars[word[1]];
-                foreach (var first in firsts)
+                foreach ( var first in firsts )
                 {
-                    if (first != word[0])
+                    if ( first != word[0] )
                     {
                         replaces.Add(first + word.Substring(1));
                     }
                 }
 
                 var node = WordTrie.Root.Children[word[0]];
-                for (var i = 1; node.IsNotNull() && node.Children.IsNotEmpty() && i < word.Length; i++)
+                for ( var i = 1; node.IsNotNull() && node.Children.IsNotEmpty() && i < word.Length; i++ )
                 {
-                    foreach (var c in node.Children.Keys)
+                    foreach ( var c in node.Children.Keys )
                     {
                         replaces.Add(word.Substring(0, i) + c + word.Substring(i + 1));
                     }
@@ -80,26 +80,26 @@ namespace JiebaNet.Segmenter.Spelling
             }
 
             var inserts = new HashSet<String>();
-            if (word.Length > 1)
+            if ( word.Length > 1 )
             {
-                if (FirstChars.ContainsKey(word[0]))
+                if ( FirstChars.ContainsKey(word[0]) )
                 {
                     var firsts = FirstChars[word[0]];
-                    foreach (var first in firsts)
+                    foreach ( var first in firsts )
                     {
                         inserts.Add(first + word);
                     }
                 }
 
                 var node = WordTrie.Root.Children.GetValueOrDefaultEx(word[0]);
-                for (var i = 0; node.IsNotNull() && node.Children.IsNotEmpty() && i < word.Length; i++)
+                for ( var i = 0; node.IsNotNull() && node.Children.IsNotEmpty() && i < word.Length; i++ )
                 {
-                    foreach (var c in node.Children.Keys)
+                    foreach ( var c in node.Children.Keys )
                     {
                         inserts.Add(word.Substring(0, i + 1) + c + word.Substring(i + 1));
                     }
 
-                    if (i < word.Length - 1)
+                    if ( i < word.Length - 1 )
                     {
                         node = node.Children.GetValueOrDefault(word[i + 1]);
                     }
@@ -118,7 +118,7 @@ namespace JiebaNet.Segmenter.Spelling
         internal ISet<String> GetKnownEdits2(String word)
         {
             var result = new HashSet<String>();
-            foreach (var e1 in GetEdits1(word))
+            foreach ( var e1 in GetEdits1(word) )
             {
                 result.UnionWith(GetEdits1(e1).Where(e => WordDictionary.Instance.ContainsWord(e)));
             }
@@ -132,13 +132,13 @@ namespace JiebaNet.Segmenter.Spelling
 
         public IEnumerable<String> Suggests(String word)
         {
-            if (WordDict.ContainsWord(word))
+            if ( WordDict.ContainsWord(word) )
             {
                 return new[] { word };
             }
 
             var candicates = GetKnownWords(GetEdits1(word));
-            if (candicates.IsNotEmpty())
+            if ( candicates.IsNotEmpty() )
             {
                 return candicates.OrderByDescending(c => WordDict.GetFreqOrDefault(c));
             }

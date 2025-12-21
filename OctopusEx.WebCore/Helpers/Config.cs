@@ -1,11 +1,12 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
-namespace Util.Helpers; 
+namespace Util.Helpers;
 
 /// <summary>
 /// 配置操作
 /// </summary>
-public static class Config {
+public static class Config
+{
     /// <summary>
     /// 配置
     /// </summary>
@@ -15,7 +16,8 @@ public static class Config {
     /// 设置配置
     /// </summary>
     /// <param name="configuration">配置</param>
-    public static void SetConfiguration( IConfiguration configuration ) {
+    public static void SetConfiguration(IConfiguration configuration)
+    {
         _configuration = configuration;
     }
 
@@ -23,16 +25,18 @@ public static class Config {
     /// 获取配置值
     /// </summary>
     /// <param name="key">配置键</param>
-    public static String GetValue( String key ) {
-        return GetValue<String>( key );
+    public static String GetValue(String key)
+    {
+        return GetValue<String>(key);
     }
 
     /// <summary>
     /// 获取配置值
     /// </summary>
     /// <param name="key">配置键</param>
-    public static T GetValue<T>( String key ) {
-        return GetConfiguration().GetValue<T>( key );
+    public static T GetValue<T>(String key)
+    {
+        return GetConfiguration().GetValue<T>(key);
     }
 
     /// <summary>
@@ -40,22 +44,25 @@ public static class Config {
     /// </summary>
     /// <typeparam name="TOptions">配置选项类型</typeparam>
     /// <param name="section">配置节</param>
-    public static TOptions Get<TOptions>( String section ) {
-        return GetSection( section ).Get<TOptions>();
+    public static TOptions Get<TOptions>(String section)
+    {
+        return GetSection(section).Get<TOptions>();
     }
 
     /// <summary>
     /// 获取配置节
     /// </summary>
     /// <param name="section">配置节</param>
-    public static IConfigurationSection GetSection( String section ) {
-        return GetConfiguration().GetSection( section );
+    public static IConfigurationSection GetSection(String section)
+    {
+        return GetConfiguration().GetSection(section);
     }
 
     /// <summary>
     /// 获取配置
     /// </summary>
-    private static IConfiguration GetConfiguration() {
+    private static IConfiguration GetConfiguration()
+    {
         return _configuration ??= CreateConfiguration();
     }
 
@@ -64,19 +71,20 @@ public static class Config {
     /// </summary>
     /// <param name="basePath">配置文件目录绝对路径</param>
     /// <param name="jsonFiles">配置文件列表,默认已包含appsettings.json</param>
-    public static IConfiguration CreateConfiguration( String basePath = null,params String[] jsonFiles ) {
+    public static IConfiguration CreateConfiguration(String basePath = null, params String[] jsonFiles)
+    {
         basePath ??= Common.ApplicationBaseDirectory;
         var builder = new ConfigurationBuilder()
-            .SetBasePath( basePath )
-            .AddJsonFile( "appsettings.json", true, false );
-        var environment = Environment.GetEnvironmentVariable( "ASPNETCORE_ENVIRONMENT" );
+            .SetBasePath(basePath)
+            .AddJsonFile("appsettings.json", true, false);
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         if ( environment.IsEmpty() == false )
-            builder.AddJsonFile( $"appsettings.{environment}.json", true, false );
+            builder.AddJsonFile($"appsettings.{environment}.json", true, false);
         builder.AddEnvironmentVariables();
         if ( jsonFiles == null )
             return builder.Build();
-        foreach ( var file in jsonFiles ) 
-            builder.AddJsonFile( file, true, false );
+        foreach ( var file in jsonFiles )
+            builder.AddJsonFile(file, true, false);
         return builder.Build();
     }
 
@@ -84,7 +92,8 @@ public static class Config {
     /// 获取数据库连接字符串
     /// </summary>
     /// <param name="name">数据库连接字符串键名</param>
-    public static String GetConnectionString( String name ) {
-        return GetConfiguration().GetConnectionString( name );
+    public static String GetConnectionString(String name)
+    {
+        return GetConfiguration().GetConnectionString(name);
     }
 }

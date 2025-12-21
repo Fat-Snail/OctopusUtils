@@ -12,29 +12,29 @@ public static class DisposeHelper
     /// <returns></returns>
     public static Object? TryDispose(this Object? obj)
     {
-        if (obj == null)
+        if ( obj == null )
         {
             return obj;
         }
         var enumerable = obj as IEnumerable;
-        if (enumerable != null)
+        if ( enumerable != null )
         {
             var list = obj as IList;
-            if (list == null)
+            if ( list == null )
             {
                 list = new List<Object>();
-                foreach (var item in enumerable)
+                foreach ( var item in enumerable )
                 {
-                    if (item is IDisposable)
+                    if ( item is IDisposable )
                     {
                         list.Add(item);
                     }
                 }
             }
-            foreach (var item2 in list)
+            foreach ( var item2 in list )
             {
                 var disposable = item2 as IDisposable;
-                if (disposable != null)
+                if ( disposable != null )
                 {
                     try
                     {
@@ -47,7 +47,7 @@ public static class DisposeHelper
             }
         }
         var disposable2 = obj as IDisposable;
-        if (disposable2 != null)
+        if ( disposable2 != null )
         {
             try
             {

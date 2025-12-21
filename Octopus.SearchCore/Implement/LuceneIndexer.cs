@@ -48,14 +48,14 @@ public class LuceneIndexer : ILuceneIndexer
         using var writer = new IndexWriter(_directory, config);
 
         // 删除重建
-        if (recreate)
+        if ( recreate )
         {
             writer.DeleteAll();
             writer.Commit();
         }
 
         // 遍历实体集，添加到索引库
-        foreach (var entity in entities)
+        foreach ( var entity in entities )
         {
             writer.AddDocument(entity.ToDocument());
         }
@@ -97,13 +97,13 @@ public class LuceneIndexer : ILuceneIndexer
         try
         {
             writer.DeleteAll();
-            if (commit)
+            if ( commit )
             {
                 writer.Commit();
             }
             writer.Flush(true, true);
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine(ex.Message);
         }
@@ -136,9 +136,9 @@ public class LuceneIndexer : ILuceneIndexer
     {
         var config = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, _analyzer);
         using var writer = new IndexWriter(_directory, config);
-        foreach (var change in changeset.Entries)
+        foreach ( var change in changeset.Entries )
         {
-            switch (change.State)
+            switch ( change.State )
             {
                 case LuceneIndexState.Removed:
                     //writer.DeleteDocuments(new Term("Id", change.Entity.Id.ToString()));
@@ -169,7 +169,7 @@ public class LuceneIndexer : ILuceneIndexer
             IndexReader reader = DirectoryReader.Open(_directory);
             return reader.NumDocs;
         }
-        catch (IndexNotFoundException ex)
+        catch ( IndexNotFoundException ex )
         {
             _directory.ClearLock("write.lock");
             Console.WriteLine(ex.Message);

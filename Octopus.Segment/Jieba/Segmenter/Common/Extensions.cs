@@ -44,7 +44,7 @@ namespace JiebaNet.Segmenter.Common
 
         public static TValue GetDefault<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue defaultValue)
         {
-            if (dict.ContainsKey(key))
+            if ( dict.ContainsKey(key) )
             {
                 return dict[key];
             }
@@ -53,7 +53,7 @@ namespace JiebaNet.Segmenter.Common
 
         public static void Update<TKey, TValue>(this IDictionary<TKey, TValue> dict, IDictionary<TKey, TValue> other)
         {
-            foreach (var key in other.Keys)
+            foreach ( var key in other.Keys )
             {
                 dict[key] = other[key];
             }
@@ -65,7 +65,7 @@ namespace JiebaNet.Segmenter.Common
 
         public static String Left(this String s, Int32 endIndex)
         {
-            if (String.IsNullOrEmpty(s))
+            if ( String.IsNullOrEmpty(s) )
             {
                 return s;
             }
@@ -75,7 +75,7 @@ namespace JiebaNet.Segmenter.Common
 
         public static String Right(this String s, Int32 startIndex)
         {
-            if (String.IsNullOrEmpty(s))
+            if ( String.IsNullOrEmpty(s) )
             {
                 return s;
             }
@@ -122,7 +122,7 @@ namespace JiebaNet.Segmenter.Common
 
         public static Char ToChar(this Int32 i)
         {
-            return (Char)i;
+            return ( Char )i;
         }
 
         #endregion

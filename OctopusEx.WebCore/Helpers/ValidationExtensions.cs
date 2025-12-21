@@ -1,4 +1,4 @@
-namespace Util.Helpers;
+﻿namespace Util.Helpers;
 
 /// <summary>
 /// 验证扩展
@@ -12,7 +12,7 @@ public static class ValidationExtensions
     /// <param name="parameterName">参数名</param>
     public static void CheckNull(this Object obj, String parameterName)
     {
-        if (obj == null)
+        if ( obj == null )
             throw new ArgumentNullException(parameterName);
     }
 }

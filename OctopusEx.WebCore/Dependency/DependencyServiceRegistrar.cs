@@ -53,7 +53,7 @@ public class DependencyServiceRegistrar : IServiceRegistrar
     {
         var types = GetTypes<TDependencyInterface>(finder);
         var result = FilterTypes(types);
-        foreach (var item in result)
+        foreach ( var item in result )
             RegisterType(services, item.Item1, item.Item2, lifetime);
     }
 
@@ -64,7 +64,7 @@ public class DependencyServiceRegistrar : IServiceRegistrar
     {
         var result = new List<(Type, Type)>();
         var classTypes = finder.Find<TDependencyInterface>();
-        foreach (var classType in classTypes)
+        foreach ( var classType in classTypes )
         {
             var interfaceTypes = Util.Helpers.Reflection.GetInterfaceTypes(classType, typeof(TDependencyInterface));
             interfaceTypes.ForEach(interfaceType => result.Add((interfaceType, classType)));
@@ -79,9 +79,9 @@ public class DependencyServiceRegistrar : IServiceRegistrar
     private List<(Type, Type)> FilterTypes(List<(Type, Type)> types)
     {
         var result = new List<(Type, Type)>();
-        foreach (var group in types.GroupBy(t => t.Item1))
+        foreach ( var group in types.GroupBy(t => t.Item1) )
         {
-            if (group.Count() == 1)
+            if ( group.Count() == 1 )
             {
                 result.Add(group.First());
                 continue;
@@ -100,10 +100,10 @@ public class DependencyServiceRegistrar : IServiceRegistrar
     {
         Int32? currentPriority = null;
         Type classType = null;
-        foreach (var item in group)
+        foreach ( var item in group )
         {
             var priority = GetPriority(item.Item2);
-            if (currentPriority == null || priority > currentPriority)
+            if ( currentPriority == null || priority > currentPriority )
             {
                 currentPriority = priority;
                 classType = item.Item2;
@@ -119,7 +119,7 @@ public class DependencyServiceRegistrar : IServiceRegistrar
     private Int32 GetPriority(Type type)
     {
         var attribute = type.GetCustomAttribute<IocAttribute>();
-        if (attribute == null)
+        if ( attribute == null )
             return 0;
         return attribute.Priority;
     }

@@ -34,25 +34,25 @@ namespace JiebaNet.Segmenter.PosSeg
 
             var tokens = new List<Pair>();
             Int32 begin = 0, next = 0;
-            for (var i = 0; i < sentence.Length; i++)
+            for ( var i = 0; i < sentence.Length; i++ )
             {
                 var parts = posList[i].Split('-');
                 var charState = parts[0][0];
                 var pos = parts[1];
-                if (charState == 'B')
+                if ( charState == 'B' )
                     begin = i;
-                else if (charState == 'E')
+                else if ( charState == 'E' )
                 {
                     tokens.Add(new Pair(sentence.Sub(begin, i + 1), pos));
                     next = i + 1;
                 }
-                else if (charState == 'S')
+                else if ( charState == 'S' )
                 {
                     tokens.Add(new Pair(sentence.Sub(i, i + 1), pos));
                     next = i + 1;
                 }
             }
-            if (next < sentence.Length)
+            if ( next < sentence.Length )
             {
                 tokens.Add(new Pair(sentence.Substring(next), posList[next].Split('-')[1]));
             }
@@ -92,7 +92,7 @@ namespace JiebaNet.Segmenter.PosSeg
             // Init weights and paths.
             v.Add(new Dictionary<String, Double>());
             memPath.Add(new Dictionary<String, String>());
-            foreach (var state in _stateTab.GetDefault(sentence[0], allStates))
+            foreach ( var state in _stateTab.GetDefault(sentence[0], allStates) )
             {
                 var emP = _emitProbs[state].GetDefault(sentence[0], Constants.MinProb);
                 v[0][state] = _startProbs[state] + emP;
@@ -100,7 +100,7 @@ namespace JiebaNet.Segmenter.PosSeg
             }
 
             // For each remaining char
-            for (var i = 1; i < sentence.Length; ++i)
+            for ( var i = 1; i < sentence.Length; ++i )
             {
                 v.Add(new Dictionary<String, Double>());
                 memPath.Add(new Dictionary<String, String>());
@@ -111,9 +111,9 @@ namespace JiebaNet.Segmenter.PosSeg
                 IEnumerable<String> obsStates = _stateTab.GetDefault(sentence[i], allStates);
                 obsStates = curPossibleStates.Intersect(obsStates);
 
-                if (!obsStates.Any())
+                if ( !obsStates.Any() )
                 {
-                    if (curPossibleStates.Count > 0)
+                    if ( curPossibleStates.Count > 0 )
                     {
                         obsStates = curPossibleStates;
                     }
@@ -123,21 +123,21 @@ namespace JiebaNet.Segmenter.PosSeg
                     }
                 }
 
-                foreach (var y in obsStates)
+                foreach ( var y in obsStates )
                 {
                     var emp = _emitProbs[y].GetDefault(sentence[i], Constants.MinProb);
 
                     var prob = Double.MinValue;
                     var state = String.Empty;
 
-                    foreach (var y0 in prevStates)
+                    foreach ( var y0 in prevStates )
                     {
                         var tranp = _transProbs[y0].GetDefault(y, Double.MinValue);
                         tranp = v[i - 1][y0] + tranp + emp;
                         // TODO: compare two very small values;
                         // TODO: how to deal with negative infinity
-                        if (prob < tranp ||
-                            (prob == tranp && String.Compare(state, y0, StringComparison.CurrentCultureIgnoreCase) < 0))
+                        if ( prob < tranp ||
+                            (prob == tranp && String.Compare(state, y0, StringComparison.CurrentCultureIgnoreCase) < 0) )
                         {
                             prob = tranp;
                             state = y0;
@@ -152,11 +152,11 @@ namespace JiebaNet.Segmenter.PosSeg
             var last = memPath.Last().Keys.Select(y => new { State = y, Prob = vLast[y] });
             var endProb = Double.MinValue;
             var endState = String.Empty;
-            foreach (var endPoint in last)
+            foreach ( var endPoint in last )
             {
                 // TODO: compare two very small values;
-                if (endProb < endPoint.Prob ||
-                    (endProb == endPoint.Prob && String.Compare(endState, endPoint.State, StringComparison.CurrentCultureIgnoreCase) < 0))
+                if ( endProb < endPoint.Prob ||
+                    (endProb == endPoint.Prob && String.Compare(endState, endPoint.State, StringComparison.CurrentCultureIgnoreCase) < 0) )
                 {
                     endProb = endPoint.Prob;
                     endState = endPoint.State;
@@ -166,7 +166,7 @@ namespace JiebaNet.Segmenter.PosSeg
             var route = new String[sentence.Length];
             var n = sentence.Length - 1;
             var curState = endState;
-            while (n >= 0)
+            while ( n >= 0 )
             {
                 route[n] = curState;
                 curState = memPath[n][curState];

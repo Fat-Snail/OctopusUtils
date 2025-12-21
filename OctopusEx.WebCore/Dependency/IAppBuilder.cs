@@ -1,11 +1,12 @@
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 
-namespace Util.Configs; 
+namespace Util.Configs;
 
 /// <summary>
 /// 应用生成器
 /// </summary>
-public interface IAppBuilder {
+public interface IAppBuilder
+{
     /// <summary>
     /// 主机生成器
     /// </summary>

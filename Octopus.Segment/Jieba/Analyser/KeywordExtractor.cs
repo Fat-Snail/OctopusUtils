@@ -21,7 +21,7 @@ namespace JiebaNet.Analyser
         {
             StopWords = new HashSet<String>();
             var lines = FileExtension.ReadEmbeddedAllLines(stopWordsFile);
-            foreach (var line in lines)
+            foreach ( var line in lines )
             {
                 StopWords.Add(line.Trim());
             }

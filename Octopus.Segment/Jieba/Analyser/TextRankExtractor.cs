@@ -32,7 +32,7 @@ namespace JiebaNet.Analyser
             Segmenter = new JiebaSegmenter();
             PosSegmenter = new PosSegmenter(Segmenter);
             SetStopWords(ConfigManager.StopWordsFile);
-            if (StopWords.IsEmpty())
+            if ( StopWords.IsEmpty() )
             {
                 StopWords.UnionWith(DefaultStopWords);
             }
@@ -41,14 +41,14 @@ namespace JiebaNet.Analyser
         public override IEnumerable<String> ExtractTags(String text, Int32 count = 20, IEnumerable<String> allowPos = null)
         {
             var rank = ExtractTagRank(text, allowPos);
-            if (count <= 0) { count = 20; }
+            if ( count <= 0 ) { count = 20; }
             return rank.OrderByDescending(p => p.Value).Select(p => p.Key).Take(count);
         }
 
         public override IEnumerable<WordWeightPair> ExtractTagsWithWeight(String text, Int32 count = 20, IEnumerable<String> allowPos = null)
         {
             var rank = ExtractTagRank(text, allowPos);
-            if (count <= 0) { count = 20; }
+            if ( count <= 0 ) { count = 20; }
             return rank.OrderByDescending(p => p.Value).Select(p => new WordWeightPair()
             {
                 Word = p.Key,
@@ -60,7 +60,7 @@ namespace JiebaNet.Analyser
 
         private IDictionary<String, Double> ExtractTagRank(String text, IEnumerable<String> allowPos)
         {
-            if (allowPos.IsEmpty())
+            if ( allowPos.IsEmpty() )
             {
                 allowPos = DefaultPosFilter;
             }
@@ -69,25 +69,25 @@ namespace JiebaNet.Analyser
             var cm = new Dictionary<String, Int32>();
             var words = PosSegmenter.Cut(text).ToList();
 
-            for (var i = 0; i < words.Count(); i++)
+            for ( var i = 0; i < words.Count(); i++ )
             {
                 var wp = words[i];
-                if (PairFilter(wp))
+                if ( PairFilter(wp) )
                 {
-                    for (var j = i + 1; j < i + Span; j++)
+                    for ( var j = i + 1; j < i + Span; j++ )
                     {
-                        if (j >= words.Count)
+                        if ( j >= words.Count )
                         {
                             break;
                         }
-                        if (!PairFilter(words[j]))
+                        if ( !PairFilter(words[j]) )
                         {
                             continue;
                         }
 
                         // TODO: better separator.
                         var key = wp.Word + "$" + words[j].Word;
-                        if (!cm.ContainsKey(key))
+                        if ( !cm.ContainsKey(key) )
                         {
                             cm[key] = 0;
                         }
@@ -96,7 +96,7 @@ namespace JiebaNet.Analyser
                 }
             }
 
-            foreach (var p in cm)
+            foreach ( var p in cm )
             {
                 var terms = p.Key.Split('$');
                 g.AddEdge(terms[0], terms[1], p.Value);

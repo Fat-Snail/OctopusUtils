@@ -37,9 +37,9 @@ public static class Reflection
     /// <param name="memberName">成员名称</param>
     public static String GetDescription(Type type, String memberName)
     {
-        if (type == null)
+        if ( type == null )
             return String.Empty;
-        if (String.IsNullOrWhiteSpace(memberName))
+        if ( String.IsNullOrWhiteSpace(memberName) )
             return String.Empty;
         return GetDescription(type.GetTypeInfo().GetMember(memberName).FirstOrDefault());
     }
@@ -50,7 +50,7 @@ public static class Reflection
     /// <param name="member">成员</param>
     public static String GetDescription(MemberInfo member)
     {
-        if (member == null)
+        if ( member == null )
             return String.Empty;
         return member.GetCustomAttribute<DescriptionAttribute>() is { } attribute ? attribute.Description : member.Name;
     }
@@ -73,11 +73,11 @@ public static class Reflection
     /// </summary>
     public static String GetDisplayName(MemberInfo member)
     {
-        if (member == null)
+        if ( member == null )
             return String.Empty;
-        if (member.GetCustomAttribute<DisplayAttribute>() is { } displayAttribute)
+        if ( member.GetCustomAttribute<DisplayAttribute>() is { } displayAttribute )
             return displayAttribute.Name;
-        if (member.GetCustomAttribute<DisplayNameAttribute>() is { } displayNameAttribute)
+        if ( member.GetCustomAttribute<DisplayNameAttribute>() is { } displayNameAttribute )
             return displayNameAttribute.DisplayName;
         return String.Empty;
     }
@@ -114,8 +114,9 @@ public static class Reflection
     /// <typeparam name="T">目标类型</typeparam>
     /// <param name="type">类型</param>
     /// <param name="parameters">传递给构造函数的参数</param>        
-    public static T CreateInstance<T>( Type type, params Object[] parameters ) {
-        return Convert.To<T>( Activator.CreateInstance( type, parameters ) );
+    public static T CreateInstance<T>(Type type, params Object[] parameters)
+    {
+        return Convert.To<T>(Activator.CreateInstance(type, parameters));
     }
 
     #endregion
@@ -140,7 +141,7 @@ public static class Reflection
     public static List<Type> FindImplementTypes(Type findType, params Assembly[] assemblies)
     {
         var result = new List<Type>();
-        foreach (var assembly in assemblies)
+        foreach ( var assembly in assemblies )
             result.AddRange(GetTypes(findType, assembly));
         return result.Distinct().ToList();
     }
@@ -151,19 +152,19 @@ public static class Reflection
     private static List<Type> GetTypes(Type findType, Assembly assembly)
     {
         var result = new List<Type>();
-        if (assembly == null)
+        if ( assembly == null )
             return result;
         Type[] types;
         try
         {
             types = assembly.GetTypes();
         }
-        catch (ReflectionTypeLoadException)
+        catch ( ReflectionTypeLoadException )
         {
             return result;
         }
 
-        foreach (var type in types)
+        foreach ( var type in types )
             AddType(result, findType, type);
         return result;
     }
@@ -173,9 +174,9 @@ public static class Reflection
     /// </summary>
     private static void AddType(List<Type> result, Type findType, Type type)
     {
-        if (type.IsInterface || type.IsAbstract)
+        if ( type.IsInterface || type.IsAbstract )
             return;
-        if (findType.IsAssignableFrom(type) == false && MatchGeneric(findType, type) == false)
+        if ( findType.IsAssignableFrom(type) == false && MatchGeneric(findType, type) == false )
             return;
         result.Add(type);
     }
@@ -185,12 +186,12 @@ public static class Reflection
     /// </summary>
     private static Boolean MatchGeneric(Type findType, Type type)
     {
-        if (findType.IsGenericTypeDefinition == false)
+        if ( findType.IsGenericTypeDefinition == false )
             return false;
         var definition = findType.GetGenericTypeDefinition();
-        foreach (var implementedInterface in type.FindInterfaces((filter, criteria) => true, null))
+        foreach ( var implementedInterface in type.FindInterfaces((filter, criteria) => true, null) )
         {
-            if (implementedInterface.IsGenericType == false)
+            if ( implementedInterface.IsGenericType == false )
                 continue;
             return definition.IsAssignableFrom(implementedInterface.GetGenericTypeDefinition());
         }
@@ -221,7 +222,7 @@ public static class Reflection
     {
         var interfaceTypes = type.GetInterfaces();
         var directInterfaceTypes = interfaceTypes.Except(interfaceTypes.SelectMany(t => t.GetInterfaces())).ToList();
-        if (baseInterfaceTypes == null || baseInterfaceTypes.Length == 0)
+        if ( baseInterfaceTypes == null || baseInterfaceTypes.Length == 0 )
             return directInterfaceTypes;
         return GetInterfaceTypes(directInterfaceTypes, baseInterfaceTypes);
     }
@@ -232,11 +233,11 @@ public static class Reflection
     private static List<Type> GetInterfaceTypes(IEnumerable<Type> interfaceTypes, Type[] baseInterfaceTypes)
     {
         var result = new List<Type>();
-        foreach (var interfaceType in interfaceTypes)
+        foreach ( var interfaceType in interfaceTypes )
         {
-            if (interfaceType.GetInterfaces().Any(baseInterfaceTypes.Contains) == false)
+            if ( interfaceType.GetInterfaces().Any(baseInterfaceTypes.Contains) == false )
                 continue;
-            if (interfaceType.IsGenericType && !interfaceType.IsGenericTypeDefinition && interfaceType.FullName == null)
+            if ( interfaceType.IsGenericType && !interfaceType.IsGenericTypeDefinition && interfaceType.FullName == null )
             {
                 result.Add(interfaceType.GetGenericTypeDefinition());
                 continue;
@@ -270,7 +271,7 @@ public static class Reflection
     public static List<Type> GetInterfaceTypes(Type type, params Type[] baseInterfaceTypes)
     {
         var interfaceTypes = type.GetInterfaces();
-        if (baseInterfaceTypes == null || baseInterfaceTypes.Length == 0)
+        if ( baseInterfaceTypes == null || baseInterfaceTypes.Length == 0 )
             return interfaceTypes.ToList();
         return GetInterfaceTypes(interfaceTypes, baseInterfaceTypes);
     }
@@ -285,7 +286,7 @@ public static class Reflection
     /// <param name="type">类型</param>
     public static Boolean IsCollection(Type type)
     {
-        if (type.IsArray)
+        if ( type.IsArray )
             return true;
         return IsGenericCollection(type);
     }
@@ -300,7 +301,7 @@ public static class Reflection
     /// <param name="type">类型</param>
     public static Boolean IsGenericCollection(Type type)
     {
-        if (!type.IsGenericType)
+        if ( !type.IsGenericType )
             return false;
         var typeDefinition = type.GetGenericTypeDefinition();
         return typeDefinition == typeof(IEnumerable<>)
@@ -321,14 +322,14 @@ public static class Reflection
     /// <param name="member">成员</param>
     public static Boolean IsBool(MemberInfo member)
     {
-        if (member == null)
+        if ( member == null )
             return false;
-        switch (member.MemberType)
+        switch ( member.MemberType )
         {
             case MemberTypes.TypeInfo:
                 return member.ToString() == "System.Boolean";
             case MemberTypes.Property:
-                return IsBool((PropertyInfo)member);
+                return IsBool(( PropertyInfo )member);
         }
 
         return false;
@@ -352,14 +353,14 @@ public static class Reflection
     /// <param name="member">成员</param>
     public static Boolean IsEnum(MemberInfo member)
     {
-        if (member == null)
+        if ( member == null )
             return false;
-        switch (member.MemberType)
+        switch ( member.MemberType )
         {
             case MemberTypes.TypeInfo:
-                return ((TypeInfo)member).IsEnum;
+                return (( TypeInfo )member).IsEnum;
             case MemberTypes.Property:
-                return IsEnum((PropertyInfo)member);
+                return IsEnum(( PropertyInfo )member);
         }
 
         return false;
@@ -370,10 +371,10 @@ public static class Reflection
     /// </summary>
     private static Boolean IsEnum(PropertyInfo property)
     {
-        if (property.PropertyType.GetTypeInfo().IsEnum)
+        if ( property.PropertyType.GetTypeInfo().IsEnum )
             return true;
         var value = Nullable.GetUnderlyingType(property.PropertyType);
-        if (value == null)
+        if ( value == null )
             return false;
         return value.GetTypeInfo().IsEnum;
     }
@@ -388,14 +389,14 @@ public static class Reflection
     /// <param name="member">成员</param>
     public static Boolean IsDate(MemberInfo member)
     {
-        if (member == null)
+        if ( member == null )
             return false;
-        switch (member.MemberType)
+        switch ( member.MemberType )
         {
             case MemberTypes.TypeInfo:
                 return member.ToString() == "System.DateTime";
             case MemberTypes.Property:
-                return IsDate((PropertyInfo)member);
+                return IsDate(( PropertyInfo )member);
         }
 
         return false;
@@ -406,9 +407,9 @@ public static class Reflection
     /// </summary>
     private static Boolean IsDate(PropertyInfo property)
     {
-        if (property.PropertyType == typeof(DateTime))
+        if ( property.PropertyType == typeof(DateTime) )
             return true;
-        if (property.PropertyType == typeof(DateTime?))
+        if ( property.PropertyType == typeof(DateTime?) )
             return true;
         return false;
     }
@@ -423,15 +424,15 @@ public static class Reflection
     /// <param name="member">成员</param>
     public static Boolean IsInt(MemberInfo member)
     {
-        if (member == null)
+        if ( member == null )
             return false;
-        switch (member.MemberType)
+        switch ( member.MemberType )
         {
             case MemberTypes.TypeInfo:
                 return member.ToString() == "System.Int32" || member.ToString() == "System.Int16" ||
                        member.ToString() == "System.Int64";
             case MemberTypes.Property:
-                return IsInt((PropertyInfo)member);
+                return IsInt(( PropertyInfo )member);
         }
 
         return false;
@@ -442,17 +443,17 @@ public static class Reflection
     /// </summary>
     private static Boolean IsInt(PropertyInfo property)
     {
-        if (property.PropertyType == typeof(Int32))
+        if ( property.PropertyType == typeof(Int32) )
             return true;
-        if (property.PropertyType == typeof(Int32?))
+        if ( property.PropertyType == typeof(Int32?) )
             return true;
-        if (property.PropertyType == typeof(Int16))
+        if ( property.PropertyType == typeof(Int16) )
             return true;
-        if (property.PropertyType == typeof(Int16?))
+        if ( property.PropertyType == typeof(Int16?) )
             return true;
-        if (property.PropertyType == typeof(Int64))
+        if ( property.PropertyType == typeof(Int64) )
             return true;
-        if (property.PropertyType == typeof(Int64?))
+        if ( property.PropertyType == typeof(Int64?) )
             return true;
         return false;
     }
@@ -467,17 +468,17 @@ public static class Reflection
     /// <param name="member">成员</param>
     public static Boolean IsNumber(MemberInfo member)
     {
-        if (member == null)
+        if ( member == null )
             return false;
-        if (IsInt(member))
+        if ( IsInt(member) )
             return true;
-        switch (member.MemberType)
+        switch ( member.MemberType )
         {
             case MemberTypes.TypeInfo:
                 return member.ToString() == "System.Double" || member.ToString() == "System.Decimal" ||
                        member.ToString() == "System.Single";
             case MemberTypes.Property:
-                return IsNumber((PropertyInfo)member);
+                return IsNumber(( PropertyInfo )member);
         }
 
         return false;
@@ -488,17 +489,17 @@ public static class Reflection
     /// </summary>
     private static Boolean IsNumber(PropertyInfo property)
     {
-        if (property.PropertyType == typeof(Double))
+        if ( property.PropertyType == typeof(Double) )
             return true;
-        if (property.PropertyType == typeof(Double?))
+        if ( property.PropertyType == typeof(Double?) )
             return true;
-        if (property.PropertyType == typeof(Decimal))
+        if ( property.PropertyType == typeof(Decimal) )
             return true;
-        if (property.PropertyType == typeof(Decimal?))
+        if ( property.PropertyType == typeof(Decimal?) )
             return true;
-        if (property.PropertyType == typeof(Single))
+        if ( property.PropertyType == typeof(Single) )
             return true;
-        if (property.PropertyType == typeof(Single?))
+        if ( property.PropertyType == typeof(Single?) )
             return true;
         return false;
     }
@@ -513,12 +514,12 @@ public static class Reflection
     /// <param name="type">类型</param>
     public static Type GetElementType(Type type)
     {
-        if (IsCollection(type) == false)
+        if ( IsCollection(type) == false )
             return type;
-        if (type.IsArray)
+        if ( type.IsArray )
             return type.GetElementType();
         var genericArgumentsTypes = type.GetTypeInfo().GetGenericArguments();
-        if (genericArgumentsTypes == null || genericArgumentsTypes.Length == 0)
+        if ( genericArgumentsTypes == null || genericArgumentsTypes.Length == 0 )
             throw new ArgumentException(nameof(genericArgumentsTypes));
         return genericArgumentsTypes[0];
     }
@@ -542,11 +543,11 @@ public static class Reflection
     /// <param name="type">类型</param>
     public static Type GetTopBaseType(Type type)
     {
-        if (type == null)
+        if ( type == null )
             return null;
-        if (type.IsInterface)
+        if ( type.IsInterface )
             return type;
-        if (type.BaseType == typeof(Object))
+        if ( type.BaseType == typeof(Object) )
             return type;
         return GetTopBaseType(type.BaseType);
     }
@@ -562,7 +563,7 @@ public static class Reflection
     /// <param name="propertyName">属性名</param>
     public static Object GetPropertyValue(Object instance, String propertyName)
     {
-        if (instance == null)
+        if ( instance == null )
             return null;
         var property = instance.GetType().GetProperty(propertyName);
         return property == null ? null : property.GetValue(instance);

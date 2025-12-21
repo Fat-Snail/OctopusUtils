@@ -44,10 +44,10 @@ namespace JiebaNet.Segmenter.PosSeg
             {
                 _wordTagTab = new Dictionary<String, String>();
                 var lines = FileExtension.ReadEmbeddedAllLines(ConfigManager.MainDictFile);
-                foreach (var line in lines)
+                foreach ( var line in lines )
                 {
                     var tokens = line.Split(' ');
-                    if (tokens.Length < 2)
+                    if ( tokens.Length < 2 )
                     {
                         Debug.Fail(String.Format("Invalid line: {0}", line));
                         continue;
@@ -59,11 +59,11 @@ namespace JiebaNet.Segmenter.PosSeg
                     _wordTagTab[word] = tag;
                 }
             }
-            catch (System.IO.IOException e)
+            catch ( System.IO.IOException e )
             {
                 Debug.Fail(String.Format("Word tag table load failure, reason: {0}", e.Message));
             }
-            catch (FormatException fe)
+            catch ( FormatException fe )
             {
                 Debug.Fail(fe.Message);
             }
@@ -83,7 +83,7 @@ namespace JiebaNet.Segmenter.PosSeg
 
         private void CheckNewUserWordTags()
         {
-            if (_segmenter.UserWordTagTab.IsNotEmpty())
+            if ( _segmenter.UserWordTagTab.IsNotEmpty() )
             {
                 _wordTagTab.Update(_segmenter.UserWordTagTab);
                 _segmenter.UserWordTagTab = new Dictionary<String, String>();
@@ -103,7 +103,7 @@ namespace JiebaNet.Segmenter.PosSeg
 
             var blocks = RegexChineseInternal.Split(text);
             Func<String, IEnumerable<Pair>> cutMethod = null;
-            if (hmm)
+            if ( hmm )
             {
                 cutMethod = CutDag;
             }
@@ -113,32 +113,32 @@ namespace JiebaNet.Segmenter.PosSeg
             }
 
             var tokens = new List<Pair>();
-            foreach (var blk in blocks)
+            foreach ( var blk in blocks )
             {
-                if (RegexChineseInternal.IsMatch(blk))
+                if ( RegexChineseInternal.IsMatch(blk) )
                 {
                     tokens.AddRange(cutMethod(blk));
                 }
                 else
                 {
                     var tmp = RegexSkipInternal.Split(blk);
-                    foreach (var x in tmp)
+                    foreach ( var x in tmp )
                     {
-                        if (RegexSkipInternal.IsMatch(x))
+                        if ( RegexSkipInternal.IsMatch(x) )
                         {
                             tokens.Add(new Pair(x, "x"));
                         }
                         else
                         {
-                            foreach (var xx in x)
+                            foreach ( var xx in x )
                             {
                                 // TODO: each char?
                                 var xxs = xx.ToString();
-                                if (RegexNumbers.IsMatch(xxs))
+                                if ( RegexNumbers.IsMatch(xxs) )
                                 {
                                     tokens.Add(new Pair(xxs, "m"));
                                 }
-                                else if (RegexEnglishWords.IsMatch(x))
+                                else if ( RegexEnglishWords.IsMatch(x) )
                                 {
                                     tokens.Add(new Pair(xxs, "eng"));
                                 }
@@ -165,17 +165,17 @@ namespace JiebaNet.Segmenter.PosSeg
             var x = 0;
             var n = sentence.Length;
             var buf = String.Empty;
-            while (x < n)
+            while ( x < n )
             {
                 var y = route[x].Key + 1;
                 var w = sentence.Substring(x, y - x);
-                if (y - x == 1)
+                if ( y - x == 1 )
                 {
                     buf += w;
                 }
                 else
                 {
-                    if (buf.Length > 0)
+                    if ( buf.Length > 0 )
                     {
                         AddBufferToWordList(tokens, buf);
                         buf = String.Empty;
@@ -185,7 +185,7 @@ namespace JiebaNet.Segmenter.PosSeg
                 x = y;
             }
 
-            if (buf.Length > 0)
+            if ( buf.Length > 0 )
             {
                 AddBufferToWordList(tokens, buf);
             }
@@ -205,19 +205,19 @@ namespace JiebaNet.Segmenter.PosSeg
             var n = sentence.Length;
 
             var y = -1;
-            while (x < n)
+            while ( x < n )
             {
                 y = route[x].Key + 1;
                 var w = sentence.Substring(x, y - x);
                 // TODO: char or word?
-                if (RegexEnglishChar.IsMatch(w))
+                if ( RegexEnglishChar.IsMatch(w) )
                 {
                     buf += w;
                     x = y;
                 }
                 else
                 {
-                    if (buf.Length > 0)
+                    if ( buf.Length > 0 )
                     {
                         tokens.Add(new Pair(buf, "eng"));
                         buf = String.Empty;
@@ -227,7 +227,7 @@ namespace JiebaNet.Segmenter.PosSeg
                 }
             }
 
-            if (buf.Length > 0)
+            if ( buf.Length > 0 )
             {
                 tokens.Add(new Pair(buf, "eng"));
             }
@@ -239,24 +239,24 @@ namespace JiebaNet.Segmenter.PosSeg
         {
             var tokens = new List<Pair>();
             var blocks = RegexChineseDetail.Split(text);
-            foreach (var blk in blocks)
+            foreach ( var blk in blocks )
             {
-                if (RegexChineseDetail.IsMatch(blk))
+                if ( RegexChineseDetail.IsMatch(blk) )
                 {
                     tokens.AddRange(PosSeg.Cut(blk));
                 }
                 else
                 {
                     var tmp = RegexSkipDetail.Split(blk);
-                    foreach (var x in tmp)
+                    foreach ( var x in tmp )
                     {
-                        if (!String.IsNullOrWhiteSpace(x))
+                        if ( !String.IsNullOrWhiteSpace(x) )
                         {
-                            if (RegexNumbers.IsMatch(x))
+                            if ( RegexNumbers.IsMatch(x) )
                             {
                                 tokens.Add(new Pair(x, "m"));
                             }
-                            else if (RegexEnglishWords.IsMatch(x))
+                            else if ( RegexEnglishWords.IsMatch(x) )
                             {
                                 tokens.Add(new Pair(x, "eng"));
                             }
@@ -278,13 +278,13 @@ namespace JiebaNet.Segmenter.PosSeg
 
         private void AddBufferToWordList(List<Pair> words, String buf)
         {
-            if (buf.Length == 1)
+            if ( buf.Length == 1 )
             {
                 words.Add(new Pair(buf, _wordTagTab.GetDefault(buf, "x")));
             }
             else
             {
-                if (!WordDict.ContainsWord(buf))
+                if ( !WordDict.ContainsWord(buf) )
                 {
                     var tokens = CutDetail(buf);
                     words.AddRange(tokens);

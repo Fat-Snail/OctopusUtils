@@ -53,7 +53,7 @@ public class MiniProfiler : IDisposable
 
     public void Dispose()
     {
-        if (!_disposed)
+        if ( !_disposed )
         {
             _stopwatch.Stop();
             _disposed = true;
@@ -80,7 +80,7 @@ public class MiniStep : IDisposable
 
     public void Dispose()
     {
-        if (!_disposed)
+        if ( !_disposed )
         {
             _stopwatch.Stop();
             _disposed = true;
@@ -111,7 +111,7 @@ public class MiniReport
         var sb = new StringBuilder();
         sb.AppendLine($"├─ {profiler.Name}: {profiler.Duration.TotalMilliseconds:F2}ms");
 
-        foreach (var step in profiler.Steps)
+        foreach ( var step in profiler.Steps )
         {
             sb.AppendLine($"│  ├─ {step.Name}: {step.Duration.TotalMilliseconds:F2}ms");
         }

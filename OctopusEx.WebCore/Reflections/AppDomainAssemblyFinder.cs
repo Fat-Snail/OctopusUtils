@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace Util.Reflections;
@@ -23,13 +23,13 @@ public class AppDomainAssemblyFinder : IAssemblyFinder
     /// </summary>
     public List<Assembly> Find()
     {
-        if (_assemblies != null)
+        if ( _assemblies != null )
             return _assemblies;
         _assemblies = new List<Assembly>();
         LoadAssemblies();
-        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
         {
-            if (IsSkip(assembly))
+            if ( IsSkip(assembly) )
                 continue;
             _assemblies.Add(assembly);
         }
@@ -43,7 +43,7 @@ public class AppDomainAssemblyFinder : IAssemblyFinder
     protected virtual void LoadAssemblies()
     {
         var currentDomainAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-        foreach (String file in GetLoadAssemblyFiles())
+        foreach ( String file in GetLoadAssemblyFiles() )
             LoadAssembly(file, currentDomainAssemblies);
     }
 
@@ -63,13 +63,13 @@ public class AppDomainAssemblyFinder : IAssemblyFinder
         try
         {
             var assemblyName = AssemblyName.GetAssemblyName(file);
-            if (IsSkip(assemblyName.Name))
+            if ( IsSkip(assemblyName.Name) )
                 return;
-            if (currentDomainAssemblies.Any(t => t.FullName == assemblyName.FullName))
+            if ( currentDomainAssemblies.Any(t => t.FullName == assemblyName.FullName) )
                 return;
             AppDomain.CurrentDomain.Load(assemblyName);
         }
-        catch (BadImageFormatException)
+        catch ( BadImageFormatException )
         {
         }
     }
@@ -80,11 +80,11 @@ public class AppDomainAssemblyFinder : IAssemblyFinder
     protected Boolean IsSkip(String assemblyName)
     {
         var applicationName = Assembly.GetEntryAssembly()?.GetName().Name;
-        if (assemblyName.StartsWith($"{applicationName}.Views"))
+        if ( assemblyName.StartsWith($"{applicationName}.Views") )
             return true;
-        if (assemblyName.StartsWith($"{applicationName}.PrecompiledViews"))
+        if ( assemblyName.StartsWith($"{applicationName}.PrecompiledViews") )
             return true;
-        if (String.IsNullOrWhiteSpace(AssemblySkipPattern))
+        if ( String.IsNullOrWhiteSpace(AssemblySkipPattern) )
             return false;
         return Regex.IsMatch(assemblyName, AssemblySkipPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
     }

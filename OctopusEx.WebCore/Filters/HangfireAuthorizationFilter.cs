@@ -16,7 +16,7 @@ public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
 
         var header = httpContext.Request.Headers["Authorization"];
 
-        if (String.IsNullOrWhiteSpace(header))
+        if ( String.IsNullOrWhiteSpace(header) )
         {
             SetChallengeResponse(httpContext);
             return false;
@@ -24,7 +24,7 @@ public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
 
         var authValues = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
 
-        if (!"Basic".Equals(authValues.Scheme, StringComparison.InvariantCultureIgnoreCase))
+        if ( !"Basic".Equals(authValues.Scheme, StringComparison.InvariantCultureIgnoreCase) )
         {
             SetChallengeResponse(httpContext);
             return false;
@@ -33,7 +33,7 @@ public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
         var parameter = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(authValues.Parameter));
         var parts = parameter.Split(':');
 
-        if (parts.Length < 2)
+        if ( parts.Length < 2 )
         {
             SetChallengeResponse(httpContext);
             return false;
@@ -42,13 +42,13 @@ public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
         var username = parts[0];
         var password = parts[1];
 
-        if (String.IsNullOrWhiteSpace(username) || String.IsNullOrWhiteSpace(password))
+        if ( String.IsNullOrWhiteSpace(username) || String.IsNullOrWhiteSpace(password) )
         {
             SetChallengeResponse(httpContext);
             return false;
         }
 
-        if (username == Username && password == Password)
+        if ( username == Username && password == Password )
         {
             return true;
         }

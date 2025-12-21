@@ -63,9 +63,9 @@ public class TagUtils
         var lines = text.Split(new[] { "\r\n", "\n" },
             StringSplitOptions.None
         );
-        foreach (var line in lines)
+        foreach ( var line in lines )
         {
-            if (String.IsNullOrWhiteSpace(line))
+            if ( String.IsNullOrWhiteSpace(line) )
             {
                 continue;
             }
@@ -89,7 +89,7 @@ public class TagUtils
     public static String GetResourceInputString(String resourceName)
     {
         var result = String.Empty;
-        using (var sr = new StreamReader(GetResourceInputStream(resourceName)))
+        using ( var sr = new StreamReader(GetResourceInputStream(resourceName)) )
         {
             result = sr.ReadToEnd();
             sr.Close();

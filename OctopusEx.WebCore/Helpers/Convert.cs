@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
@@ -41,12 +41,12 @@ public static class Convert
     public static Int32? ToIntOrNull(Object input)
     {
         var success = Int32.TryParse(input.SafeString(), out var result);
-        if (success)
+        if ( success )
             return result;
         try
         {
             var temp = ToDoubleOrNull(input, 0);
-            if (temp == null)
+            if ( temp == null )
                 return null;
             return System.Convert.ToInt32(temp);
         }
@@ -80,12 +80,12 @@ public static class Convert
     public static Int64? ToLongOrNull(Object input)
     {
         var success = Int64.TryParse(input.SafeString(), out var result);
-        if (success)
+        if ( success )
             return result;
         try
         {
             var temp = ToDecimalOrNull(input, 0);
-            if (temp == null)
+            if ( temp == null )
                 return null;
             return System.Convert.ToInt64(temp);
         }
@@ -121,11 +121,11 @@ public static class Convert
     public static Single? ToFloatOrNull(Object input, Int32? digits = null)
     {
         var success = Single.TryParse(input.SafeString(), out var result);
-        if (!success)
+        if ( !success )
             return null;
-        if (digits == null)
+        if ( digits == null )
             return result;
-        return (Single)Math.Round(result, digits.Value);
+        return ( Single )Math.Round(result, digits.Value);
     }
 
     #endregion
@@ -154,9 +154,9 @@ public static class Convert
     public static Double? ToDoubleOrNull(Object input, Int32? digits = null)
     {
         var success = Double.TryParse(input.SafeString(), out var result);
-        if (!success)
+        if ( !success )
             return null;
-        if (digits == null)
+        if ( digits == null )
             return result;
         return Math.Round(result, digits.Value);
     }
@@ -187,9 +187,9 @@ public static class Convert
     public static Decimal? ToDecimalOrNull(Object input, Int32? digits = null)
     {
         var success = Decimal.TryParse(input.SafeString(), out var result);
-        if (!success)
+        if ( !success )
             return null;
-        if (digits == null)
+        if ( digits == null )
             return result;
         return Math.Round(result, digits.Value);
     }
@@ -218,7 +218,7 @@ public static class Convert
     public static Boolean? ToBoolOrNull(Object input)
     {
         var value = input.SafeString();
-        switch (value)
+        switch ( value )
         {
             case "1":
                 return true;
@@ -253,7 +253,7 @@ public static class Convert
     public static DateTime? ToDateTimeOrNull(Object input)
     {
         var success = DateTime.TryParse(input.SafeString(), out var result);
-        if (success == false)
+        if ( success == false )
             return null;
         return result;
     }
@@ -281,10 +281,10 @@ public static class Convert
     /// <param name="input">输入值</param>
     public static Guid? ToGuidOrNull(Object input)
     {
-        if (input == null)
+        if ( input == null )
             return null;
-        if (input.GetType() == typeof(Byte[]))
-            return new Guid((Byte[])input);
+        if ( input.GetType() == typeof(Byte[]) )
+            return new Guid(( Byte[] )input);
         return Guid.TryParse(input.SafeString(), out var result) ? result : null;
     }
 
@@ -349,7 +349,7 @@ public static class Convert
     public static List<T> ToList<T>(String input)
     {
         var result = new List<T>();
-        if (String.IsNullOrWhiteSpace(input))
+        if ( String.IsNullOrWhiteSpace(input) )
             return result;
         var array = input.Split(',');
         result.AddRange(from each in array where !String.IsNullOrWhiteSpace(each) select To<T>(each));
@@ -367,20 +367,20 @@ public static class Convert
     /// <param name="input">输入值</param>
     public static T To<T>(Object input)
     {
-        if (input == null)
+        if ( input == null )
             return default;
-        if (input is String && String.IsNullOrWhiteSpace(input.ToString()))
+        if ( input is String && String.IsNullOrWhiteSpace(input.ToString()) )
             return default;
         var type = Common.GetType<T>();
         var typeName = type.Name.ToUpperInvariant();
         try
         {
-            if (typeName == "STRING" || typeName == "GUID")
-                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(input.ToString());
+            if ( typeName == "STRING" || typeName == "GUID" )
+                return ( T )TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(input.ToString());
             // if (type.IsEnum)
             //     return Enum.Parse<T>(input);
-            if (input is IConvertible)
-                return (T)System.Convert.ChangeType(input, type, CultureInfo.InvariantCulture);
+            if ( input is IConvertible )
+                return ( T )System.Convert.ChangeType(input, type, CultureInfo.InvariantCulture);
             // if (input is JsonElement element)
             // {
             //     var value = element.GetRawText();
@@ -388,7 +388,7 @@ public static class Convert
             //     return Json.ToObject<T>(value, options);
             // }
 
-            return (T)input;
+            return ( T )input;
         }
         catch
         {
@@ -417,11 +417,11 @@ public static class Convert
     public static IDictionary<String, Object> ToDictionary(Object data, Boolean useDisplayName)
     {
         var result = new Dictionary<String, Object>();
-        if (data == null)
+        if ( data == null )
             return result;
-        if (data is IEnumerable<KeyValuePair<String, Object>> dic)
+        if ( data is IEnumerable<KeyValuePair<String, Object>> dic )
             return new Dictionary<String, Object>(dic);
-        foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(data))
+        foreach ( PropertyDescriptor property in TypeDescriptor.GetProperties(data) )
         {
             var value = property.GetValue(data);
             result.Add(GetPropertyDescriptorName(property, useDisplayName), value);
@@ -435,11 +435,11 @@ public static class Convert
     /// </summary>
     private static String GetPropertyDescriptorName(PropertyDescriptor property, Boolean useDisplayName)
     {
-        if (useDisplayName == false)
+        if ( useDisplayName == false )
             return property.Name;
-        if (String.IsNullOrEmpty(property.Description) == false)
+        if ( String.IsNullOrEmpty(property.Description) == false )
             return property.Description;
-        if (String.IsNullOrEmpty(property.DisplayName) == false)
+        if ( String.IsNullOrEmpty(property.DisplayName) == false )
             return property.DisplayName;
         return property.Name;
     }

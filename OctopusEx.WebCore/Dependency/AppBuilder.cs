@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Util.Helpers;
 
 namespace Util.Configs;
@@ -6,13 +6,15 @@ namespace Util.Configs;
 /// <summary>
 /// 应用生成器
 /// </summary>
-public class AppBuilder : IAppBuilder {
+public class AppBuilder : IAppBuilder
+{
     /// <summary>
     /// 初始化应用生成器
     /// </summary>
     /// <param name="host">主机生成器</param>
-    public AppBuilder( IHostBuilder host ) {
-        Host = host ?? throw new ArgumentNullException( nameof( host ) );
+    public AppBuilder(IHostBuilder host)
+    {
+        Host = host ?? throw new ArgumentNullException(nameof(host));
     }
 
     /// <inheritdoc />
@@ -21,7 +23,8 @@ public class AppBuilder : IAppBuilder {
     /// <summary>
     /// 构建
     /// </summary>
-    public IHost Build() {
+    public IHost Build()
+    {
         var result = Host.Build();
         //Ioc.SetServiceProviderAction( () => result.Services );
         return result;

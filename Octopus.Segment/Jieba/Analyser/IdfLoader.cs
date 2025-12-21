@@ -18,7 +18,7 @@ namespace JiebaNet.Analyser
             IdfFilePath = String.Empty;
             IdfFreq = new Dictionary<String, Double>();
             MedianIdf = 0.0;
-            if (!String.IsNullOrWhiteSpace(idfPath))
+            if ( !String.IsNullOrWhiteSpace(idfPath) )
             {
                 SetNewPath(idfPath);
             }
@@ -27,12 +27,12 @@ namespace JiebaNet.Analyser
         public void SetNewPath(String newIdfPath)
         {
             var idfPath = newIdfPath;
-            if (IdfFilePath != idfPath)
+            if ( IdfFilePath != idfPath )
             {
                 IdfFilePath = idfPath;
                 var lines = FileExtension.ReadEmbeddedAllLines(idfPath, Encoding.UTF8);
                 IdfFreq = new Dictionary<String, Double>();
-                foreach (var line in lines)
+                foreach ( var line in lines )
                 {
                     var parts = line.Trim().Split(' ');
                     var word = parts[0];

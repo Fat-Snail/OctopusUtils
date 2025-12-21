@@ -62,9 +62,9 @@ public class Container
     public T GetService<T>(Type type)
     {
         var service = GetService(type);
-        if (service == null)
+        if ( service == null )
             return default;
-        return (T)service;
+        return ( T )service;
     }
 
     /// <summary>

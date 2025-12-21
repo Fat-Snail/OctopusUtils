@@ -12,7 +12,7 @@ public class SingleInstanceAttribute : JobFilterAttribute, IServerFilter
     {
         var jobKey = $"{context.BackgroundJob.Job.Type.FullName}.{context.BackgroundJob.Job.Method.Name}";
 
-        if (!RunningJobs.TryAdd(jobKey, true))
+        if ( !RunningJobs.TryAdd(jobKey, true) )
         {
             context.Canceled = true; // 如果已经在运行，取消当前执行
         }

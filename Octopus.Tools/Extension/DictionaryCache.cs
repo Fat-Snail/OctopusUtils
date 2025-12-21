@@ -46,7 +46,7 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
         public CacheItem(TValue value, Int32 seconds)
         {
             Value = value;
-            if (seconds > 0) ExpiredTime = DateTime.Now.AddSeconds(seconds);
+            if ( seconds > 0 ) ExpiredTime = DateTime.Now.AddSeconds(seconds);
         }
 
         /// <summary>过期时间</summary>
@@ -129,14 +129,14 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
         get
         {
             CacheItem item;
-            if (_items.TryGetValue(key, out item) && (Expire <= 0 || !item.Expired)) return item.Value;
+            if ( _items.TryGetValue(key, out item) && (Expire <= 0 || !item.Expired) ) return item.Value;
 
             return default(TValue);
         }
         set
         {
             CacheItem item;
-            if (_items.TryGetValue(key, out item))
+            if ( _items.TryGetValue(key, out item) )
             {
                 item.Value = value;
                 //更新当前缓存项的过期时间
@@ -160,31 +160,31 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
         var exp = Expire;
         var items = _items;
         CacheItem item;
-        if (items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired)) return item.Value;
+        if ( items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired) ) return item.Value;
 
         // 提前计算，避免因为不同的Key错误锁定了主键
         var value = default(TValue);
         // 如果延迟加锁，则提前计算
-        if (DelayLock && func != null) value = func(key);
+        if ( DelayLock && func != null ) value = func(key);
 
-        if (items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired)) return item.Value;
+        if ( items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired) ) return item.Value;
 
         // 对于缓存命中，仅是缓存过期的项，如果采用异步，则马上修改缓存时间，让后面的来访者直接采用已过期的缓存项
-        if (exp > 0 && Asynchronous)
+        if ( exp > 0 && Asynchronous )
         {
-            if (item != null) item.ExpiredTime = DateTime.Now.AddSeconds(exp);
+            if ( item != null ) item.ExpiredTime = DateTime.Now.AddSeconds(exp);
         }
 
-        if (func == null)
+        if ( func == null )
         {
-            if (CacheDefault) items[key] = new CacheItem(value, exp);
+            if ( CacheDefault ) items[key] = new CacheItem(value, exp);
         }
         else
         {
             // 如果不是延迟加锁，则现在计算
-            if (!DelayLock) value = func(key);
+            if ( !DelayLock ) value = func(key);
 
-            if (CacheDefault || !Equals(value, default(TValue))) items[key] = new CacheItem(value, exp);
+            if ( CacheDefault || !Equals(value, default(TValue)) ) items[key] = new CacheItem(value, exp);
         }
         StartTimer();
 
@@ -203,16 +203,16 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
         var exp = Expire;
         var items = _items;
         CacheItem item;
-        if (items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired)) return item.Value;
+        if ( items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired) ) return item.Value;
 
         // 对于缓存命中，仅是缓存过期的项，如果采用异步，则马上修改缓存时间，让后面的来访者直接采用已过期的缓存项
-        if (exp > 0 && Asynchronous)
+        if ( exp > 0 && Asynchronous )
         {
-            if (item != null) item.ExpiredTime = DateTime.Now.AddSeconds(exp);
+            if ( item != null ) item.ExpiredTime = DateTime.Now.AddSeconds(exp);
         }
 
         var value = func(key, arg);
-        if (CacheDefault || !Equals(value, default(TValue))) items[key] = new CacheItem(value, exp);
+        if ( CacheDefault || !Equals(value, default(TValue)) ) items[key] = new CacheItem(value, exp);
 
         StartTimer();
 
@@ -233,16 +233,16 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
         var exp = Expire;
         var items = _items;
         CacheItem item;
-        if (items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired)) return item.Value;
+        if ( items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired) ) return item.Value;
 
         // 对于缓存命中，仅是缓存过期的项，如果采用异步，则马上修改缓存时间，让后面的来访者直接采用已过期的缓存项
-        if (exp > 0 && Asynchronous)
+        if ( exp > 0 && Asynchronous )
         {
-            if (item != null) item.ExpiredTime = DateTime.Now.AddSeconds(exp);
+            if ( item != null ) item.ExpiredTime = DateTime.Now.AddSeconds(exp);
         }
 
         var value = func(key, arg, arg2);
-        if (CacheDefault || !Equals(value, default(TValue))) items[key] = new CacheItem(value, exp);
+        if ( CacheDefault || !Equals(value, default(TValue)) ) items[key] = new CacheItem(value, exp);
         StartTimer();
 
         return value;
@@ -265,16 +265,16 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
         var exp = Expire;
         var items = _items;
         CacheItem item;
-        if (items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired)) return item.Value;
+        if ( items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired) ) return item.Value;
 
         // 对于缓存命中，仅是缓存过期的项，如果采用异步，则马上修改缓存时间，让后面的来访者直接采用已过期的缓存项
-        if (exp > 0 && Asynchronous)
+        if ( exp > 0 && Asynchronous )
         {
-            if (item != null) item.ExpiredTime = DateTime.Now.AddSeconds(exp);
+            if ( item != null ) item.ExpiredTime = DateTime.Now.AddSeconds(exp);
         }
 
         var value = func(key, arg, arg2, arg3);
-        if (CacheDefault || !Equals(value, default(TValue))) items[key] = new CacheItem(value, exp);
+        if ( CacheDefault || !Equals(value, default(TValue)) ) items[key] = new CacheItem(value, exp);
         StartTimer();
 
         return value;
@@ -299,16 +299,16 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
         var exp = Expire;
         var items = _items;
         CacheItem item;
-        if (items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired)) return item.Value;
+        if ( items.TryGetValue(key, out item) && (exp <= 0 || !item.Expired) ) return item.Value;
 
         // 对于缓存命中，仅是缓存过期的项，如果采用异步，则马上修改缓存时间，让后面的来访者直接采用已过期的缓存项
-        if (exp > 0 && Asynchronous)
+        if ( exp > 0 && Asynchronous )
         {
-            if (item != null) item.ExpiredTime = DateTime.Now.AddSeconds(exp);
+            if ( item != null ) item.ExpiredTime = DateTime.Now.AddSeconds(exp);
         }
 
         var value = func(key, arg, arg2, arg3, arg4);
-        if (CacheDefault || !Equals(value, default(TValue))) items[key] = new CacheItem(value, exp);
+        if ( CacheDefault || !Equals(value, default(TValue)) ) items[key] = new CacheItem(value, exp);
         StartTimer();
 
         return value;
@@ -325,9 +325,9 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
     {
         var period = ClearPeriod;
         // 缓存数大于0才启动定时器
-        if (period <= 0 || _items.Count < 1) return;
+        if ( period <= 0 || _items.Count < 1 ) return;
 
-        if (clearTimer == null) clearTimer = new Timer(RemoveNotAlive, null, period * 1000, period * 1000);
+        if ( clearTimer == null ) clearTimer = new Timer(RemoveNotAlive, null, period * 1000, period * 1000);
     }
 
     private void StopTimer()
@@ -340,10 +340,10 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
     private void RemoveNotAlive(Object state)
     {
         var expriod = ClearPeriod;
-        if (expriod <= 0) return;
+        if ( expriod <= 0 ) return;
 
         var dic = _items;
-        if (dic.Count < 1)
+        if ( dic.Count < 1 )
         {
             // 缓存数小于0时关闭定时器
             StopTimer();
@@ -353,13 +353,13 @@ public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposa
         // 这里先计算，性能很重要
         var now = DateTime.Now;
         var exp = now.AddSeconds(-1 * expriod);
-        foreach (var item in dic.ToArray())
+        foreach ( var item in dic.ToArray() )
         {
             var t = item.Value.ExpiredTime;
-            if (t < exp)
+            if ( t < exp )
             {
                 // 自动释放对象
-                if (AutoDispose) item.Value.Value.TryDispose();
+                if ( AutoDispose ) item.Value.Value.TryDispose();
 
                 CacheItem temp;
                 dic.TryRemove(item.Key, out temp);

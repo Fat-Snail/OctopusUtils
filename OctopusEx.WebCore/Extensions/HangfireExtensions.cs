@@ -17,7 +17,7 @@ public static class HangfireExtensions
     public static IServiceCollection AddHangfireConfiguration(this IServiceCollection services,
         Action<Microsoft.Extensions.DependencyInjection.IServiceCollection>? configureAction = null)
     {
-        if (configureAction != null)
+        if ( configureAction != null )
         {
             configureAction(services);
         }
@@ -64,7 +64,7 @@ public static class HangfireExtensions
             Console.WriteLine($"[HangfireExtensions] 成功添加一次性作业: {jobName}, ID: {jobId}");
             return jobId;
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine($"[HangfireExtensions] 添加一次性作业失败: {ex.Message}");
             Task.Run(action.Compile());
@@ -90,7 +90,7 @@ public static class HangfireExtensions
             Console.WriteLine($"[HangfireExtensions] 成功添加延迟作业: {jobName}, ID: {jobId}");
             return jobId;
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine($"[HangfireExtensions] 添加延迟作业失败: {ex.Message}");
             Task.Delay(delay).ContinueWith(_ => action.Compile()());
@@ -116,7 +116,7 @@ public static class HangfireExtensions
             Console.WriteLine($"[HangfireExtensions] 成功添加循环作业: {jobId}");
             return jobId;
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine($"[HangfireExtensions] 添加循环作业失败: {ex.Message}");
             var interval = ParseCronToInterval(cronExpression);
@@ -138,7 +138,7 @@ public static class HangfireExtensions
             recurringJobManager.RemoveIfExists(jobId);
             Console.WriteLine($"[HangfireExtensions] 成功移除循环作业: {jobId}");
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine($"[HangfireExtensions] 移除循环作业失败: {ex.Message}");
         }
@@ -149,10 +149,10 @@ public static class HangfireExtensions
     /// </summary>
     private static TimeSpan ParseCronToInterval(String cronExpression)
     {
-        if (cronExpression == "* * * * *") return TimeSpan.FromMinutes(1); // 每分钟
-        if (cronExpression == "0 * * * *") return TimeSpan.FromHours(1);   // 每小时
-        if (cronExpression == "0 0 * * *") return TimeSpan.FromDays(1);    // 每天
-        if (cronExpression == "0 */6 * * *") return TimeSpan.FromHours(6); // 每6小时
+        if ( cronExpression == "* * * * *" ) return TimeSpan.FromMinutes(1); // 每分钟
+        if ( cronExpression == "0 * * * *" ) return TimeSpan.FromHours(1);   // 每小时
+        if ( cronExpression == "0 0 * * *" ) return TimeSpan.FromDays(1);    // 每天
+        if ( cronExpression == "0 */6 * * *" ) return TimeSpan.FromHours(6); // 每6小时
 
         return TimeSpan.FromMinutes(1); // 默认每分钟
     }
@@ -174,7 +174,7 @@ public static class HangfireExtensions
             var lockKey = uniqueKey ?? jobName;
 
             // 检查是否已有相同作业在执行
-            if (IsJobRunning(serviceProvider, lockKey))
+            if ( IsJobRunning(serviceProvider, lockKey) )
             {
                 Console.WriteLine($"[HangfireExtensions] 作业 {lockKey} 已在执行中，跳过添加");
                 return $"skipped-{lockKey}-{DateTime.Now:yyyyMMddHHmmss}";
@@ -185,7 +185,7 @@ public static class HangfireExtensions
             Console.WriteLine($"[HangfireExtensions] 成功添加防重复一次性作业: {jobName}, LockKey: {lockKey}, ID: {jobId}");
             return jobId;
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine($"[HangfireExtensions] 添加防重复一次性作业失败: {ex.Message}");
             Task.Run(action.Compile());
@@ -215,7 +215,7 @@ public static class HangfireExtensions
             Console.WriteLine($"[HangfireExtensions] 成功添加防重复延迟作业: {jobName}, LockKey: {lockKey}, ID: {jobId}");
             return jobId;
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine($"[HangfireExtensions] 添加防重复延迟作业失败: {ex.Message}");
             Task.Delay(delay).ContinueWith(_ => action.Compile()());
@@ -245,7 +245,7 @@ public static class HangfireExtensions
             Console.WriteLine($"[HangfireExtensions] 成功添加防重复循环作业: {jobId}, LockKey: {lockKey}");
             return jobId;
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine($"[HangfireExtensions] 添加防重复循环作业失败: {ex.Message}");
             var interval = ParseCronToInterval(cronExpression);
@@ -265,12 +265,12 @@ public static class HangfireExtensions
         try
         {
             // 使用静态锁字典检查（简化实现）
-            lock (_jobLocks)
+            lock ( _jobLocks )
             {
                 return _jobLocks.ContainsKey(uniqueKey) && _jobLocks[uniqueKey];
             }
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine($"[HangfireExtensions] 检查作业状态失败: {ex.Message}");
             return false;
@@ -288,12 +288,12 @@ public static class HangfireExtensions
         try
         {
             // 使用静态锁字典检查（简化实现）
-            lock (_jobLocks)
+            lock ( _jobLocks )
             {
                 return _jobLocks.ContainsKey(uniqueKey) && _jobLocks[uniqueKey] ? 1 : 0;
             }
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine($"[HangfireExtensions] 获取作业数量失败: {ex.Message}");
             return 0;
@@ -325,7 +325,7 @@ public static class HangfireExtensions
             Console.WriteLine($"[HangfireExtensions] 成功添加分布式锁作业: {jobName}, LockKey: {uniqueKey}, ID: {jobId}");
             return jobId;
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine($"[HangfireExtensions] 添加分布式锁作业失败: {ex.Message}");
             Task.Run(action.Compile());
@@ -346,9 +346,9 @@ public static class HangfireExtensions
         {
             // 这里可以实现分布式锁逻辑
             // 简化实现：使用静态字典作为锁（仅适用于单实例）
-            lock (_jobLocks)
+            lock ( _jobLocks )
             {
-                if (_jobLocks.ContainsKey(lockKey))
+                if ( _jobLocks.ContainsKey(lockKey) )
                 {
                     Console.WriteLine($"[HangfireExtensions] 作业 {lockKey} 正在执行中，跳过");
                     return;
@@ -362,7 +362,7 @@ public static class HangfireExtensions
             // 执行实际作业
             action.Compile().DynamicInvoke();
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             Console.WriteLine($"[HangfireExtensions] 执行作业 {lockKey} 时出错: {ex.Message}");
             throw;
@@ -370,9 +370,9 @@ public static class HangfireExtensions
         finally
         {
             // 释放锁
-            lock (_jobLocks)
+            lock ( _jobLocks )
             {
-                if (_jobLocks.ContainsKey(lockKey))
+                if ( _jobLocks.ContainsKey(lockKey) )
                 {
                     _jobLocks.Remove(lockKey);
                 }

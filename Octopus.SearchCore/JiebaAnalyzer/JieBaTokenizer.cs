@@ -40,25 +40,25 @@ namespace JiebaNet
 
             _segmenter = new JiebaSegmenter();
             _mode = Mode;
-            if (defaultUserDict)
+            if ( defaultUserDict )
             {
                 _segmenter.LoadUserDictForEmbedded(Assembly.GetCallingAssembly(), _dictPath);
             }
 
-            if (!String.IsNullOrEmpty(Settings.IgnoreDictFile))
+            if ( !String.IsNullOrEmpty(Settings.IgnoreDictFile) )
             {
                 var list = FileExtension.ReadAllLines(Settings.IgnoreDictFile);
-                foreach (var item in list)
+                foreach ( var item in list )
                 {
-                    if (String.IsNullOrEmpty(item))
+                    if ( String.IsNullOrEmpty(item) )
                         continue;
-                    if (StopWords.Contains(item))
+                    if ( StopWords.Contains(item) )
                         continue;
                     StopWords.Add(item);
                 }
             }
 
-            if (!String.IsNullOrEmpty(Settings.UserDictFile))
+            if ( !String.IsNullOrEmpty(Settings.UserDictFile) )
             {
                 _segmenter.LoadUserDict(Settings.UserDictFile);
             }
@@ -85,11 +85,11 @@ namespace JiebaNet
         private Lucene.Net.Analysis.Token Next()
         {
             var res = _iter.MoveNext();
-            if (res)
+            if ( res )
             {
                 var word = _iter.Current;
                 var token = new Lucene.Net.Analysis.Token(word.Word, word.StartIndex, word.EndIndex);
-                if (Settings.Log)
+                if ( Settings.Log )
                 {
                     //chinese char
                     var zh = new Regex(@"[\u4e00-\u9fa5]|[^\x00-\xff]");
@@ -109,7 +109,7 @@ namespace JiebaNet
             ClearAttributes();
 
             var word = Next();
-            if (word != null)
+            if ( word != null )
             {
                 var buffer = word.ToString();
                 _termAtt.SetEmpty().Append(buffer);
@@ -138,9 +138,9 @@ namespace JiebaNet
         {
             _wordList.Clear();
 
-            foreach (var x in words)
+            foreach ( var x in words )
             {
-                if (!StopWords.Contains(x.Word))
+                if ( !StopWords.Contains(x.Word) )
                 {
                     _wordList.Add(x);
                 }

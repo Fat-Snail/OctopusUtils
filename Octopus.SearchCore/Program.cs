@@ -20,7 +20,7 @@ Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 var segmenter = new JiebaSegmenter();
 var words = segmenter.Cut("男子洗澡时发现舒肤佳香皂内嵌刀");
 
-foreach (var word in words)
+foreach ( var word in words )
 {
     Console.WriteLine(word);
 }
@@ -82,12 +82,12 @@ newsList.Add(new News()
 var tagSegmenter = TagUtils.GetSegmenter();
 var tagExtractor = new JiebaNet.Analyser.TfidfExtractor(tagSegmenter);
 
-foreach (var n in newsList)
+foreach ( var n in newsList )
 {
     var tags = tagExtractor.ExtractTags(n.Title + " " + n.Content, 10, new List<String> { "role", "scene" });
-    if (tags.Any())
+    if ( tags.Any() )
     {
-        foreach (var tag in tags)
+        foreach ( var tag in tags )
         {
             Console.WriteLine(tag);
         }

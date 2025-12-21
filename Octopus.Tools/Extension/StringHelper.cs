@@ -18,9 +18,9 @@ public static class StringHelper
     /// <returns></returns>
     public static Boolean EqualIgnoreCase(this String? value, params String?[] strs)
     {
-        foreach (var item in strs)
+        foreach ( var item in strs )
         {
-            if (String.Equals(value, item, StringComparison.OrdinalIgnoreCase)) return true;
+            if ( String.Equals(value, item, StringComparison.OrdinalIgnoreCase) ) return true;
         }
         return false;
     }
@@ -31,11 +31,11 @@ public static class StringHelper
     /// <returns></returns>
     public static Boolean StartsWithIgnoreCase(this String? value, params String?[] strs)
     {
-        if (value == null || String.IsNullOrEmpty(value)) return false;
+        if ( value == null || String.IsNullOrEmpty(value) ) return false;
 
-        foreach (var item in strs)
+        foreach ( var item in strs )
         {
-            if (!String.IsNullOrEmpty(item) && value.StartsWith(item, StringComparison.OrdinalIgnoreCase)) return true;
+            if ( !String.IsNullOrEmpty(item) && value.StartsWith(item, StringComparison.OrdinalIgnoreCase) ) return true;
         }
         return false;
     }
@@ -46,11 +46,11 @@ public static class StringHelper
     /// <returns></returns>
     public static Boolean EndsWithIgnoreCase(this String? value, params String?[] strs)
     {
-        if (value == null || String.IsNullOrEmpty(value)) return false;
+        if ( value == null || String.IsNullOrEmpty(value) ) return false;
 
-        foreach (var item in strs)
+        foreach ( var item in strs )
         {
-            if (item != null && value.EndsWith(item, StringComparison.OrdinalIgnoreCase)) return true;
+            if ( item != null && value.EndsWith(item, StringComparison.OrdinalIgnoreCase) ) return true;
         }
         return false;
     }
@@ -65,11 +65,11 @@ public static class StringHelper
     /// <returns></returns>
     public static Boolean IsNullOrWhiteSpace([NotNullWhen(false)] this String? value)
     {
-        if (value != null)
+        if ( value != null )
         {
-            for (var i = 0; i < value.Length; i++)
+            for ( var i = 0; i < value.Length; i++ )
             {
-                if (!Char.IsWhiteSpace(value[i])) return false;
+                if ( !Char.IsWhiteSpace(value[i]) ) return false;
             }
         }
         return true;
@@ -82,8 +82,8 @@ public static class StringHelper
     public static String[] Split(this String? value, params String[] separators)
     {
         //!! netcore3.0中新增Split(String? separator, StringSplitOptions options = StringSplitOptions.None)，优先于StringHelper扩展
-        if (value == null || String.IsNullOrEmpty(value)) return new String[0];
-        if (separators == null || separators.Length <= 0 || separators.Length == 1 && separators[0].IsNullOrEmpty()) separators = [",", ";"];
+        if ( value == null || String.IsNullOrEmpty(value) ) return new String[0];
+        if ( separators == null || separators.Length <= 0 || separators.Length == 1 && separators[0].IsNullOrEmpty() ) separators = [",", ";"];
 
         return value.Split(separators, StringSplitOptions.RemoveEmptyEntries);
     }
@@ -95,14 +95,14 @@ public static class StringHelper
     /// <returns></returns>
     public static Int32[] SplitAsInt(this String? value, params String[] separators)
     {
-        if (value == null || String.IsNullOrEmpty(value)) return new Int32[0];
-        if (separators == null || separators.Length <= 0) separators = [",", ";"];
+        if ( value == null || String.IsNullOrEmpty(value) ) return new Int32[0];
+        if ( separators == null || separators.Length <= 0 ) separators = [",", ";"];
 
         var ss = value.Split(separators, StringSplitOptions.RemoveEmptyEntries);
         var list = new List<Int32>();
-        foreach (var item in ss)
+        foreach ( var item in ss )
         {
-            if (!Int32.TryParse(item.Trim(), out var id)) continue;
+            if ( !Int32.TryParse(item.Trim(), out var id) ) continue;
 
             // 本意只是拆分字符串然后转为数字，不应该过滤重复项
             //if (!list.Contains(id))
@@ -121,9 +121,9 @@ public static class StringHelper
     /// <returns></returns>
     public static StringBuilder Separate(this StringBuilder sb, String separator)
     {
-        if (/*sb == null ||*/ String.IsNullOrEmpty(separator)) return sb;
+        if (/*sb == null ||*/ String.IsNullOrEmpty(separator) ) return sb;
 
-        if (sb.Length > 0) sb.Append(separator);
+        if ( sb.Length > 0 ) sb.Append(separator);
 
         return sb;
     }
@@ -135,7 +135,7 @@ public static class StringHelper
     public static Byte[] GetBytes(this String? value, Encoding? encoding = null)
     {
         //if (value == null) return null;
-        if (String.IsNullOrEmpty(value)) return new Byte[0];
+        if ( String.IsNullOrEmpty(value) ) return new Byte[0];
 
         encoding ??= Encoding.UTF8;
         return encoding.GetBytes(value);

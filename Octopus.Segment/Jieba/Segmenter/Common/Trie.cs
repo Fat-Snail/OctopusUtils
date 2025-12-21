@@ -22,24 +22,24 @@ namespace JiebaNet.Segmenter.Common
 
         public Int32 Insert(String s, Int32 pos, Int32 freq = 1)
         {
-            if (String.IsNullOrEmpty(s) || pos >= s.Length)
+            if ( String.IsNullOrEmpty(s) || pos >= s.Length )
             {
                 return 0;
             }
 
-            if (Children == null)
+            if ( Children == null )
             {
                 Children = new Dictionary<Char, TrieNode>();
             }
 
             var c = s[pos];
-            if (!Children.ContainsKey(c))
+            if ( !Children.ContainsKey(c) )
             {
                 Children[c] = new TrieNode(c);
             }
 
             var curNode = Children[c];
-            if (pos == s.Length - 1)
+            if ( pos == s.Length - 1 )
             {
                 curNode.Frequency += freq;
                 return curNode.Frequency;
@@ -50,18 +50,18 @@ namespace JiebaNet.Segmenter.Common
 
         public TrieNode Search(String s, Int32 pos)
         {
-            if (String.IsNullOrEmpty(s))
+            if ( String.IsNullOrEmpty(s) )
             {
                 return null;
             }
 
             // if out of range or without any child nodes
-            if (pos >= s.Length || Children == null)
+            if ( pos >= s.Length || Children == null )
             {
                 return null;
             }
             // if reaches the last char of s, it's time to make the decision.
-            if (pos == s.Length - 1)
+            if ( pos == s.Length - 1 )
             {
                 return Children.ContainsKey(s[pos]) ? Children[s[pos]] : null;
             }
@@ -125,7 +125,7 @@ namespace JiebaNet.Segmenter.Common
             CheckWord(word);
 
             var i = Root.Insert(word.Trim(), 0, freq);
-            if (i > 0)
+            if ( i > 0 )
             {
                 TotalFrequency += freq;
                 Count++;
@@ -142,7 +142,7 @@ namespace JiebaNet.Segmenter.Common
 
         private void CheckWord(String word)
         {
-            if (String.IsNullOrWhiteSpace(word))
+            if ( String.IsNullOrWhiteSpace(word) )
             {
                 throw new ArgumentException("word must not be null or whitespace");
             }

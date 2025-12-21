@@ -54,24 +54,24 @@ public abstract class LuceneIndexableBaseEntity : ILuceneIndexable
     {
         var doc = new Document();
         var type = GetType();
-        if (type.Assembly.IsDynamic && type.FullName.Contains("Prox"))
+        if ( type.Assembly.IsDynamic && type.FullName.Contains("Prox") )
         {
             type = type.BaseType;
         }
 
         var classProperties = type.GetProperties();
         doc.Add(new StringField("Type", type.AssemblyQualifiedName, Field.Store.YES));
-        foreach (var propertyInfo in classProperties)
+        foreach ( var propertyInfo in classProperties )
         {
             var propertyValue = propertyInfo.GetValue(this);
-            if (propertyValue == null)
+            if ( propertyValue == null )
             {
                 continue;
             }
 
             //1. 该处修复用IndexId去删除索引无效的问题
             //2. 以Id为目标的删除放在其他处： 也利用到了IndexId
-            if (propertyInfo.Name == nameof(ILuceneIndexable.IndexId))
+            if ( propertyInfo.Name == nameof(ILuceneIndexable.IndexId) )
             {
                 var filed = new Field(propertyInfo.Name, propertyValue.ToString(), new FieldType
                 {
@@ -84,10 +84,10 @@ public abstract class LuceneIndexableBaseEntity : ILuceneIndexable
             }
 
             var attrs = propertyInfo.GetCustomAttributes<LuceneIndexAttribute>();
-            foreach (var attr in attrs)
+            foreach ( var attr in attrs )
             {
                 var name = !string.IsNullOrEmpty(attr.Name) ? attr.Name : propertyInfo.Name;
-                switch (propertyValue)
+                switch ( propertyValue )
                 {
                     case DateTime time:
                         doc.Add(new StringField(name, time.ToString("yyyy-MM-dd HH:mm:ss"), attr.Store));

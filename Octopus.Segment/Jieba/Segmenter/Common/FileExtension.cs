@@ -13,7 +13,7 @@ namespace JiebaNet.Segmenter.Common
 
         public static String ReadEmbeddedAllLine(String path)
         {
-            if (File.Exists(path))
+            if ( File.Exists(path) )
             {
                 return File.ReadAllText(path);
             }
@@ -56,10 +56,10 @@ namespace JiebaNet.Segmenter.Common
         public static List<String> ReadAllLines(String path, Encoding encoding)
         {
             var list = new List<String>();
-            using (var streamReader = new StreamReader(path, encoding))
+            using ( var streamReader = new StreamReader(path, encoding) )
             {
                 String item;
-                while ((item = streamReader.ReadLine()) != null)
+                while ( (item = streamReader.ReadLine()) != null )
                 {
                     list.Add(item);
                 }

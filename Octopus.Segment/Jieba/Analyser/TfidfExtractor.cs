@@ -24,7 +24,7 @@ namespace JiebaNet.Analyser
             Segmenter = segmenter.IsNull() ? new JiebaSegmenter() : segmenter;
             PosSegmenter = new PosSegmenter(Segmenter);
             SetStopWords(ConfigManager.StopWordsFile);
-            if (StopWords.IsEmpty())
+            if ( StopWords.IsEmpty() )
             {
                 StopWords.UnionWith(DefaultStopWords);
             }
@@ -51,7 +51,7 @@ namespace JiebaNet.Analyser
         private IDictionary<String, Double> GetWordIfidf(String text, IEnumerable<String> allowPos)
         {
             IEnumerable<String> words = null;
-            if (allowPos.IsNotEmpty())
+            if ( allowPos.IsNotEmpty() )
             {
                 words = FilterCutByPos(text, allowPos);
             }
@@ -62,17 +62,17 @@ namespace JiebaNet.Analyser
 
             // Calculate TF
             var freq = new Dictionary<String, Double>();
-            foreach (var word in words)
+            foreach ( var word in words )
             {
                 var w = word;
-                if (String.IsNullOrEmpty(w) || w.Trim().Length < 2 || StopWords.Contains(w.ToLower()))
+                if ( String.IsNullOrEmpty(w) || w.Trim().Length < 2 || StopWords.Contains(w.ToLower()) )
                 {
                     continue;
                 }
                 freq[w] = freq.GetDefault(w, 0.0) + 1.0;
             }
             var total = freq.Values.Sum();
-            foreach (var k in freq.Keys.ToList())
+            foreach ( var k in freq.Keys.ToList() )
             {
                 freq[k] *= IdfFreq.GetDefault(k, MedianIdf) / total;
             }
@@ -82,7 +82,7 @@ namespace JiebaNet.Analyser
 
         public override IEnumerable<String> ExtractTags(String text, Int32 count = 20, IEnumerable<String> allowPos = null)
         {
-            if (count <= 0) { count = DefaultWordCount; }
+            if ( count <= 0 ) { count = DefaultWordCount; }
 
             var freq = GetWordIfidf(text, allowPos);
             return freq.OrderByDescending(p => p.Value).Select(p => p.Key).Take(count);
@@ -90,7 +90,7 @@ namespace JiebaNet.Analyser
 
         public override IEnumerable<WordWeightPair> ExtractTagsWithWeight(String text, Int32 count = 20, IEnumerable<String> allowPos = null)
         {
-            if (count <= 0) { count = DefaultWordCount; }
+            if ( count <= 0 ) { count = DefaultWordCount; }
 
             var freq = GetWordIfidf(text, allowPos);
             return freq.OrderByDescending(p => p.Value).Select(p => new WordWeightPair()

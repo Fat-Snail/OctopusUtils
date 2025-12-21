@@ -32,40 +32,40 @@ public static class DocumentExtension
     /// <returns></returns>
     private static Object ConvertTo(String value, Type type)
     {
-        if (value == null)
+        if ( value == null )
         {
             return default;
         }
 
-        if (value.GetType() == type)
+        if ( value.GetType() == type )
         {
             return value;
         }
 
-        if (type.IsEnum)
+        if ( type.IsEnum )
         {
             return Enum.Parse(type, value.ToString(CultureInfo.InvariantCulture));
         }
 
-        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        if ( type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) )
         {
             var underlyingType = Nullable.GetUnderlyingType(type);
             return underlyingType!.IsEnum ? Enum.Parse(underlyingType, value.ToString(CultureInfo.CurrentCulture)) : Convert.ChangeType(value, underlyingType);
         }
 
         var converter = TypeDescriptor.GetConverter(value);
-        if (converter != null)
+        if ( converter != null )
         {
-            if (converter.CanConvertTo(type))
+            if ( converter.CanConvertTo(type) )
             {
                 return converter.ConvertTo(value, type);
             }
         }
 
         converter = TypeDescriptor.GetConverter(type);
-        if (converter != null)
+        if ( converter != null )
         {
-            if (converter.CanConvertFrom(value.GetType()))
+            if ( converter.CanConvertFrom(value.GetType()) )
             {
                 return converter.ConvertFrom(value);
             }
