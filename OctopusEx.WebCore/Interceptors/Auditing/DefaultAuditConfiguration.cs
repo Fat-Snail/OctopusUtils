@@ -23,13 +23,15 @@ public class DefaultAuditConfiguration : IAuditConfiguration
             // 系统管理领域配置
             ["System"] = new DomainAuditConfiguration
             {
-                Enabled = true, IgnoredProperties = new List<string> { "PasswordHash", "SecurityStamp" }
+                Enabled = true,
+                IgnoredProperties = new List<string> { "PasswordHash", "SecurityStamp" }
             },
 
             // 产品领域配置
             ["Product"] = new DomainAuditConfiguration
             {
-                Enabled = true, IgnoredProperties = new List<string> { "InternalCode", "LastPrice" }
+                Enabled = true,
+                IgnoredProperties = new List<string> { "InternalCode", "LastPrice" }
             },
 
             // 审计日志领域（自身不审计）

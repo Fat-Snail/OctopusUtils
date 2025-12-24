@@ -57,7 +57,8 @@ public static class AuditConfigurationExample
             // 配置领域 - 只跟踪特定字段
             config.ConfigureDomain("Configuration", new DomainAuditConfiguration
             {
-                Enabled = true, TrackedProperties = new List<string> { "Value", "Description" } // 只跟踪这些字段
+                Enabled = true,
+                TrackedProperties = new List<string> { "Value", "Description" } // 只跟踪这些字段
             });
 
             // 4. 动态添加忽略字段
