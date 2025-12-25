@@ -46,7 +46,7 @@ public static class AuditConfigurationExample
             config.ConfigureDomain("Order", new DomainAuditConfiguration
             {
                 Enabled = true,
-                TrackAllProperties = true, // 记录所有字段，即使未修改
+                //TrackAllProperties = true, // 记录所有字段，即使未修改
                 IgnoredProperties = new List<string> { "InternalNotes" }
             });
 
@@ -58,7 +58,7 @@ public static class AuditConfigurationExample
             config.ConfigureDomain("Configuration", new DomainAuditConfiguration
             {
                 Enabled = true,
-                TrackedProperties = new List<string> { "Value", "Description" } // 只跟踪这些字段
+                //TrackedProperties = new List<string> { "Value", "Description" } // 只跟踪这些字段
             });
 
             // 4. 动态添加忽略字段

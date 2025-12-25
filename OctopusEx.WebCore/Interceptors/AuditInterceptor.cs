@@ -112,9 +112,9 @@ public class AuditInterceptor : SaveChangesInterceptor
                 if ( ShouldIgnoreProperty(propertyName, domainConfig) )
                     continue;
 
-                // 检查是否只跟踪特定字段
-                if ( domainConfig.TrackedProperties.Any() && !domainConfig.TrackedProperties.Contains(propertyName) )
-                    continue;
+                // // 检查是否只跟踪特定字段（只有当TrackAllProperties为false时才检查）
+                // if ( !domainConfig.TrackAllProperties && domainConfig.TrackedProperties.Any() && !domainConfig.TrackedProperties.Contains(propertyName) )
+                //     continue;
 
                 if ( property.Metadata.IsPrimaryKey() )
                 {
@@ -126,31 +126,34 @@ public class AuditInterceptor : SaveChangesInterceptor
                 {
                     case EntityState.Added:
                         auditEntry.NewValues[propertyName] = property.CurrentValue!;
-                        if ( domainConfig.TrackAllProperties || domainConfig.TrackedProperties.Contains(propertyName) )
-                        {
-                            auditEntry.ChangedProperties.Add(propertyName);
-                        }
+                        // if ( domainConfig.TrackAllProperties || domainConfig.TrackedProperties.Contains(propertyName) )
+                        // {
+                        //     auditEntry.ChangedProperties.Add(propertyName);
+                        // }
+                        // auditEntry.ChangedProperties.Add(propertyName);
                         auditEntry.Action = "INSERT";
                         break;
 
                     case EntityState.Deleted:
                         auditEntry.OldValues[propertyName] = property.OriginalValue!;
-                        if ( domainConfig.TrackAllProperties || domainConfig.TrackedProperties.Contains(propertyName) )
-                        {
-                            auditEntry.ChangedProperties.Add(propertyName);
-                        }
+                        // if ( domainConfig.TrackAllProperties || domainConfig.TrackedProperties.Contains(propertyName) )
+                        // {
+                        //     auditEntry.ChangedProperties.Add(propertyName);
+                        // }
+                        auditEntry.ChangedProperties.Add(propertyName);
                         auditEntry.Action = "DELETE";
                         break;
 
                     case EntityState.Modified:
-                        if ( property.IsModified || domainConfig.TrackAllProperties )
+                        if ( property.IsModified)
                         {
                             auditEntry.OldValues[propertyName] = property.OriginalValue!;
                             auditEntry.NewValues[propertyName] = property.CurrentValue!;
-                            if ( domainConfig.TrackAllProperties || domainConfig.TrackedProperties.Contains(propertyName) )
-                            {
-                                auditEntry.ChangedProperties.Add(propertyName);
-                            }
+                            // if ( domainConfig.TrackAllProperties || domainConfig.TrackedProperties.Contains(propertyName) )
+                            // {
+                            //     auditEntry.ChangedProperties.Add(propertyName);
+                            // }
+                            auditEntry.ChangedProperties.Add(propertyName);
                             auditEntry.Action = "UPDATE";
                         }
                         break;
@@ -226,10 +229,8 @@ public class AuditInterceptor : SaveChangesInterceptor
     /// </summary>
     private string GetDomainName(Type entityType)
     {
-        // 可以根据命名空间、特性等来确定领域
-        // 这里简单实现：使用命名空间的最后一部分作为领域名称
-        var namespaceParts = entityType.Namespace?.Split('.') ?? Array.Empty<string>();
-        return namespaceParts.LastOrDefault() ?? "Default";
+        // 使用实体类型名称作为领域名称，确保每个实体类型都有独立的配置
+        return entityType.Name;
     }
 
     /// <summary>

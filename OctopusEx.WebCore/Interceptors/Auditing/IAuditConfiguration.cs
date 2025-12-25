@@ -41,15 +41,15 @@ public class DomainAuditConfiguration
     /// </summary>
     public IReadOnlyCollection<string> IgnoredProperties { get; set; } = new List<string>();
 
-    /// <summary>
-    /// 是否记录所有字段变更（包括未修改的字段）
-    /// </summary>
-    public bool TrackAllProperties { get; set; } = false;
-
-    /// <summary>
-    /// 只记录特定字段的变更
-    /// </summary>
-    public IReadOnlyCollection<string> TrackedProperties { get; set; } = new List<string>();
+    // /// <summary>
+    // /// 是否记录所有字段变更（包括未修改的字段）
+    // /// </summary>
+    // public bool TrackAllProperties { get; set; } = false;
+    //
+    // /// <summary>
+    // /// 只记录特定字段的变更
+    // /// </summary>
+    // public IReadOnlyCollection<string> TrackedProperties { get; set; } = new List<string>();
 }
 
 /// <summary>
