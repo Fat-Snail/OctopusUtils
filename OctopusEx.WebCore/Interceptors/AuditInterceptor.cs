@@ -145,7 +145,7 @@ public class AuditInterceptor : SaveChangesInterceptor
                         break;
 
                     case EntityState.Modified:
-                        if ( property.IsModified)
+                        if ( property.IsModified )
                         {
                             auditEntry.OldValues[propertyName] = property.OriginalValue!;
                             auditEntry.NewValues[propertyName] = property.CurrentValue!;
