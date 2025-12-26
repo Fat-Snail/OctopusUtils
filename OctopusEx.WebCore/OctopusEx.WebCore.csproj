@@ -1,26 +1,79 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>12</LangVersion>
+    <AssemblyName>OctopusEx.WebCore</AssemblyName>
+    <RootNamespace>Octopus</RootNamespace>
+    <AssemblyTitle>Octopus核心库</AssemblyTitle>
+    <Description>Web核心基础组件，公共类。</Description>
+    <Company>Fatty Coder</Company>
+    <Copyright>©2024-2025 Fatty Coder</Copyright>
+    <VersionPrefix>1.0</VersionPrefix>
+    <VersionSuffix>$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</VersionSuffix>
+    <Version>$(VersionPrefix).$(VersionSuffix)</Version>
+    <FileVersion>$(Version)</FileVersion>
+    <AssemblyVersion>$(VersionPrefix).$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</AssemblyVersion>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
 
-    <ItemGroup>
-        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
-        <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
-        <PackageReference Include="OpenTelemetry" Version="1.9.0"/>
-        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0"/>
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.10.0-beta.1"/>
-        <PackageReference Include="Hangfire.Core" Version="1.8.14"/>
-        <PackageReference Include="Scalar.AspNetCore" Version="2.11.7" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
-        <PackageReference Include="System.Text.Json" Version="10.0.0" />
-    </ItemGroup>
+    <!-- 程序集签名配置 -->
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../octopus-key.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+
+  <!-- NuGet 包元数据 -->
+
+
+  <PropertyGroup>
+    <PackageId>$(AssemblyName)</PackageId>
+    <Authors>$(Company)</Authors>
+    <RepositoryUrl>https://github.com/Fat-Snail/OctopusUtils</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Octopus核心库;$(AssemblyName)</PackageTags>
+    <PackageIcon>favicon.png</PackageIcon>
+    <PackageReleaseNotes>Octopus核心库；Scalar UI脚手架；Aspire工具类；简易审计日志；hangfire脚手架；自动注入；</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\favicon.png" Link="favicon.png" PackagePath="\"/>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="/"/>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14"/>
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.1"/>
+    <PackageReference Include="OpenTelemetry" Version="1.9.0"/>
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0"/>
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0"/>
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0"/>
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0"/>
+    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.10.0-beta.1"/>
+    <PackageReference Include="Hangfire.Core" Version="1.8.14"/>
+    <PackageReference Include="Scalar.AspNetCore" Version="2.11.7"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1"/>
+    <PackageReference Include="System.Text.Json" Version="10.0.0"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\favicon.png">
+      <Link>favicon.png</Link>
+      <PackagePath>/</PackagePath>
+    </Content>
+  </ItemGroup>
 
 </Project>
