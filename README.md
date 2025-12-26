@@ -227,6 +227,7 @@ dotnet build
 - [谷歌云盘下载](Google.md)
 - [控制台进度条](ConsoleShow.md)
 - [代码质量检查 (Husky.NET)](HUSKY.md)
+- [ASP.NET Core Web 应用脚手架 (OctopusEx.WebCore)](OctopusEx.WebCore/README.md)
 - **异步彩色控制台输出 (ConsoleEx)** - 内置文档注释和智能提示支持
 
 ## 🤝 贡献

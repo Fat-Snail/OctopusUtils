@@ -1,5 +1,30 @@
 # 更新日志
 
+## [1.2.0] - 2025-12-20
+
+### 新增
+- ✨ **OctopusEx.WebCore** - ASP.NET Core Web 应用脚手架
+  - 🎯 **ApiUIExtensions** - Swagger UI 和 Scalar UI 集成扩展
+  - 🔍 **AspireExtensions** - .NET Aspire 链路追踪简化配置
+  - 📊 **AuditServiceExtensions** - 基于领域的数据库审计系统
+  - ⚡ **HangfireExtensions** - 后台作业调度扩展（支持单任务执行）
+  - 🔧 **HostBuilderExtensions** - 自动依赖注入脚手架
+  - 📝 **完整示例项目** - 包含前后端代码示例
+
+### 工具和配置
+- ✨ 更新 **.editorconfig** - 支持 .NET 10 最新语法糖
+- ✨ 配置 **Husky.NET** - 提交时自动格式化代码
+- ✨ 支持 **.NET 10.0** - 升级 SDK 版本到 10.0.100
+
+### 新增特性详情
+- **ApiUIExtensions** - 支持 Swagger 和 Scalar UI 灵活切换
+- **AspireExtensions** - 简化 OpenTelemetry 配置
+- **AuditServiceExtensions** - 基于模型的可配置审计系统
+- **HangfireExtensions** - 简化后台作业配置，支持单任务执行
+- **自动依赖注入** - 基于接口的智能服务注册
+
+---
+
 ## [1.1.0] - 2024-11-19
 
 ### 新增
