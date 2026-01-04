@@ -128,7 +128,7 @@ dotnet add package OctopusEx.WebCore
 
 ### 项目引用
 ```xml
-<PackageReference Include="OctopusEx.WebCore" Version="1.0.0" />
+<PackageReference Include="OctopusEx.WebCore" Version="1.0.2025.1225" />
 ```
 
 ## 🔧 快速开始
