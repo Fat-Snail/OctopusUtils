@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Util.Helpers;
 using Util.Infrastructure;
 using Util.Reflections;
+using OctopusEx.WebCore.Filters;
 
 namespace OctopusEx.WebCore;
 
@@ -54,15 +55,17 @@ public class Bootstrapper
     /// <summary>
     /// 配置服务
     /// </summary>
-    protected virtual void ConfigureServices()
-    {
-        _hostBuilder.ConfigureServices((context, services) =>
-        {
-            Util.Helpers.Config.SetConfiguration(context.Configuration);
-            services.TryAddSingleton(_assemblyFinder);
-            services.TryAddSingleton(_typeFinder);
-        });
-    }
+     protected virtual void ConfigureServices()
+     {
+         _hostBuilder.ConfigureServices((context, services) =>
+         {
+             Util.Helpers.Config.SetConfiguration(context.Configuration);
+             // 将 Hangfire Dashboard 的凭据绑定到配置源
+             HangfireDashboardCredentials.Bind(context.Configuration);
+             services.TryAddSingleton(_assemblyFinder);
+             services.TryAddSingleton(_typeFinder);
+         });
+     }
 
     /// <summary>
     /// 解析服务注册器

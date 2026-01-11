@@ -8,6 +8,8 @@
   - 🔍 **AspireExtensions** - .NET Aspire 链路追踪简化配置
   - 📊 **AuditServiceExtensions** - 基于领域的数据库审计系统
   - ⚡ **HangfireExtensions** - 后台作业调度扩展（支持单任务执行）
+    - 🆕 支持 appsettings.json 配置 Dashboard 用户名密码
+    - 🆕 内置 `HangfireAuthorizationFilter` 认证过滤器
   - 🔧 **HostBuilderExtensions** - 自动依赖注入脚手架
   - 📝 **完整示例项目** - 包含前后端代码示例
 
@@ -21,7 +23,16 @@
 - **AspireExtensions** - 简化 OpenTelemetry 配置
 - **AuditServiceExtensions** - 基于模型的可配置审计系统
 - **HangfireExtensions** - 简化后台作业配置，支持单任务执行
+  - `AddSimpleHangfire()` - 简化 Hangfire 配置
+  - `AddRecurringJob()` - 添加定时作业
+  - `AddBackgroundJob()` - 添加一次性作业
+  - `UseHangfireDashboard()` - 配置 Dashboard 认证
 - **自动依赖注入** - 基于接口的智能服务注册
+
+### 更新 (2025-12-20)
+- 📝 更新 **OctopusEx.WebCore/README.md** - 新增 Hangfire Dashboard 认证配置说明
+- 📝 添加 appsettings.json 配置示例
+- 📝 完善 Hangfire 扩展文档
 
 ---
 

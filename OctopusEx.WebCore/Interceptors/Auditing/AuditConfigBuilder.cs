@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace OctopusEx.WebCore.Interceptors.Auditing;
 
@@ -98,10 +98,7 @@ public class LambdaConfig<TEntity>
             Enabled = Enabled
         };
 
-        // 使用反射设置IgnoredProperties，因为它是只读的
-        var ignoredPropertiesField = domainConfig.GetType().GetField("<IgnoredProperties>k__BackingField",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        ignoredPropertiesField?.SetValue(domainConfig, _ignoredProperties);
+        domainConfig.IgnoredProperties = _ignoredProperties;
 
         return domainConfig;
     }

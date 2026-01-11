@@ -1,7 +1,38 @@
-﻿namespace OctopusEx.WebCore.Interceptors.Auditing;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using System;
+
+namespace OctopusEx.WebCore.Interceptors.Auditing;
 
 public class DefaultAuditConfiguration : IAuditConfiguration
 {
+    private readonly IHttpContextAccessor? _httpContextAccessor;
+    private readonly ConcurrentDictionary<string, DomainAuditConfiguration> _domainConfigurations;
+
+    public DefaultAuditConfiguration() : this(null) { }
+
+    public DefaultAuditConfiguration(IHttpContextAccessor? httpContextAccessor)
+    {
+        _httpContextAccessor = httpContextAccessor;
+        _domainConfigurations = new ConcurrentDictionary<string, DomainAuditConfiguration>();
+
+        _domainConfigurations.TryAdd("System", new DomainAuditConfiguration
+        {
+            Enabled = true,
+            IgnoredProperties = new List<string> { "PasswordHash", "SecurityStamp" }
+        });
+
+        _domainConfigurations.TryAdd("Product", new DomainAuditConfiguration
+        {
+            Enabled = true,
+            IgnoredProperties = new List<string> { "InternalCode", "LastPrice" }
+        });
+
+        _domainConfigurations.TryAdd("Audit", new DomainAuditConfiguration { Enabled = false });
+    }
+
     public bool Enabled { get; set; } = true;
 
     public IReadOnlyCollection<string> GlobalIgnoredProperties { get; set; } = new List<string>
@@ -14,79 +45,49 @@ public class DefaultAuditConfiguration : IAuditConfiguration
         "RowVersion"
     };
 
-    private readonly Dictionary<string, DomainAuditConfiguration> _domainConfigurations;
-
-    public DefaultAuditConfiguration()
-    {
-        _domainConfigurations = new Dictionary<string, DomainAuditConfiguration>
-        {
-            // 系统管理领域配置
-            ["System"] = new DomainAuditConfiguration
-            {
-                Enabled = true,
-                IgnoredProperties = new List<string> { "PasswordHash", "SecurityStamp" }
-            },
-
-            // 产品领域配置
-            ["Product"] = new DomainAuditConfiguration
-            {
-                Enabled = true,
-                IgnoredProperties = new List<string> { "InternalCode", "LastPrice" }
-            },
-
-            // 审计日志领域（自身不审计）
-            ["Audit"] = new DomainAuditConfiguration { Enabled = false }
-        };
-    }
-
     public DomainAuditConfiguration GetDomainConfiguration(string domainName)
     {
-        return _domainConfigurations.TryGetValue(domainName, out var config)
-            ? config
-            : new DomainAuditConfiguration { Enabled = true };
+        if (_domainConfigurations.TryGetValue(domainName, out var cfg)) return cfg;
+        var defaultCfg = new DomainAuditConfiguration { Enabled = true };
+        _domainConfigurations.TryAdd(domainName, defaultCfg);
+        return defaultCfg;
     }
 
     public AuditUserInfo GetCurrentUser()
     {
-        // 这里可以从HttpContext、Claims等获取当前用户信息
-        // 暂时返回默认值，实际使用时需要注入HttpContextAccessor等
+        if (_httpContextAccessor?.HttpContext != null)
+        {
+            var http = _httpContextAccessor.HttpContext;
+            var user = http.User;
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? user.Identity?.Name ?? "anonymous";
+            var userName = user.Identity?.Name ?? userId;
+            var ip = http.Connection?.RemoteIpAddress?.ToString();
+            var ua = http.Request.Headers["User-Agent"].ToString();
+            return new AuditUserInfo { UserId = userId, UserName = userName, IpAddress = ip, UserAgent = ua };
+        }
         return new AuditUserInfo { UserId = "system", UserName = "System User" };
     }
 
-    /// <summary>
-    /// 添加或更新领域配置
-    /// </summary>
     public void ConfigureDomain(string domainName, DomainAuditConfiguration configuration)
     {
-        _domainConfigurations[domainName] = configuration;
+        _domainConfigurations.AddOrUpdate(domainName, configuration, (k, old) => configuration);
     }
 
-    /// <summary>
-    /// 禁用特定领域的审计
-    /// </summary>
     public void DisableDomain(string domainName)
     {
-        if ( _domainConfigurations.ContainsKey(domainName) )
+        if ( _domainConfigurations.TryGetValue(domainName, out var cfg) )
         {
-            _domainConfigurations[domainName].Enabled = false;
+            cfg.Enabled = false;
         }
         else
         {
-            _domainConfigurations[domainName] = new DomainAuditConfiguration { Enabled = false };
+            _domainConfigurations.TryAdd(domainName, new DomainAuditConfiguration { Enabled = false });
         }
     }
 
-    /// <summary>
-    /// 为特定领域添加忽略字段
-    /// </summary>
     public void AddIgnoredProperties(string domainName, params string[] properties)
     {
-        if ( !_domainConfigurations.ContainsKey(domainName) )
-        {
-            _domainConfigurations[domainName] = new DomainAuditConfiguration();
-        }
-
-        var config = _domainConfigurations[domainName];
+        var config = _domainConfigurations.GetOrAdd(domainName, new DomainAuditConfiguration());
         var ignoredProps = new List<string>(config.IgnoredProperties ?? new List<string>());
         ignoredProps.AddRange(properties);
         config.IgnoredProperties = ignoredProps;

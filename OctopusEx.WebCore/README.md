@@ -68,7 +68,7 @@ builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =
 **完整示例项目**: [auditing-demo.zip](https://github.com/Fat-Snail/X-Net-Mod/blob/main/auditing-demo.zip)
 
 ### 4. Hangfire 扩展 (HangfireExtensions)
-**简化后台作业配置，支持单任务执行**
+**简化后台作业配置，支持单任务执行和 Dashboard 认证**
 
 ```csharp
 // 配置 Hangfire（简化扩展方法）
@@ -93,7 +93,39 @@ serviceProvider.AddRecurringJob(
 // 添加一次性作业
 serviceProvider.AddBackgroundJob("startup-notification",
     () => Console.WriteLine("Hangfire 作业系统已启动"));
+
+// 配置 Hangfire Dashboard（带认证）
+app.UseHangfireDashboard("/hangfire",
+    new DashboardOptions
+    {
+        DashboardTitle = "独立作业系统控制台",
+        StatsPollingInterval = 10000,
+        Authorization = new[] { new HangfireAuthorizationFilter() }
+    });
 ```
+
+**配置 Dashboard 认证（appsettings.json）**
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning",
+      "Aspire.Hosting.Dcp": "Warning"
+    }
+  },
+  "HangfireDashboard": {
+    "Username": "jobadmin1",
+    "Password": "jobadmin1"
+  }
+}
+```
+
+**说明：**
+- `HangfireDashboard.Username` - Dashboard 登录用户名
+- `HangfireDashboard.Password` - Dashboard 登录密码
+- `HangfireAuthorizationFilter` - 内置认证过滤器，自动从配置读取凭据
 
 ### 5. 自动依赖注入
 **基于接口的智能依赖注入系统**
@@ -153,6 +185,15 @@ builder.Services.AddSimpleHangfire();
 
 var app = builder.Build();
 
+// 配置 Hangfire Dashboard（带认证）
+app.UseHangfireDashboard("/hangfire",
+    new DashboardOptions
+    {
+        DashboardTitle = "独立作业系统控制台",
+        StatsPollingInterval = 10000,
+        Authorization = new[] { new HangfireAuthorizationFilter() }
+    });
+
 if (app.Environment.IsDevelopment())
 {
     app.UseBothApiUIs();
@@ -161,7 +202,23 @@ if (app.Environment.IsDevelopment())
 app.Run();
 ```
 
-### 3. 配置审计（可选）
+### 3. 配置 appsettings.json
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "HangfireDashboard": {
+    "Username": "jobadmin1",
+    "Password": "jobadmin1"
+  }
+}
+```
+
+### 4. 配置审计（可选）
 ```csharp
 // 在 Program.cs 中添加
 builder.Services.AddAuditing(config =>
@@ -196,6 +253,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 - `AddSimpleHangfire()` - 简化 Hangfire 配置
 - `AddRecurringJob()` - 添加定时作业
 - `AddBackgroundJob()` - 添加一次性作业
+- `UseHangfireDashboard()` - 配置 Dashboard 认证（支持 appsettings.json 配置）
 
 ### HostBuilderExtensions
 - `AsBuild().AddUtil()` - 启用自动依赖注入
