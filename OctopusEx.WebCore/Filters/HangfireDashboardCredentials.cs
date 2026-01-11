@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.Extensions.Configuration;
 
 namespace OctopusEx.WebCore.Filters
@@ -11,9 +11,9 @@ namespace OctopusEx.WebCore.Filters
 
         public static void Bind(IConfiguration configuration)
         {
-            if (configuration == null) return;
+            if ( configuration == null ) return;
             var section = configuration.GetSection("HangfireDashboard");
-            if (section.Exists())
+            if ( section.Exists() )
             {
                 Username = section.GetValue<string>("Username", Username);
                 Password = section.GetValue<string>("Password", Password);

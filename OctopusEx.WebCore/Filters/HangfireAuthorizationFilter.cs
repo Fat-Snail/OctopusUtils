@@ -1,6 +1,6 @@
+﻿using System;
 using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Http;
-using System;
 
 namespace OctopusEx.WebCore.Filters
 {
@@ -11,14 +11,14 @@ namespace OctopusEx.WebCore.Filters
             var httpContext = context.GetHttpContext();
 
             var header = httpContext.Request.Headers["Authorization"];
-            if (string.IsNullOrWhiteSpace(header))
+            if ( string.IsNullOrWhiteSpace(header) )
             {
                 SetChallengeResponse(httpContext);
                 return false;
             }
 
             var authValues = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
-            if (!"Basic".Equals(authValues.Scheme, StringComparison.InvariantCultureIgnoreCase))
+            if ( !"Basic".Equals(authValues.Scheme, StringComparison.InvariantCultureIgnoreCase) )
             {
                 SetChallengeResponse(httpContext);
                 return false;
@@ -26,7 +26,7 @@ namespace OctopusEx.WebCore.Filters
 
             var parameter = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(authValues.Parameter));
             var parts = parameter.Split(':');
-            if (parts.Length < 2)
+            if ( parts.Length < 2 )
             {
                 SetChallengeResponse(httpContext);
                 return false;
@@ -34,13 +34,13 @@ namespace OctopusEx.WebCore.Filters
 
             var username = parts[0];
             var password = parts[1];
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            if ( string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password) )
             {
                 SetChallengeResponse(httpContext);
                 return false;
             }
 
-            if (username == HangfireDashboardCredentials.Username && password == HangfireDashboardCredentials.Password)
+            if ( username == HangfireDashboardCredentials.Username && password == HangfireDashboardCredentials.Password )
             {
                 return true;
             }

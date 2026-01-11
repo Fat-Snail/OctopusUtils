@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace OctopusEx.WebCore.Interceptors.Auditing;
 

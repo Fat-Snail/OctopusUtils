@@ -1,4 +1,4 @@
-namespace OctopusEx.WebCore.Extensions;
+﻿namespace OctopusEx.WebCore.Extensions;
 
 using Interceptors;
 using Interceptors.Auditing;
@@ -24,13 +24,13 @@ public static class AuditServiceExtensions
             configure?.Invoke(cfg);
             return cfg;
         });
- 
+
         // 注册审计拦截器
         services.AddScoped<AuditInterceptor>();
- 
+
         return services;
     }
- 
+
     /// <summary>
     /// 配置DbContext使用审计拦截器
     /// </summary>
@@ -42,7 +42,7 @@ public static class AuditServiceExtensions
         {
             optionsBuilder.AddInterceptors(auditInterceptor);
         }
- 
+
         return optionsBuilder;
     }
 }

@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
-using System;
 
 namespace OctopusEx.WebCore.Interceptors.Auditing;
 
@@ -47,7 +47,7 @@ public class DefaultAuditConfiguration : IAuditConfiguration
 
     public DomainAuditConfiguration GetDomainConfiguration(string domainName)
     {
-        if (_domainConfigurations.TryGetValue(domainName, out var cfg)) return cfg;
+        if ( _domainConfigurations.TryGetValue(domainName, out var cfg) ) return cfg;
         var defaultCfg = new DomainAuditConfiguration { Enabled = true };
         _domainConfigurations.TryAdd(domainName, defaultCfg);
         return defaultCfg;
@@ -55,7 +55,7 @@ public class DefaultAuditConfiguration : IAuditConfiguration
 
     public AuditUserInfo GetCurrentUser()
     {
-        if (_httpContextAccessor?.HttpContext != null)
+        if ( _httpContextAccessor?.HttpContext != null )
         {
             var http = _httpContextAccessor.HttpContext;
             var user = http.User;
