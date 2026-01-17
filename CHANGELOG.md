@@ -1,5 +1,16 @@
 # 更新日志
 
+## [1.2.0] - 2026-01-17
+
+### 新增
+- ✨ **OctopusEx.WebCore** - ASP.NET Core Web 应用脚手架
+  - 🛡️ **SensitiveWordFilterPlugin** - 智能敏感词过滤插件
+    - ⚡ 基于 ToolGood.Words 快速匹配
+    - 🧠 结合 Semantic Kernel AI 智能识别
+    - 🎯 支持三种检测模式：快速检测、AI 识别、综合检测
+    - 📚 提供详细的检测结果和置信度评分
+
+
 ## [1.2.0] - 2025-12-20
 
 ### 新增
@@ -10,11 +21,6 @@
   - ⚡ **HangfireExtensions** - 后台作业调度扩展（支持单任务执行）
     - 🆕 支持 appsettings.json 配置 Dashboard 用户名密码
     - 🆕 内置 `HangfireAuthorizationFilter` 认证过滤器
-  - 🛡️ **SensitiveWordFilterPlugin** - 智能敏感词过滤插件
-    - ⚡ 基于 ToolGood.Words 快速匹配
-    - 🧠 结合 Semantic Kernel AI 智能识别
-    - 🎯 支持三种检测模式：快速检测、AI 识别、综合检测
-    - 📚 提供详细的检测结果和置信度评分
   - 🔧 **HostBuilderExtensions** - 自动依赖注入脚手架
   - 📝 **完整示例项目** - 包含前后端代码示例
 
