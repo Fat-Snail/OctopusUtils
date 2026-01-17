@@ -10,6 +10,11 @@
   - ⚡ **HangfireExtensions** - 后台作业调度扩展（支持单任务执行）
     - 🆕 支持 appsettings.json 配置 Dashboard 用户名密码
     - 🆕 内置 `HangfireAuthorizationFilter` 认证过滤器
+  - 🛡️ **SensitiveWordFilterPlugin** - 智能敏感词过滤插件
+    - ⚡ 基于 ToolGood.Words 快速匹配
+    - 🧠 结合 Semantic Kernel AI 智能识别
+    - 🎯 支持三种检测模式：快速检测、AI 识别、综合检测
+    - 📚 提供详细的检测结果和置信度评分
   - 🔧 **HostBuilderExtensions** - 自动依赖注入脚手架
   - 📝 **完整示例项目** - 包含前后端代码示例
 
@@ -27,12 +32,19 @@
   - `AddRecurringJob()` - 添加定时作业
   - `AddBackgroundJob()` - 添加一次性作业
   - `UseHangfireDashboard()` - 配置 Dashboard 认证
+- **SensitiveWordFilterPlugin** - 多层次敏感词检测
+  - `DetectSensitiveWords()` - ToolGood.Words 快速检测
+  - `DetectSensitiveWordsWithAI()` - AI 智能识别
+  - `ComprehensiveDetectSensitiveWords()` - 综合检测
+  - `SetSensitiveWords()` - 批量配置敏感词库
+  - `AddSensitiveWord()` - 添加单个敏感词
 - **自动依赖注入** - 基于接口的智能服务注册
 
 ### 更新 (2025-12-20)
-- 📝 更新 **OctopusEx.WebCore/README.md** - 新增 Hangfire Dashboard 认证配置说明
+- 📝 更新 **OctopusEx.WebCore/README.md** - 新增敏感词过滤插件文档
+- 📝 新增敏感词过滤使用示例和检测方法对比
+- 📝 完善 Hangfire Dashboard 认证配置说明
 - 📝 添加 appsettings.json 配置示例
-- 📝 完善 Hangfire 扩展文档
 
 ---
 

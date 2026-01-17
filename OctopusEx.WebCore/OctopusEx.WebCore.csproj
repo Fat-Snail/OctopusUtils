@@ -9,7 +9,7 @@
     <Description>Web核心基础组件，公共类。</Description>
     <Company>Fatty Coder</Company>
     <Copyright>©2024-2025 Fatty Coder</Copyright>
-    <VersionPrefix>1.0</VersionPrefix>
+    <VersionPrefix>1.1</VersionPrefix>
     <VersionSuffix>$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</VersionSuffix>
     <Version>$(VersionPrefix).$(VersionSuffix)</Version>
     <FileVersion>$(Version)</FileVersion>

@@ -127,7 +127,109 @@ app.UseHangfireDashboard("/hangfire",
 - `HangfireDashboard.Password` - Dashboard 登录密码
 - `HangfireAuthorizationFilter` - 内置认证过滤器，自动从配置读取凭据
 
-### 5. 自动依赖注入
+### 5. 敏感词过滤插件 (SensitiveWordFilterPlugin)
+**基于 Semantic Kernel 和 AI 的智能敏感词检测**
+
+结合 ToolGood.Words 的快速匹配和 AI 的智能识别，提供多层次的敏感词过滤方案。
+
+```csharp
+// 配置 Kernel 和插件
+var builder = Kernel.CreateBuilder();
+
+// 添加日志服务
+builder.Services.AddLogging(c => c.AddConsole().SetMinimumLevel(LogLevel.Warning));
+
+// 配置连接到本地 Ollama（用于 AI 识别）
+builder.AddOpenAIChatCompletion(
+    modelId: "llama3.2:3b",
+    apiKey: "ollama",
+    endpoint: new Uri("http://localhost:11434/v1")
+);
+
+// 添加敏感词过滤插件
+builder.Plugins.AddFromType<SensitiveWordFilterPlugin>("SensitiveFilter");
+
+var kernel = builder.Build();
+
+// 更新整个敏感词库
+var setResult = await kernel.InvokeAsync<string>("SensitiveFilter", "SetSensitiveWords", new()
+{
+    ["sensitiveWordsJson"] = "[\"AK48\", \"M16\", \"手枪\", \"步枪\", \"爆炸物\", \"危险品\", \"毒品\", \"大麻\"]"
+});
+
+// 进行敏感词检测
+var inputText = "这是一段包含敏感信息的文本";
+
+// 方式1: 仅使用 ToolGood.Words 快速检测
+var toolGoodResult = await kernel.InvokeAsync<string>("SensitiveFilter", "DetectSensitiveWords", new()
+{
+    ["input"] = inputText
+});
+
+// 方式2: 仅使用 AI 智能识别
+var aiResult = await kernel.InvokeAsync<string>("SensitiveFilter", "DetectSensitiveWordsWithAI", new()
+{
+    ["input"] = inputText
+});
+
+// 方式3: 综合检测（ToolGood.Words + AI）
+var combinedResult = await kernel.InvokeAsync<string>("SensitiveFilter", "ComprehensiveDetectSensitiveWords", new()
+{
+    ["input"] = inputText
+});
+
+// 添加单个敏感词到词库
+var addResult = await kernel.InvokeAsync<string>("SensitiveFilter", "AddSensitiveWord", new()
+{
+    ["word"] = "新的敏感词"
+});
+```
+
+**检测方法对比：**
+
+| 检测方法 | 特点 | 优势 | 适用场景 |
+|---------|------|------|---------|
+| **ToolGood.Words** | 基于关键词匹配 | ⚡ 极快速度 | 大批量文本过滤 |
+| **AI 识别** | 基于语义理解 | 🧠 智能识别 | 复杂语境判断 |
+| **综合检测** | 结合两者优势 | 🎯 高精度 + 高速度 | 生产环境推荐 |
+
+**返回结果模型：**
+
+```csharp
+// ToolGood.Words 检测结果
+public class SensitiveWordDetectionResult
+{
+    public string OriginalText { get; set; }
+    public bool HasSensitiveWords { get; set; }
+    public List<string> SensitiveWords { get; set; }
+    public string DetectionMethod { get; set; } // "ToolGood.Words"
+}
+
+// AI 识别结果
+public class AITextAnalysisResult
+{
+    public string OriginalText { get; set; }
+    public bool HasSensitiveWords { get; set; }
+    public List<string> SensitiveWords { get; set; }
+    public List<string> SensitiveTypes { get; set; }
+    public double Confidence { get; set; }
+    public string DetectionMethod { get; set; } // "AI"
+    public string ErrorMessage { get; set; }
+}
+
+// 综合检测结果
+public class CombinedDetectionResult
+{
+    public string OriginalText { get; set; }
+    public bool FinalHasSensitiveWords { get; set; }
+    public List<string> FinalSensitiveWords { get; set; }
+    public List<string> FinalSensitiveTypes { get; set; }
+    public double CombinedConfidence { get; set; }
+    public string DetectionMethod { get; set; } // "Combined"
+}
+```
+
+### 6. 自动依赖注入
 **基于接口的智能依赖注入系统**
 
 ```csharp
@@ -161,6 +263,13 @@ dotnet add package OctopusEx.WebCore
 ### 项目引用
 ```xml
 <PackageReference Include="OctopusEx.WebCore" Version="1.0.2025.1225" />
+```
+
+**额外依赖（如使用敏感词过滤功能）:**
+```xml
+<PackageReference Include="Microsoft.SemanticKernel" Version="1.0.0" />
+<PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.0.0" />
+<PackageReference Include="ToolGood.Words" Version="3.1.0" />
 ```
 
 ## 🔧 快速开始
@@ -255,6 +364,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 - `AddBackgroundJob()` - 添加一次性作业
 - `UseHangfireDashboard()` - 配置 Dashboard 认证（支持 appsettings.json 配置）
 
+### SensitiveWordFilterPlugin
+- `DetectSensitiveWords()` - 使用 ToolGood.Words 快速检测敏感词
+- `DetectSensitiveWordsWithAI()` - 使用 AI 智能识别敏感内容
+- `ComprehensiveDetectSensitiveWords()` - 综合检测（ToolGood.Words + AI）
+- `SetSensitiveWords()` - 批量设置敏感词库
+- `AddSensitiveWord()` - 添加单个敏感词到词库
+
 ### HostBuilderExtensions
 - `AsBuild().AddUtil()` - 启用自动依赖注入
 
@@ -273,6 +389,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 - OpenAPI 文档
 - 自动依赖注入
 - 链路追踪配置
+- 敏感词过滤演示
 
 下载地址: [auditing-demo.zip](https://github.com/Fat-Snail/X-Net-Mod/blob/main/auditing-demo.zip)
 
