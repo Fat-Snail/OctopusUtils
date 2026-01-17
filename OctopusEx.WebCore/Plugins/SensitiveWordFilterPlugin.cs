@@ -261,7 +261,8 @@ public class SensitiveWordFilterPlugin
                 return JsonSerializer.Serialize(parsed,
                     new JsonSerializerOptions
                     {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        WriteIndented = true
                     });
             }
             catch ( JsonException )
@@ -281,7 +282,8 @@ public class SensitiveWordFilterPlugin
                 return JsonSerializer.Serialize(fallbackResult,
                     new JsonSerializerOptions
                     {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        WriteIndented = true
                     });
             }
         }
