@@ -4,21 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JiebaNet.Segmenter
+namespace JiebaNet.Segmenter;
+
+public class DefaultDictionary<TKey, TValue> : Dictionary<TKey, TValue>
 {
-    public class DefaultDictionary<TKey, TValue> : Dictionary<TKey, TValue>
+    public new TValue this[TKey key]
     {
-        public new TValue this[TKey key]
+        get
         {
-            get
+            if ( !ContainsKey(key) )
             {
-                if ( !ContainsKey(key) )
-                {
-                    Add(key, default(TValue));
-                }
-                return base[key];
+                Add(key, default(TValue));
             }
-            set { base[key] = value; }
+            return base[key];
         }
+        set { base[key] = value; }
     }
 }

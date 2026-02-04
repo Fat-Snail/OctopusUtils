@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace JiebaNet.Segmenter.FinalSeg
+namespace JiebaNet.Segmenter.FinalSeg;
+
+public interface IFinalSeg
 {
-    public interface IFinalSeg
-    {
-        IEnumerable<String> Cut(String sentence);
-    }
+    IEnumerable<String> Cut(String sentence);
 }

@@ -78,4 +78,9 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DomainCore\Abstractions\Interfaces\DataAccess\" />
+    <Folder Include="DomainCore\Implementations\" />
+  </ItemGroup>
+
 </Project>

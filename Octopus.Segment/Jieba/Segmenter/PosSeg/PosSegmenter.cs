@@ -6,296 +6,295 @@ using System.Text;
 using System.Text.RegularExpressions;
 using JiebaNet.Segmenter.Common;
 
-namespace JiebaNet.Segmenter.PosSeg
+namespace JiebaNet.Segmenter.PosSeg;
+
+public class PosSegmenter
 {
-    public class PosSegmenter
+    private static readonly WordDictionary WordDict = WordDictionary.Instance;
+    private static readonly Viterbi PosSeg = Viterbi.Instance;
+
+    // TODO: 
+    private static readonly Object locker = new Object();
+
+    #region Regular Expressions
+
+    internal static readonly Regex RegexChineseInternal = new Regex(@"([\u4E00-\u9FD5a-zA-Z0-9+#&\._]+)", RegexOptions.Compiled);
+    internal static readonly Regex RegexSkipInternal = new Regex(@"(\r\n|\s)", RegexOptions.Compiled);
+
+    internal static readonly Regex RegexChineseDetail = new Regex(@"([\u4E00-\u9FD5]+)", RegexOptions.Compiled);
+    internal static readonly Regex RegexSkipDetail = new Regex(@"([\.0-9]+|[a-zA-Z0-9]+)", RegexOptions.Compiled);
+
+    internal static readonly Regex RegexEnglishWords = new Regex(@"[a-zA-Z0-9]+", RegexOptions.Compiled);
+    internal static readonly Regex RegexNumbers = new Regex(@"[\.0-9]+", RegexOptions.Compiled);
+
+    internal static readonly Regex RegexEnglishChar = new Regex(@"^[a-zA-Z0-9]$", RegexOptions.Compiled);
+
+    #endregion
+
+    private static IDictionary<String, String> _wordTagTab;
+
+    static PosSegmenter()
     {
-        private static readonly WordDictionary WordDict = WordDictionary.Instance;
-        private static readonly Viterbi PosSeg = Viterbi.Instance;
+        LoadWordTagTab();
+    }
 
-        // TODO: 
-        private static readonly Object locker = new Object();
-
-        #region Regular Expressions
-
-        internal static readonly Regex RegexChineseInternal = new Regex(@"([\u4E00-\u9FD5a-zA-Z0-9+#&\._]+)", RegexOptions.Compiled);
-        internal static readonly Regex RegexSkipInternal = new Regex(@"(\r\n|\s)", RegexOptions.Compiled);
-
-        internal static readonly Regex RegexChineseDetail = new Regex(@"([\u4E00-\u9FD5]+)", RegexOptions.Compiled);
-        internal static readonly Regex RegexSkipDetail = new Regex(@"([\.0-9]+|[a-zA-Z0-9]+)", RegexOptions.Compiled);
-
-        internal static readonly Regex RegexEnglishWords = new Regex(@"[a-zA-Z0-9]+", RegexOptions.Compiled);
-        internal static readonly Regex RegexNumbers = new Regex(@"[\.0-9]+", RegexOptions.Compiled);
-
-        internal static readonly Regex RegexEnglishChar = new Regex(@"^[a-zA-Z0-9]$", RegexOptions.Compiled);
-
-        #endregion
-
-        private static IDictionary<String, String> _wordTagTab;
-
-        static PosSegmenter()
+    private static void LoadWordTagTab()
+    {
+        try
         {
-            LoadWordTagTab();
-        }
-
-        private static void LoadWordTagTab()
-        {
-            try
+            _wordTagTab = new Dictionary<String, String>();
+            var lines = FileExtension.ReadEmbeddedAllLines(ConfigManager.MainDictFile);
+            foreach ( var line in lines )
             {
-                _wordTagTab = new Dictionary<String, String>();
-                var lines = FileExtension.ReadEmbeddedAllLines(ConfigManager.MainDictFile);
-                foreach ( var line in lines )
+                var tokens = line.Split(' ');
+                if ( tokens.Length < 2 )
                 {
-                    var tokens = line.Split(' ');
-                    if ( tokens.Length < 2 )
-                    {
-                        Debug.Fail(String.Format("Invalid line: {0}", line));
-                        continue;
-                    }
-
-                    var word = tokens[0];
-                    var tag = tokens[2];
-
-                    _wordTagTab[word] = tag;
+                    Debug.Fail(String.Format("Invalid line: {0}", line));
+                    continue;
                 }
-            }
-            catch ( System.IO.IOException e )
-            {
-                Debug.Fail(String.Format("Word tag table load failure, reason: {0}", e.Message));
-            }
-            catch ( FormatException fe )
-            {
-                Debug.Fail(fe.Message);
+
+                var word = tokens[0];
+                var tag = tokens[2];
+
+                _wordTagTab[word] = tag;
             }
         }
-
-        private JiebaSegmenter _segmenter;
-
-        public PosSegmenter()
+        catch ( System.IO.IOException e )
         {
-            _segmenter = new JiebaSegmenter();
+            Debug.Fail(String.Format("Word tag table load failure, reason: {0}", e.Message));
+        }
+        catch ( FormatException fe )
+        {
+            Debug.Fail(fe.Message);
+        }
+    }
+
+    private JiebaSegmenter _segmenter;
+
+    public PosSegmenter()
+    {
+        _segmenter = new JiebaSegmenter();
+    }
+
+    public PosSegmenter(JiebaSegmenter segmenter)
+    {
+        _segmenter = segmenter;
+    }
+
+    private void CheckNewUserWordTags()
+    {
+        if ( _segmenter.UserWordTagTab.IsNotEmpty() )
+        {
+            _wordTagTab.Update(_segmenter.UserWordTagTab);
+            _segmenter.UserWordTagTab = new Dictionary<String, String>();
+        }
+    }
+
+    public IEnumerable<Pair> Cut(String text, Boolean hmm = true)
+    {
+        return CutInternal(text, hmm);
+    }
+
+    #region Internal Cut Methods
+
+    internal IEnumerable<Pair> CutInternal(String text, Boolean hmm = true)
+    {
+        CheckNewUserWordTags();
+
+        var blocks = RegexChineseInternal.Split(text);
+        Func<String, IEnumerable<Pair>> cutMethod = null;
+        if ( hmm )
+        {
+            cutMethod = CutDag;
+        }
+        else
+        {
+            cutMethod = CutDagWithoutHmm;
         }
 
-        public PosSegmenter(JiebaSegmenter segmenter)
+        var tokens = new List<Pair>();
+        foreach ( var blk in blocks )
         {
-            _segmenter = segmenter;
-        }
-
-        private void CheckNewUserWordTags()
-        {
-            if ( _segmenter.UserWordTagTab.IsNotEmpty() )
+            if ( RegexChineseInternal.IsMatch(blk) )
             {
-                _wordTagTab.Update(_segmenter.UserWordTagTab);
-                _segmenter.UserWordTagTab = new Dictionary<String, String>();
-            }
-        }
-
-        public IEnumerable<Pair> Cut(String text, Boolean hmm = true)
-        {
-            return CutInternal(text, hmm);
-        }
-
-        #region Internal Cut Methods
-
-        internal IEnumerable<Pair> CutInternal(String text, Boolean hmm = true)
-        {
-            CheckNewUserWordTags();
-
-            var blocks = RegexChineseInternal.Split(text);
-            Func<String, IEnumerable<Pair>> cutMethod = null;
-            if ( hmm )
-            {
-                cutMethod = CutDag;
+                tokens.AddRange(cutMethod(blk));
             }
             else
             {
-                cutMethod = CutDagWithoutHmm;
-            }
-
-            var tokens = new List<Pair>();
-            foreach ( var blk in blocks )
-            {
-                if ( RegexChineseInternal.IsMatch(blk) )
+                var tmp = RegexSkipInternal.Split(blk);
+                foreach ( var x in tmp )
                 {
-                    tokens.AddRange(cutMethod(blk));
-                }
-                else
-                {
-                    var tmp = RegexSkipInternal.Split(blk);
-                    foreach ( var x in tmp )
+                    if ( RegexSkipInternal.IsMatch(x) )
                     {
-                        if ( RegexSkipInternal.IsMatch(x) )
+                        tokens.Add(new Pair(x, "x"));
+                    }
+                    else
+                    {
+                        foreach ( var xx in x )
                         {
-                            tokens.Add(new Pair(x, "x"));
-                        }
-                        else
-                        {
-                            foreach ( var xx in x )
+                            // TODO: each char?
+                            var xxs = xx.ToString();
+                            if ( RegexNumbers.IsMatch(xxs) )
                             {
-                                // TODO: each char?
-                                var xxs = xx.ToString();
-                                if ( RegexNumbers.IsMatch(xxs) )
-                                {
-                                    tokens.Add(new Pair(xxs, "m"));
-                                }
-                                else if ( RegexEnglishWords.IsMatch(x) )
-                                {
-                                    tokens.Add(new Pair(xxs, "eng"));
-                                }
-                                else
-                                {
-                                    tokens.Add(new Pair(xxs, "x"));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return tokens;
-        }
-
-        internal IEnumerable<Pair> CutDag(String sentence)
-        {
-            var dag = _segmenter.GetDag(sentence);
-            var route = _segmenter.Calc(sentence, dag);
-
-            var tokens = new List<Pair>();
-
-            var x = 0;
-            var n = sentence.Length;
-            var buf = String.Empty;
-            while ( x < n )
-            {
-                var y = route[x].Key + 1;
-                var w = sentence.Substring(x, y - x);
-                if ( y - x == 1 )
-                {
-                    buf += w;
-                }
-                else
-                {
-                    if ( buf.Length > 0 )
-                    {
-                        AddBufferToWordList(tokens, buf);
-                        buf = String.Empty;
-                    }
-                    tokens.Add(new Pair(w, _wordTagTab.GetDefault(w, "x")));
-                }
-                x = y;
-            }
-
-            if ( buf.Length > 0 )
-            {
-                AddBufferToWordList(tokens, buf);
-            }
-
-            return tokens;
-        }
-
-        internal IEnumerable<Pair> CutDagWithoutHmm(String sentence)
-        {
-            var dag = _segmenter.GetDag(sentence);
-            var route = _segmenter.Calc(sentence, dag);
-
-            var tokens = new List<Pair>();
-
-            var x = 0;
-            var buf = String.Empty;
-            var n = sentence.Length;
-
-            var y = -1;
-            while ( x < n )
-            {
-                y = route[x].Key + 1;
-                var w = sentence.Substring(x, y - x);
-                // TODO: char or word?
-                if ( RegexEnglishChar.IsMatch(w) )
-                {
-                    buf += w;
-                    x = y;
-                }
-                else
-                {
-                    if ( buf.Length > 0 )
-                    {
-                        tokens.Add(new Pair(buf, "eng"));
-                        buf = String.Empty;
-                    }
-                    tokens.Add(new Pair(w, _wordTagTab.GetDefault(w, "x")));
-                    x = y;
-                }
-            }
-
-            if ( buf.Length > 0 )
-            {
-                tokens.Add(new Pair(buf, "eng"));
-            }
-
-            return tokens;
-        }
-
-        internal IEnumerable<Pair> CutDetail(String text)
-        {
-            var tokens = new List<Pair>();
-            var blocks = RegexChineseDetail.Split(text);
-            foreach ( var blk in blocks )
-            {
-                if ( RegexChineseDetail.IsMatch(blk) )
-                {
-                    tokens.AddRange(PosSeg.Cut(blk));
-                }
-                else
-                {
-                    var tmp = RegexSkipDetail.Split(blk);
-                    foreach ( var x in tmp )
-                    {
-                        if ( !String.IsNullOrWhiteSpace(x) )
-                        {
-                            if ( RegexNumbers.IsMatch(x) )
-                            {
-                                tokens.Add(new Pair(x, "m"));
+                                tokens.Add(new Pair(xxs, "m"));
                             }
                             else if ( RegexEnglishWords.IsMatch(x) )
                             {
-                                tokens.Add(new Pair(x, "eng"));
+                                tokens.Add(new Pair(xxs, "eng"));
                             }
                             else
                             {
-                                tokens.Add(new Pair(x, "x"));
+                                tokens.Add(new Pair(xxs, "x"));
                             }
                         }
                     }
                 }
             }
-
-            return tokens;
         }
 
-        #endregion
+        return tokens;
+    }
 
-        #region Private Helpers
+    internal IEnumerable<Pair> CutDag(String sentence)
+    {
+        var dag = _segmenter.GetDag(sentence);
+        var route = _segmenter.Calc(sentence, dag);
 
-        private void AddBufferToWordList(List<Pair> words, String buf)
+        var tokens = new List<Pair>();
+
+        var x = 0;
+        var n = sentence.Length;
+        var buf = String.Empty;
+        while ( x < n )
         {
-            if ( buf.Length == 1 )
+            var y = route[x].Key + 1;
+            var w = sentence.Substring(x, y - x);
+            if ( y - x == 1 )
             {
-                words.Add(new Pair(buf, _wordTagTab.GetDefault(buf, "x")));
+                buf += w;
             }
             else
             {
-                if ( !WordDict.ContainsWord(buf) )
+                if ( buf.Length > 0 )
                 {
-                    var tokens = CutDetail(buf);
-                    words.AddRange(tokens);
+                    AddBufferToWordList(tokens, buf);
+                    buf = String.Empty;
                 }
-                else
+                tokens.Add(new Pair(w, _wordTagTab.GetDefault(w, "x")));
+            }
+            x = y;
+        }
+
+        if ( buf.Length > 0 )
+        {
+            AddBufferToWordList(tokens, buf);
+        }
+
+        return tokens;
+    }
+
+    internal IEnumerable<Pair> CutDagWithoutHmm(String sentence)
+    {
+        var dag = _segmenter.GetDag(sentence);
+        var route = _segmenter.Calc(sentence, dag);
+
+        var tokens = new List<Pair>();
+
+        var x = 0;
+        var buf = String.Empty;
+        var n = sentence.Length;
+
+        var y = -1;
+        while ( x < n )
+        {
+            y = route[x].Key + 1;
+            var w = sentence.Substring(x, y - x);
+            // TODO: char or word?
+            if ( RegexEnglishChar.IsMatch(w) )
+            {
+                buf += w;
+                x = y;
+            }
+            else
+            {
+                if ( buf.Length > 0 )
                 {
-                    words.AddRange(buf.Select(ch => new Pair(ch.ToString(), "x")));
+                    tokens.Add(new Pair(buf, "eng"));
+                    buf = String.Empty;
+                }
+                tokens.Add(new Pair(w, _wordTagTab.GetDefault(w, "x")));
+                x = y;
+            }
+        }
+
+        if ( buf.Length > 0 )
+        {
+            tokens.Add(new Pair(buf, "eng"));
+        }
+
+        return tokens;
+    }
+
+    internal IEnumerable<Pair> CutDetail(String text)
+    {
+        var tokens = new List<Pair>();
+        var blocks = RegexChineseDetail.Split(text);
+        foreach ( var blk in blocks )
+        {
+            if ( RegexChineseDetail.IsMatch(blk) )
+            {
+                tokens.AddRange(PosSeg.Cut(blk));
+            }
+            else
+            {
+                var tmp = RegexSkipDetail.Split(blk);
+                foreach ( var x in tmp )
+                {
+                    if ( !String.IsNullOrWhiteSpace(x) )
+                    {
+                        if ( RegexNumbers.IsMatch(x) )
+                        {
+                            tokens.Add(new Pair(x, "m"));
+                        }
+                        else if ( RegexEnglishWords.IsMatch(x) )
+                        {
+                            tokens.Add(new Pair(x, "eng"));
+                        }
+                        else
+                        {
+                            tokens.Add(new Pair(x, "x"));
+                        }
+                    }
                 }
             }
         }
 
-        #endregion
+        return tokens;
     }
+
+    #endregion
+
+    #region Private Helpers
+
+    private void AddBufferToWordList(List<Pair> words, String buf)
+    {
+        if ( buf.Length == 1 )
+        {
+            words.Add(new Pair(buf, _wordTagTab.GetDefault(buf, "x")));
+        }
+        else
+        {
+            if ( !WordDict.ContainsWord(buf) )
+            {
+                var tokens = CutDetail(buf);
+                words.AddRange(tokens);
+            }
+            else
+            {
+                words.AddRange(buf.Select(ch => new Pair(ch.ToString(), "x")));
+            }
+        }
+    }
+
+    #endregion
 }

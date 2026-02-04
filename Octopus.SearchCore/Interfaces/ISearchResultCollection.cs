@@ -1,26 +1,25 @@
 ﻿using System.Collections.Generic;
 
-namespace Octopus.SearchCore.Interfaces
+namespace Octopus.SearchCore.Interfaces;
+
+/// <summary>
+/// 搜索结果集
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public interface ISearchResultCollection<T>
 {
     /// <summary>
-    /// 搜索结果集
+    /// 总条数
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface ISearchResultCollection<T>
-    {
-        /// <summary>
-        /// 总条数
-        /// </summary>
-        Int32 TotalHits { get; set; }
+    Int32 TotalHits { get; set; }
 
-        /// <summary>
-        /// 耗时
-        /// </summary>
-        Int64 Elapsed { get; set; }
+    /// <summary>
+    /// 耗时
+    /// </summary>
+    Int64 Elapsed { get; set; }
 
-        /// <summary>
-        /// 结果集
-        /// </summary>
-        IList<T> Results { get; set; }
-    }
+    /// <summary>
+    /// 结果集
+    /// </summary>
+    IList<T> Results { get; set; }
 }

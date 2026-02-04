@@ -1,27 +1,26 @@
 ﻿using System;
 using System.IO;
 
-namespace JiebaNet.Analyser
+namespace JiebaNet.Analyser;
+
+public class ConfigManager
 {
-    public class ConfigManager
+    // TODO: duplicate codes.
+    public static String ConfigFileBaseDir
     {
-        // TODO: duplicate codes.
-        public static String ConfigFileBaseDir
+        get
         {
-            get
-            {
-                return "Resources";
-            }
+            return "Resources";
         }
+    }
 
-        public static String IdfFile
-        {
-            get { return Path.Combine(ConfigFileBaseDir, "idf.txt"); }
-        }
+    public static String IdfFile
+    {
+        get { return Path.Combine(ConfigFileBaseDir, "idf.txt"); }
+    }
 
-        public static String StopWordsFile
-        {
-            get { return Path.Combine(ConfigFileBaseDir, "stopwords.txt"); }
-        }
+    public static String StopWordsFile
+    {
+        get { return Path.Combine(ConfigFileBaseDir, "stopwords.txt"); }
     }
 }

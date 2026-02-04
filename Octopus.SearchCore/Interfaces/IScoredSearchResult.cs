@@ -1,19 +1,18 @@
-﻿namespace Octopus.SearchCore.Interfaces
+﻿namespace Octopus.SearchCore.Interfaces;
+
+/// <summary>
+/// 结果项
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public interface IScoredSearchResult<T>
 {
     /// <summary>
-    /// 结果项
+    /// 匹配度
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IScoredSearchResult<T>
-    {
-        /// <summary>
-        /// 匹配度
-        /// </summary>
-        Single Score { get; set; }
+    Single Score { get; set; }
 
-        /// <summary>
-        /// 实体
-        /// </summary>
-        T Entity { get; set; }
-    }
+    /// <summary>
+    /// 实体
+    /// </summary>
+    T Entity { get; set; }
 }

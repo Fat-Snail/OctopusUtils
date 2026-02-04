@@ -75,6 +75,7 @@ public static class Utils
 
         RetryMethod(() =>
         {
+            HashSet<string> hashSet = new HashSet<string>();
             action();
             return true; // 返回虚拟值
         }, maxRetryCount, sleepTime, false, onRetry);

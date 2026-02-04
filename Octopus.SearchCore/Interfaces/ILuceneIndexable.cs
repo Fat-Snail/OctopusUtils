@@ -7,41 +7,40 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
 using Lucene.Net.Documents;
 
-namespace Octopus.SearchCore.Interfaces
+namespace Octopus.SearchCore.Interfaces;
+
+/// <summary>
+/// 需要被索引的实体基类
+/// </summary>
+public interface ILuceneIndexable
 {
     /// <summary>
-    /// 需要被索引的实体基类
+    /// 主键id
     /// </summary>
-    public interface ILuceneIndexable
-    {
-        /// <summary>
-        /// 主键id
-        /// </summary>
-        [LuceneIndex(Name = "Id", Store = Field.Store.YES), Key]
+    [LuceneIndex(Name = "Id", Store = Field.Store.YES), Key]
 
-        Int32 Id { get; set; }
+    Int32 Id { get; set; }
 
 #if Long
-        Int64 Id { get; set; }
+    Int64 Id { get; set; }
 #endif
 #if String
-        String Id { get; set; }
+    String Id { get; set; }
 #endif
 #if Guid
-        Guid Id { get; set; }
+    Guid Id { get; set; }
 #endif
 
-        /// <summary>
-        /// 索引id
-        /// </summary>
-        [LuceneIndex(Name = "IndexId", Store = Field.Store.YES)]
-        [XmlIgnore, NotMapped]
-        internal String IndexId { get; set; }
+    /// <summary>
+    /// 索引id
+    /// </summary>
+    [LuceneIndex(Name = "IndexId", Store = Field.Store.YES)]
+    [XmlIgnore, NotMapped]
+    internal String IndexId { get; set; }
 
-        /// <summary>
-        /// 转换成Lucene文档
-        /// </summary>
-        /// <returns></returns>
-        Document ToDocument();
-    }
+    /// <summary>
+    /// 转换成Lucene文档
+    /// </summary>
+    /// <returns></returns>
+    Document ToDocument();
 }
