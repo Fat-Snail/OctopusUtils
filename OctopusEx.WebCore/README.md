@@ -229,7 +229,411 @@ public class CombinedDetectionResult
 }
 ```
 
-### 6. 自动依赖注入
+### 6. 领域仓储层 (DomainCore)
+**泛型仓储和 CRUD 服务基类，快速搭建通用功能**
+
+提供完整的仓储模式实现，包含泛型仓储、工作单元、CRUD 服务和控制器基类。
+
+#### 核心组件
+
+**DomainCore 包含：**
+- `IRepository<TEntity, TKey>` - 泛型仓储接口
+- `Repository<TEntity, TKey>` - 泛型仓储实现
+- `IUnitOfWork` - 工作单元接口
+- `UnitOfWork` - 工作单元实现
+- `CrudServiceBase<TEntity, TKey, TDto>` - CRUD 服务基类
+- `CURDControllerBase<TEntity, TKey, TDto>` - CRUD 控制器基类
+
+#### 1. 配置泛型仓储
+
+```csharp
+// 配置服务和数据库
+var services = new ServiceCollection();
+
+// 注册内存数据库的泛型仓储服务
+services.AddGenericRepositoryEfCoreInMemory();
+
+// 注册具体业务服务
+services.AddScoped<ProductService>();
+
+// 构建服务提供程序
+var serviceProvider = services.BuildServiceProvider();
+```
+
+#### 2. 使用仓储和工作单元
+
+```csharp
+using var scope = serviceProvider.CreateScope();
+var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext>();
+
+// 获取产品仓储
+var productRepo = unitOfWork.GetRepository<Product, int>();
+
+// 添加新产品
+var newProduct = new Product
+{
+    Name = "示例产品",
+    Description = "这是一个示例产品",
+    Price = 99.99m,
+    StockQuantity = 10,
+    IsActive = true,
+    CategoryId = 1
+};
+
+await productRepo.AddAsync(newProduct);
+await unitOfWork.SaveChangesAsync();
+Console.WriteLine($"✅ 产品添加成功，ID: {newProduct.Id}");
+
+// 查询产品
+var product = await productRepo.GetByIdAsync(newProduct.Id);
+Console.WriteLine($"✅ 查询产品: {product?.Name}");
+
+// 更新产品
+if (product != null)
+{
+    product.Price = 109.99m;
+    await productRepo.UpdateAsync(product);
+    await unitOfWork.SaveChangesAsync();
+    Console.WriteLine("✅ 产品更新成功");
+}
+
+// 删除产品
+await productRepo.DeleteByIdAsync(newProduct.Id);
+await unitOfWork.SaveChangesAsync();
+Console.WriteLine("✅ 产品删除成功");
+```
+
+#### 3. 批量操作
+
+```csharp
+var productRepo = unitOfWork.GetRepository<Product, int>();
+
+// 批量添加
+var newProducts = new List<Product>
+{
+    new Product { Name = "批量产品A", Price = 100, StockQuantity = 10, IsActive = true, CategoryId = 1 },
+    new Product { Name = "批量产品B", Price = 200, StockQuantity = 20, IsActive = true, CategoryId = 2 },
+    new Product { Name = "批量产品C", Price = 300, StockQuantity = 30, IsActive = true, CategoryId = 3 }
+};
+
+await productRepo.AddRangeAsync(newProducts);
+await unitOfWork.SaveChangesAsync();
+
+// 批量查询
+var productIds = newProducts.Select(p => p.Id).ToList();
+var fetchedProducts = await productRepo.GetByIdsAsync(productIds);
+
+// 批量更新
+foreach (var product in fetchedProducts)
+{
+    product.Price *= 1.5m;
+}
+await productRepo.UpdateRangeAsync(fetchedProducts);
+await unitOfWork.SaveChangesAsync();
+
+// 批量删除
+await productRepo.DeleteRangeAsync(fetchedProducts);
+await unitOfWork.SaveChangesAsync();
+```
+
+#### 4. 查询构建器和 FindAllAsync
+
+```csharp
+var productRepo = unitOfWork.GetRepository<Product, int>();
+
+// 方法1：仅条件查询
+var products1 = await productRepo.FindAllAsync(
+    condition: p => p.IsActive && p.Price > 1000,
+    cancellationToken: default);
+
+// 方法2：条件查询 + 排序
+var products2 = await productRepo.FindAllAsync(
+    condition: p => p.IsActive,
+    orderBy: q => q.OrderByDescending(p => p.Price),
+    cancellationToken: default);
+
+// 方法3：条件查询 + 排序 + 关联加载
+var products3 = await productRepo.FindAllAsync(
+    condition: p => p.IsActive,
+    orderBy: q => q.OrderBy(p => p.Name),
+    includes: p => p.Category);
+
+// 方法4：查询构建器模式
+var products4 = await productRepo.FindAllAsync(
+    queryBuilder: builder =>
+    {
+        return builder
+            .Where(p => p.IsActive)
+            .Where(p => p.Price > 1000)
+            .OrderBy(p => p.Price)
+            .Include(p => p.Category)
+            .Take(5)
+            .AsNoTracking();
+    });
+```
+
+#### 5. 联表查询
+
+```csharp
+var productRepo = unitOfWork.GetRepository<Product, int>();
+
+// 方法1：使用 Include 直接加载关联实体
+var productsWithCategory = await productRepo.FindAllAsync(
+    condition: p => p.IsActive,
+    includes: p => p.Category);
+
+// 方法2：使用 LINQ Join 进行显式连接查询
+var query = from p in dbContext.Set<Product>()
+            join c in dbContext.Set<Category>() on p.CategoryId equals c.Id
+            where p.IsActive && c.IsActive
+            select new
+            {
+                ProductName = p.Name,
+                ProductPrice = p.Price,
+                CategoryName = c.Name,
+                CategoryDescription = c.Description
+            };
+
+var joinResults = await query.Take(3).ToListAsync();
+```
+
+#### 6. 复杂查询和聚合
+
+```csharp
+// 按分类统计产品数量、平均价格、总库存
+var statsQuery = from p in dbContext.Set<Product>()
+                 join c in dbContext.Set<Category>() on p.CategoryId equals c.Id
+                 where p.IsActive && c.IsActive
+                 group p by new { c.Id, c.Name } into g
+                 select new
+                 {
+                     CategoryName = g.Key.Name,
+                     ProductCount = g.Count(),
+                     AvgPrice = g.Average(p => p.Price),
+                     TotalStock = g.Sum(p => p.StockQuantity),
+                     MaxPrice = g.Max(p => p.Price),
+                     MinPrice = g.Min(p => p.Price)
+                 };
+
+var stats = await statsQuery.ToListAsync();
+```
+
+#### 7. 事务操作
+
+```csharp
+await unitOfWork.ExecuteTransactionAsync(async () =>
+{
+    // 操作1：添加新分类
+    var newCategory = new Category
+    {
+        Name = "新分类",
+        Description = "事务中添加的分类",
+        IsActive = true
+    };
+    await categoryRepo.AddAsync(newCategory);
+    await unitOfWork.SaveChangesAsync();
+
+    // 操作2：添加新产品
+    var newProduct = new Product
+    {
+        Name = "事务产品",
+        Description = "在事务中添加的产品",
+        Price = 199.99m,
+        StockQuantity = 50,
+        IsActive = true,
+        CategoryId = newCategory.Id
+    };
+    await productRepo.AddAsync(newProduct);
+    await unitOfWork.SaveChangesAsync();
+
+    // 操作3：更新现有产品价格
+    var existingProduct = await productRepo.GetByIdAsync(1);
+    if (existingProduct != null)
+    {
+        existingProduct.Price *= 1.1m;
+        await productRepo.UpdateAsync(existingProduct);
+        await unitOfWork.SaveChangesAsync();
+    }
+
+    Console.WriteLine("✅ 事务操作成功完成！");
+});
+```
+
+#### 8. 使用 CrudServiceBase
+
+创建自定义服务类继承 `CrudServiceBase<TEntity, TKey, TDto>`：
+
+```csharp
+public class ProductService : CrudServiceBase<Product, int, ProductDto>
+{
+    public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
+        : base(unitOfWork, mapper)
+    {
+    }
+
+    // 可以添加自定义业务方法
+    public async Task<List<ProductDto>> SearchProductsAsync(
+        string keyword,
+        decimal? minPrice = null,
+        decimal? maxPrice = null,
+        int? categoryId = null,
+        CancellationToken cancellationToken = default)
+    {
+        var repository = UnitOfWork.GetRepository<Product, int>();
+
+        var products = await repository.FindAllAsync(
+            condition: p =>
+                (string.IsNullOrEmpty(keyword) || p.Name.Contains(keyword)) &&
+                (!minPrice.HasValue || p.Price >= minPrice.Value) &&
+                (!maxPrice.HasValue || p.Price <= maxPrice.Value) &&
+                (!categoryId.HasValue || p.CategoryId == categoryId.Value),
+            cancellationToken: cancellationToken);
+
+        return Mapper.Map<List<ProductDto>>(products);
+    }
+
+    // 获取统计信息
+    public async Task<ProductStatisticsDto> GetProductStatisticsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var repository = UnitOfWork.GetRepository<Product, int>();
+
+        var allProducts = await repository.FindAllAsync(
+            condition: p => p.IsActive,
+            cancellationToken: cancellationToken);
+
+        return new ProductStatisticsDto
+        {
+            TotalCount = allProducts.Count,
+            ActiveCount = allProducts.Count(p => p.IsActive),
+            HighPriceCount = allProducts.Count(p => p.Price > 1000)
+        };
+    }
+}
+```
+
+#### 9. 使用 CURDControllerBase
+
+创建控制器继承 `CURDControllerBase<TEntity, TKey, TDto>`：
+
+```csharp
+/// <summary>
+/// 产品控制器（继承自通用CRUD控制器基类）
+/// </summary>
+[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : CURDControllerBase<Product, int, ProductDto>
+{
+    public ProductsController(ProductService productService)
+        : base(productService)
+    {
+    }
+
+    /// <summary>
+    /// 从DTO中获取实体主键值
+    /// </summary>
+    protected override int GetEntityIdFromDto(ProductDto dto)
+    {
+        return dto.Id ?? throw new ArgumentException("Product Id is required");
+    }
+
+    /// <summary>
+    /// 验证创建请求
+    /// </summary>
+    protected override async Task<ValidationResult> ValidateCreateRequestAsync(
+        ProductDto request,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(request.Name))
+        {
+            return ValidationResult.Fail("产品名称不能为空");
+        }
+
+        if (request.Price <= 0)
+        {
+            return ValidationResult.Fail("产品价格必须大于0");
+        }
+
+        return await base.ValidateCreateRequestAsync(request, cancellationToken);
+    }
+
+    /// <summary>
+    /// 验证更新请求
+    /// </summary>
+    protected override async Task<ValidationResult> ValidateUpdateRequestAsync(
+        int id,
+        ProductDto request,
+        CancellationToken cancellationToken)
+    {
+        if (request.Id.HasValue && request.Id.Value != id)
+        {
+            return ValidationResult.Fail("请求中的ID与路由中的ID不匹配");
+        }
+
+        return await base.ValidateUpdateRequestAsync(id, request, cancellationToken);
+    }
+
+    /// <summary>
+    /// 检查是否可以删除
+    /// </summary>
+    protected override async Task<DeleteCheckResult> CanDeleteAsync(
+        int id,
+        CancellationToken cancellationToken)
+    {
+        // 检查产品是否有关联的订单
+        // 如果产品已经被使用，则不能删除
+        return await base.CanDeleteAsync(id, cancellationToken);
+    }
+
+    /// <summary>
+    /// 自定义端点：根据价格范围查询产品
+    /// </summary>
+    [HttpGet("by-price-range")]
+    public async Task<ActionResult<BaseResponse<List<ProductDto>>>> GetProductsByPriceRange(
+        [FromQuery] decimal minPrice,
+        [FromQuery] decimal maxPrice,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (minPrice < 0 || maxPrice < 0 || minPrice > maxPrice)
+            {
+                return BadRequest(BaseResponse<List<ProductDto>>.Error("价格范围参数无效"));
+            }
+
+            var filteredProducts = await ((ProductService)Service)
+                .SearchProductsAsync(null, minPrice, maxPrice, null, cancellationToken);
+
+            return Ok(BaseResponse<List<ProductDto>>.Success(filteredProducts, "获取成功"));
+        }
+        catch (Exception ex)
+        {
+            return HandleException(ex);
+        }
+    }
+}
+```
+
+#### 10. 完整的 Program.cs 配置
+
+```csharp
+// 注册泛型仓储服务
+builder.Services.AddGenericRepositoryEfCoreInMemory();
+
+// 注册 AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+
+// 注册业务服务
+services.AddScoped<ProductService>();
+
+// 注册控制器
+builder.Services.AddControllers();
+```
+
+**完整示例项目**: [auditing-demo.zip](https://github.com/Fat-Snail/X-Net-Mod/blob/main/auditing-demo.zip)
+
+### 7. 自动依赖注入
 **基于接口的智能依赖注入系统**
 
 ```csharp
@@ -265,11 +669,17 @@ dotnet add package OctopusEx.WebCore
 <PackageReference Include="OctopusEx.WebCore" Version="1.0.2025.1225" />
 ```
 
-**额外依赖（如使用敏感词过滤功能）:**
+**额外依赖：**
+
 ```xml
+<!-- 敏感词过滤功能 -->
 <PackageReference Include="Microsoft.SemanticKernel" Version="1.0.0" />
 <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.0.0" />
 <PackageReference Include="ToolGood.Words" Version="3.1.0" />
+
+<!-- 领域仓储层 -->
+<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.0" />
+<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 ```
 
 ## 🔧 快速开始
@@ -342,6 +752,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
            .UseAuditing(builder.Services.BuildServiceProvider()));
 ```
 
+### 5. 配置领域仓储层（可选）
+```csharp
+// 注册泛型仓储服务
+builder.Services.AddGenericRepositoryEfCoreInMemory();
+
+// 注册 AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+
+// 注册业务服务
+builder.Services.AddScoped<ProductService>();
+```
+
 ## 🎯 核心扩展类
 
 ### ApiUIExtensions
@@ -371,6 +793,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 - `SetSensitiveWords()` - 批量设置敏感词库
 - `AddSensitiveWord()` - 添加单个敏感词到词库
 
+### DomainCore
+- `IRepository<TEntity, TKey>` - 泛型仓储接口
+- `Repository<TEntity, TKey>` - 泛型仓储实现
+- `IUnitOfWork` - 工作单元接口
+- `UnitOfWork` - 工作单元实现
+- `CrudServiceBase<TEntity, TKey, TDto>` - CRUD 服务基类
+- `CURDControllerBase<TEntity, TKey, TDto>` - CRUD 控制器基类
+- `AddGenericRepositoryEfCoreInMemory()` - 注册内存数据库仓储服务
+
 ### HostBuilderExtensions
 - `AsBuild().AddUtil()` - 启用自动依赖注入
 
@@ -390,6 +821,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 - 自动依赖注入
 - 链路追踪配置
 - 敏感词过滤演示
+- 领域仓储层（CRUD 服务和控制器）
 
 下载地址: [auditing-demo.zip](https://github.com/Fat-Snail/X-Net-Mod/blob/main/auditing-demo.zip)
 

@@ -1,17 +1,20 @@
 # 更新日志
 
-## [1.2.0] - 2026-01-17
+## [1.2.1] - 2026-02-07
 
 ### 新增
 - ✨ **OctopusEx.WebCore** - ASP.NET Core Web 应用脚手架
-  - 🛡️ **SensitiveWordFilterPlugin** - 智能敏感词过滤插件
-    - ⚡ 基于 ToolGood.Words 快速匹配
-    - 🧠 结合 Semantic Kernel AI 智能识别
-    - 🎯 支持三种检测模式：快速检测、AI 识别、综合检测
-    - 📚 提供详细的检测结果和置信度评分
+  - 🗄️ **DomainCore** - 领域仓储层和 CRUD 脚手架
+    - 🆕 泛型仓储接口和实现 `IRepository<TEntity, TKey>` 和 `Repository<TEntity, TKey>`
+    - 🆕 工作单元模式 `IUnitOfWork` 和 `UnitOfWork`
+    - 🆕 CRUD 服务基类 `CrudServiceBase<TEntity, TKey, TDto>`
+    - 🆕 CRUD 控制器基类 `CURDControllerBase<TEntity, TKey, TDto>`
+    - 🆕 支持批量操作、复杂查询、事务处理
+    - 🆕 支持联表查询、查询构建器模式
+    - 🆕 完整的验证和异常处理机制
+    - 🆕 灵活的扩展点和自定义能力
 
-
-## [1.2.0] - 2025-12-20
+## [1.2.0] - 2026-01-17
 
 ### 新增
 - ✨ **OctopusEx.WebCore** - ASP.NET Core Web 应用脚手架
@@ -21,6 +24,11 @@
   - ⚡ **HangfireExtensions** - 后台作业调度扩展（支持单任务执行）
     - 🆕 支持 appsettings.json 配置 Dashboard 用户名密码
     - 🆕 内置 `HangfireAuthorizationFilter` 认证过滤器
+  - 🛡️ **SensitiveWordFilterPlugin** - 智能敏感词过滤插件
+    - ⚡ 基于 ToolGood.Words 快速匹配
+    - 🧠 结合 Semantic Kernel AI 智能识别
+    - 🎯 支持三种检测模式：快速检测、AI 识别、综合检测
+    - 📚 提供详细的检测结果和置信度评分
   - 🔧 **HostBuilderExtensions** - 自动依赖注入脚手架
   - 📝 **完整示例项目** - 包含前后端代码示例
 
@@ -38,6 +46,17 @@
   - `AddRecurringJob()` - 添加定时作业
   - `AddBackgroundJob()` - 添加一次性作业
   - `UseHangfireDashboard()` - 配置 Dashboard 认证
+- **DomainCore** - 领域仓储层和 CRUD 脚手架
+  - `AddGenericRepositoryEfCoreInMemory()` - 注册泛型仓储服务
+  - `IRepository<TEntity, TKey>` - 提供标准的 CRUD 方法
+  - `IUnitOfWork` - 管理多个仓储的事务
+  - `CrudServiceBase<TEntity, TKey, TDto>` - 服务层基类
+  - `CURDControllerBase<TEntity, TKey, TDto>` - 控制器基类
+  - 支持批量操作：`AddRangeAsync`, `UpdateRangeAsync`, `DeleteRangeAsync`
+  - 支持复杂查询：`FindAllAsync` 多重载，查询构建器
+  - 支持联表查询：Include, Join, 复杂聚合
+  - 支持事务处理：`ExecuteTransactionAsync`
+  - 灵活的验证机制：`ValidateCreateRequestAsync`, `ValidateUpdateRequestAsync`, `CanDeleteAsync`
 - **SensitiveWordFilterPlugin** - 多层次敏感词检测
   - `DetectSensitiveWords()` - ToolGood.Words 快速检测
   - `DetectSensitiveWordsWithAI()` - AI 智能识别
@@ -46,8 +65,10 @@
   - `AddSensitiveWord()` - 添加单个敏感词
 - **自动依赖注入** - 基于接口的智能服务注册
 
-### 更新 (2025-12-20)
-- 📝 更新 **OctopusEx.WebCore/README.md** - 新增敏感词过滤插件文档
+### 更新 (2026-01-17)
+- 📝 更新 **OctopusEx.WebCore/README.md** - 新增领域仓储层文档
+- 📝 添加 DomainCore 详细使用示例（10个完整示例）
+- 📝 新增敏感词过滤插件文档
 - 📝 新增敏感词过滤使用示例和检测方法对比
 - 📝 完善 Hangfire Dashboard 认证配置说明
 - 📝 添加 appsettings.json 配置示例
@@ -62,10 +83,10 @@
 - ✨ 添加测试断言工具 Assert
 - ✨ 新增测试报告格式化功能
 
-### 优化  
+### 优化
 - 🔧 将所有基本类型升级为完整的 .NET 类型名称
 - 🔧 string → String
-- 🔧 int → Int32  
+- 🔧 int → Int32
 - 🔧 bool → Boolean
 - 🔧 long → Int64
 - 🔧 float → Single
