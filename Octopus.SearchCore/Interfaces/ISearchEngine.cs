@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Octopus.SearchCore.Interfaces;
+﻿namespace Octopus.SearchCore.Interfaces;
 
 public interface ISearchEngine
 {

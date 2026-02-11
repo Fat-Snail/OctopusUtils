@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Lucene.Net.Documents;
-
-namespace Octopus.SearchCore.Interfaces;
+﻿namespace Octopus.SearchCore.Interfaces;
 
 /// <summary>
 /// 搜索引擎

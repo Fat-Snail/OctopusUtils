@@ -1,8 +1,4 @@
-﻿using System.Collections.Concurrent;
-using Hangfire.Common;
-using Hangfire.Server;
-
-namespace OctopusEx.WebCore.Attributes.HangfireJob;
+﻿namespace OctopusEx.WebCore.Attributes.HangfireJob;
 
 public class SingleInstanceAttribute : JobFilterAttribute, IServerFilter
 {

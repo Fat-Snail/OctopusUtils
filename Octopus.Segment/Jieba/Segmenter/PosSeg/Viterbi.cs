@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using JiebaNet.Segmenter.Common;
-//using Newtonsoft.Json;
+﻿//using Newtonsoft.Json;
 
 namespace JiebaNet.Segmenter.PosSeg;
 

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-//using Microsoft.Extensions.FileProviders;
-using System.Reflection;
-using System.Text;
-using JiebaNet.Segmenter.Common;
+﻿//using Microsoft.Extensions.FileProviders;
 
 namespace JiebaNet.Segmenter;
 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Octopus.SearchCore.Interfaces;
+﻿namespace Octopus.SearchCore.Interfaces;
 
 /// <summary>
 /// 搜索结果集

@@ -1,7 +1,4 @@
-﻿using System.IO;
-using JiebaNet.Segmenter;
-using Lucene.Net.Analysis;
-using Lucene.Net.Analysis.Core;
+﻿using Lucene.Net.Analysis.Core;
 using Lucene.Net.Analysis.TokenAttributes;
 
 namespace Lucene.Net.Analysis.Jieba;

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Util.Helpers;
+﻿namespace Util.Helpers;
 
 /// <summary>
 /// 公共操作

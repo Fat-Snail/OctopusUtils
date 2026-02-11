@@ -1,6 +1,4 @@
-﻿using Lucene.Net.Documents;
-
-namespace Octopus.SearchCore.Interfaces;
+﻿namespace Octopus.SearchCore.Interfaces;
 
 /// <summary>
 /// 搜索结果

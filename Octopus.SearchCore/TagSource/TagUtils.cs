@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using System.Text.RegularExpressions;
-
-namespace Octopus.SearchCore.TagSource;
+﻿namespace Octopus.SearchCore.TagSource;
 
 public class TagUtils
 {

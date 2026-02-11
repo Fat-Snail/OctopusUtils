@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using NewLife;
-namespace NewLife;
+﻿namespace NewLife;
 
 /// <summary>字典缓存。当指定键的缓存项不存在时，调用委托获取值，并写入缓存。</summary>
 /// <remarks>常用匿名函数或者Lambda表达式作为委托。</remarks>

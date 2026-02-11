@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using JiebaNet.Segmenter.Common;
-using JiebaNet.Segmenter.FinalSeg;
+﻿using JiebaNet.Segmenter.FinalSeg;
+using JiebaNet.Segmenter.PosSeg;
 
 namespace JiebaNet.Segmenter;
 
 public class JiebaSegmenter
 {
     private static readonly WordDictionary WordDict = WordDictionary.Instance;
-    private static readonly IFinalSeg FinalSeg = Viterbi.Instance;
+    private static readonly IFinalSeg FinalSeg = JiebaNet.Segmenter.FinalSeg.Viterbi.Instance;
     private static readonly ISet<String> LoadedPath = new HashSet<String>();
 
     private static readonly Object locker = new Object();

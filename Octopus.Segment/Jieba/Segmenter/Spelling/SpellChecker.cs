@@ -1,6 +1,4 @@
-﻿using JiebaNet.Segmenter.Common;
-
-namespace JiebaNet.Segmenter.Spelling;
+﻿namespace JiebaNet.Segmenter.Spelling;
 
 public interface ISpellChecker
 {

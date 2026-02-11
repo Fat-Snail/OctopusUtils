@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi;
-using Scalar.AspNetCore;
-using Swashbuckle.AspNetCore.SwaggerGen;
+﻿using Microsoft.OpenApi;
 
 namespace OctopusEx.WebCore.Extensions;
 

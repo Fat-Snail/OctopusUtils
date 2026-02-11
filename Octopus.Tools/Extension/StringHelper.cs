@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-
-namespace NewLife;
+﻿namespace NewLife;
 
 /// <summary>字符串助手类</summary>
 /// <remarks>

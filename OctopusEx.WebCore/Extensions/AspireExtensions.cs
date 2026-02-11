@@ -1,14 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
-
-namespace OctopusEx.WebCore.Extensions;
-
-using OpenTelemetry;
-using OpenTelemetry.Metrics;
+﻿namespace OctopusEx.WebCore.Extensions;
 
 public static class AspireExtensions
 {
@@ -71,7 +61,7 @@ public static class AspireExtensions
         // {
         //     builder.Services.AddOpenTelemetry().UseOtlpExporter();
         // }
-        
+
         // 关键：为日志配置相同的资源构建器
         builder.Logging.AddOpenTelemetry(logging =>
         {

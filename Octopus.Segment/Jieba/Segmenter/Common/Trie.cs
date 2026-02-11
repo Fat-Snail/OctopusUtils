@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace JiebaNet.Segmenter.Common;
+﻿namespace JiebaNet.Segmenter.Common;
 
 // Refer to: https://github.com/brianfromoregon/trie
 public class TrieNode

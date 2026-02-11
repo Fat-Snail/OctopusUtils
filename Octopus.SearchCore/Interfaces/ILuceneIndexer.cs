@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Octopus.SearchCore.Interfaces;
+﻿namespace Octopus.SearchCore.Interfaces;
 
 public interface ILuceneIndexer
 {

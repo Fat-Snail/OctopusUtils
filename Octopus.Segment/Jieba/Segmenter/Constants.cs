@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace JiebaNet.Segmenter;
+﻿namespace JiebaNet.Segmenter;
 
 public class Constants
 {

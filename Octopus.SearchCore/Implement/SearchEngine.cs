@@ -1,14 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Reflection;
-using JiebaNet.Segmenter;
-using Lucene.Net.Analysis;
-using Lucene.Net.Documents;
-using Microsoft.Extensions.Caching.Memory;
-using Octopus.SearchCore.Ext;
-using Octopus.SearchCore.Interfaces;
-
-namespace Octopus.SearchCore;
+﻿namespace Octopus.SearchCore;
 
 /// <summary>
 /// 搜索引擎

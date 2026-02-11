@@ -1,20 +1,7 @@
-﻿using System.Text;
-using JiebaNet.Segmenter;
-using Lucene.Net.Analysis.Jieba;
-using Lucene.Net.Store;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-using Octopus.SearchCore;
-using Octopus.SearchCore.Ext;
+﻿using Lucene.Net.Analysis.Jieba;
 using Octopus.SearchCore.IndexDemo;
-using Octopus.SearchCore.Interfaces;
-using Octopus.SearchCore.TagSource;
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-
 
 //分词
 var segmenter = new JiebaSegmenter();

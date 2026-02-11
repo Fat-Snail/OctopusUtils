@@ -1,19 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text.RegularExpressions;
-using JiebaNet.Segmenter;
-using Lucene.Net.Analysis;
-using Lucene.Net.Documents;
-using Lucene.Net.Index;
+﻿using Lucene.Net.Index;
 using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
-using Lucene.Net.Store;
-using Microsoft.Extensions.Caching.Memory;
-using Octopus.SearchCore.Ext;
-using Octopus.SearchCore.Interfaces;
 
 namespace Octopus.SearchCore;
 

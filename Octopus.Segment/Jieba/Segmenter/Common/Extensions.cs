@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-namespace JiebaNet.Segmenter.Common;
+﻿namespace JiebaNet.Segmenter.Common;
 
 public static class Extensions
 {

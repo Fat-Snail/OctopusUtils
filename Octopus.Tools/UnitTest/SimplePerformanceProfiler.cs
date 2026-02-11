@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-
-namespace Octopus.Tools.UnitTest;
+﻿namespace Octopus.Tools.UnitTest;
 /// <summary>
 /// 简单性能分析器 - 类似MiniProfiler的功能
 /// </summary>

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Threading;
-
-namespace Octopus.Tools;
+﻿namespace Octopus.Tools;
 
 public class ConsoleProgressBar : IDisposable, IProgress<Double>
 {

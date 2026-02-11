@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-
-/// <summary>销毁助手。扩展方法专用</summary>
+﻿/// <summary>销毁助手。扩展方法专用</summary>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public static class DisposeHelper
 {

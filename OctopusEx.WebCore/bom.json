@@ -1,0 +1,2390 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:cd1c4eb3-0a3d-4ee7-9b07-c0235b27f4c6",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-01-26T07:41:49Z",
+    "tools": [
+      {
+        "vendor": "CycloneDX",
+        "name": "CycloneDX module for .NET",
+        "version": "5.5.0.0"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "bom-ref": "OctopusEx.WebCore@0.0.0",
+      "name": "OctopusEx.WebCore",
+      "version": "0.0.0"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Google.Protobuf@3.22.5",
+      "authors": [
+        {
+          "name": "Google Inc."
+        }
+      ],
+      "name": "Google.Protobuf",
+      "version": "3.22.5",
+      "description": "C# runtime library for Protocol Buffers - Google\u0027s data interchange format.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "5F670A07963E92E4F8F8DBEB25D666FFAC91E18E3F1E004B1E0DB89C534D2CA8D8580958DE4080BE9F72DFEB9E6866CA42F3AA7EF67D75AB1E459D07A6E426A1"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "copyright": "Copyright 2015, Google Inc.",
+      "purl": "pkg:nuget/Google.Protobuf@3.22.5",
+      "externalReferences": [
+        {
+          "url": "https://github.com/protocolbuffers/protobuf",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/protocolbuffers/protobuf.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Grpc.Core.Api@2.52.0",
+      "authors": [
+        {
+          "name": "The gRPC Authors"
+        }
+      ],
+      "name": "Grpc.Core.Api",
+      "version": "2.52.0",
+      "description": "gRPC C# Surface API",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "049D85162ED8A5ECB38EFF0B36B15313DD4476E7564A86CF0CC267AE94035A33994A1CDDA1AC7BA9A0F5A5E230F6019CFD87B1A3F0C37ED2FF185573E2CFC02E"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright 2019 The gRPC Authors",
+      "purl": "pkg:nuget/Grpc.Core.Api@2.52.0",
+      "externalReferences": [
+        {
+          "url": "https://github.com/grpc/grpc-dotnet",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/grpc/grpc-dotnet.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Grpc.Net.Client@2.52.0",
+      "authors": [
+        {
+          "name": "The gRPC Authors"
+        }
+      ],
+      "name": "Grpc.Net.Client",
+      "version": "2.52.0",
+      "description": ".NET client for gRPC",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "21C737BAF7BDBA80327C39C1955BE6A4E50D9100BDBCDD8B2471C45B2D423CEC773EAAE390B76A69F0BD8CF356C26B83F36A206E108F41AC1945746FF944C0B7"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright 2019 The gRPC Authors",
+      "purl": "pkg:nuget/Grpc.Net.Client@2.52.0",
+      "externalReferences": [
+        {
+          "url": "https://github.com/grpc/grpc-dotnet",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/grpc/grpc-dotnet.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Grpc.Net.Common@2.52.0",
+      "authors": [
+        {
+          "name": "The gRPC Authors"
+        }
+      ],
+      "name": "Grpc.Net.Common",
+      "version": "2.52.0",
+      "description": "Infrastructure for common functionality in gRPC",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "ACA8BBB9EBA51F8CDF5D77874BBD9F78CEA53E062C2B5DA903F16AAD1315E300CB9E5E557A6E6C4F2B4283EAF176F7EAC073463D152F6ECBE53A0F30B8FAE714"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright 2019 The gRPC Authors",
+      "purl": "pkg:nuget/Grpc.Net.Common@2.52.0",
+      "externalReferences": [
+        {
+          "url": "https://github.com/grpc/grpc-dotnet",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/grpc/grpc-dotnet.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Hangfire.AspNetCore@1.8.14",
+      "authors": [
+        {
+          "name": "Sergey Odinokov"
+        }
+      ],
+      "name": "Hangfire.AspNetCore",
+      "version": "1.8.14",
+      "description": "ASP.NET Core support for Hangfire, a background job framework for .NET applications.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "A4BD9AC0F0270ADB37D881AB5C614C11EEA30721F99A8DA29D4FEE53132AA33559ED48D121C734DC26DDD872986425E31FB309FFE08A030263583D076B7D56AA"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "name": "Unknown - See URL",
+            "url": "https://aka.ms/deprecateLicenseUrl"
+          }
+        }
+      ],
+      "copyright": "Copyright \u00A9 2017-2024 Hangfire O\u00DC",
+      "purl": "pkg:nuget/Hangfire.AspNetCore@1.8.14",
+      "externalReferences": [
+        {
+          "url": "https://www.hangfire.io/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/HangfireIO/Hangfire.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Hangfire.Core@1.8.14",
+      "authors": [
+        {
+          "name": "Sergey Odinokov"
+        }
+      ],
+      "name": "Hangfire.Core",
+      "version": "1.8.14",
+      "description": "An easy way to perform fire-and-forget, delayed and recurring tasks in .NET applications. No Windows Service required.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "34916ABC8BC2A4D4A6BD42A2867D473B365BC59AD2F9C69DD72E2128C856F72F4EEFC41CD03A61BE96428CB4C6D39F9668273DE7688F8847456EF2B3AF9DE6CD"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "name": "Unknown - See URL",
+            "url": "https://aka.ms/deprecateLicenseUrl"
+          }
+        }
+      ],
+      "copyright": "Copyright \u00A9 2013-2024 Hangfire O\u00DC",
+      "purl": "pkg:nuget/Hangfire.Core@1.8.14",
+      "externalReferences": [
+        {
+          "url": "https://www.hangfire.io/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/HangfireIO/Hangfire.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Hangfire.MemoryStorage@1.8.1.2",
+      "authors": [
+        {
+          "name": "PERRICHOT Florian"
+        }
+      ],
+      "name": "Hangfire.MemoryStorage",
+      "version": "1.8.1.2",
+      "description": "A memory storage for Hangfire",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "BA20FD85153C3F4DB7F4C7D48321748B7630AE8FC9219CD77C443D5E2C91D797CA9F34DD32462339A86A88EF0C9086D8103E3650EF6E785B347798E3B75CB71B"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "name": "Unknown - See URL",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+          }
+        }
+      ],
+      "copyright": "Copyright 2015-2025",
+      "purl": "pkg:nuget/Hangfire.MemoryStorage@1.8.1.2",
+      "externalReferences": [
+        {
+          "url": "https://github.com/perrich/Hangfire.MemoryStorage",
+          "type": "website"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Hangfire.NetCore@1.8.14",
+      "authors": [
+        {
+          "name": "Sergey Odinokov"
+        }
+      ],
+      "name": "Hangfire.NetCore",
+      "version": "1.8.14",
+      "description": ".NET Core\u0027s Worker Service host support for Hangfire, a background job framework for .NET applications.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "3E2FD2110A34F85A398E328BCF95DE262E9841F22F3A12530CD857843F272C2E2F27043B0B6F4C775616FA8C5665F067DF159032A396EF883AAA67D81C6BA8A8"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "name": "Unknown - See URL",
+            "url": "https://aka.ms/deprecateLicenseUrl"
+          }
+        }
+      ],
+      "copyright": "Copyright \u00A9 2019-2024 Hangfire O\u00DC",
+      "purl": "pkg:nuget/Hangfire.NetCore@1.8.14",
+      "externalReferences": [
+        {
+          "url": "https://www.hangfire.io/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/HangfireIO/Hangfire.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.AspNetCore.OpenApi@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.AspNetCore.OpenApi",
+      "version": "10.0.1",
+      "description": "Provides APIs for annotating route handler endpoints in ASP.NET Core with OpenAPI annotations.\n\nThis package was built from the source code at https://github.com/dotnet/dotnet/tree/fad253f51b461736dfd3cd9c15977bb7493becef",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "47E86EF09877E6B40E9388E50061B0F4808773DE64C35EB8554F49AC71D30F117981DA4A89BB4073F734834500B36D77AB9E77DF74AC65733EE807644C207ACD"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.AspNetCore.OpenApi@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://asp.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Bcl.HashCode@1.1.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Bcl.HashCode",
+      "version": "1.1.1",
+      "description": "Provides the HashCode type for .NET Standard 2.0. This package is not required starting with .NET Standard 2.1 and .NET Core 3.0.\n\nCommonly Used Types:\nSystem.HashCode\n \nWhen using NuGet 3.x this package requires at least version 3.4.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "50C11207F3131C6499D6573D33C0951EDECDBA944BCD08762B5A912B9A4C9CD3844D4C7FE19686C219623365D6F7740818A825200CE4575B14C079B1F7FC6F3E"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Bcl.HashCode@1.1.1",
+      "externalReferences": [
+        {
+          "url": "https://github.com/dotnet/corefx",
+          "type": "website"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.EntityFrameworkCore@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.EntityFrameworkCore",
+      "version": "10.0.1",
+      "description": "Entity Framework Core is a modern object-database mapper for .NET. It supports LINQ queries, change tracking, updates, and schema migrations. EF Core works with SQL Server, Azure SQL Database, SQLite, Azure Cosmos DB, MySQL, PostgreSQL, and other databases through a provider plugin API.\n\nCommonly Used Types:\nMicrosoft.EntityFrameworkCore.DbContext\nMicrosoft.EntityFrameworkCore.DbSet",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "6CA020BF661380B4B377B687DB6A5897AF7B016B75619288D3465256DCE8D1C931A03F67374DE0C182A95AD2A2AEF3916D2FCAF0655CDD16A6CE90BDECBA2F92"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.EntityFrameworkCore@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://docs.microsoft.com/ef/core/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.EntityFrameworkCore.Abstractions@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.EntityFrameworkCore.Abstractions",
+      "version": "10.0.1",
+      "description": "Provides abstractions and attributes that are used to configure Entity Framework Core",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "C3C06EA14A2066FDF61985EFC3AD01821C4E0303D46FCA892212B53870214EBD35EFC74BE4C383C5F8B3D4087817CF2AB3D8C8A33706BD032EE3947E529514D3"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.EntityFrameworkCore.Abstractions@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://docs.microsoft.com/ef/core/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.EntityFrameworkCore.Analyzers@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.EntityFrameworkCore.Analyzers",
+      "version": "10.0.1",
+      "description": "CSharp Analyzers for Entity Framework Core.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "2C2632BE3DE86D517CEAE81AA0CF6C9941F1CAD83A7C040A7B7CF872F4BDD20DEDD78238DC4ADB36A0E301F4C30AA59AA5B746F425517A2F92B1DB99F33D4AEC"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.EntityFrameworkCore.Analyzers@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://docs.microsoft.com/ef/core/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.AI@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.AI",
+      "version": "10.0.1",
+      "description": "Utilities for working with generative AI components.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "3767D1094220AF794788786C03016AD25F3C7520DD8E9C875AAB75ACBB093E6CD5B4BCB2FC86BCEA86860F21668E5587EDF76D167A99EF8EA6F40578AE89ADDA"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.AI@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/extensions",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.AI.Abstractions@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.AI.Abstractions",
+      "version": "10.0.1",
+      "description": "Abstractions representing generative AI components.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "C239BD5A173A5A8AFD4A3342E53EA177AA6CF5B5D9143A400505C1283197E94F9A6B648A0C725B8F7CD563BE19AA13BA6E0E93089E8432B119206ECA86734AA3"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.AI.Abstractions@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/extensions",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.ApiDescription.Server@10.0.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.ApiDescription.Server",
+      "version": "10.0.0",
+      "description": "MSBuild tasks and targets for build-time Swagger and OpenApi document generation\n\nThis package was built from the source code at https://github.com/dotnet/dotnet/tree/b0f34d51fccc69fd334253924abd8d6853fad7aa",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "25E9DDC666061CCBB34870E47B511EEAB7693CF1C8965E5A6F479650A4539138176DD67591575F15700534A7F67D2E13F2F0E9DC295BEF6B0D2875739D1C5AE7"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.ApiDescription.Server@10.0.0",
+      "externalReferences": [
+        {
+          "url": "https://asp.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Caching.Abstractions@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Caching.Abstractions",
+      "version": "10.0.1",
+      "description": "Caching abstractions for in-memory cache and distributed cache.\n\nCommonly Used Types:\nMicrosoft.Extensions.Caching.Distributed.IDistributedCache\nMicrosoft.Extensions.Caching.Memory.IMemoryCache",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "1CCBA07AC8369AA2EB0EC67A9A4E2B2BC26754ABB338A5312E226B5D1D2C3F1517046593853460E295F6DAAB731236F028E60C0E011DC5D319C0E8F8ACC79E0B"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Caching.Abstractions@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Caching.Memory@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Caching.Memory",
+      "version": "10.0.1",
+      "description": "In-memory cache implementation of Microsoft.Extensions.Caching.Memory.IMemoryCache.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "E6B8DD65952F54FF9B8D8CD0B14F8675698DC22EAB8B0E3664D2F695CF57B6BE47B1688357B9EB1E2DE67E725AF8A8211B110BEB9AA1CBA9890A147F8ECFAAEB"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Caching.Memory@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Configuration@9.0.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Configuration",
+      "version": "9.0.0",
+      "description": "Implementation of key-value pair based configuration for Microsoft.Extensions.Configuration. Includes the memory configuration provider.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "534F843342F2CA2BC09663FD37FDD3D8ACD50C9904FC8F1F3FA14498BF4B9FE91329A1A9BFC012D17FD1358D894C15EFDBD026EBFAECEA48FA0BB59E79B8EE71"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Configuration@9.0.0",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Configuration.Abstractions@9.0.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Configuration.Abstractions",
+      "version": "9.0.0",
+      "description": "Provides abstractions of key-value pair based configuration. Interfaces defined in this package are implemented by classes in Microsoft.Extensions.Configuration and other configuration packages.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "3282710ED202A188CF30D23FE4D9831C4111752907D00B963294FD71917633BBF0F45E2B4B7FB9FDE1C3A52710BCC122D06A7ACE70B836B0D4B5576656DCC3B9"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Configuration.Abstractions@9.0.0",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Configuration.Binder@8.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Configuration.Binder",
+      "version": "8.0.1",
+      "description": "Provides the functionality to bind an object to data in configuration providers for Microsoft.Extensions.Configuration. This package enables you to represent the configuration data as strongly-typed classes defined in the application code. To bind a configuration, use the Microsoft.Extensions.Configuration.ConfigurationBinder.Get extension method on the IConfiguration object. To use this package, you also need to install a package for the configuration provider, for example, Microsoft.Extensions.Configuration.Json for the JSON provider.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "33EEB1774C8AA47E3B2715D63DAD025626340A70572462132CE8EAF60B6EAB3D714D51ABEFEF30E7783387E20517D2BEF3CACA3B665E23480E6DF09E0E1CAB6F"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Configuration.Binder@8.0.1",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.DependencyInjection@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.DependencyInjection",
+      "version": "10.0.1",
+      "description": "Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "A7F3096C3518BF6D93A2B5D50007465DBEBF55F3ED4848BA704085CE5ADA2FCFCF5A5619CD56F92813BBC43610B1709020BEA5CB43C8B57D8AC5028890D65BC3"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.DependencyInjection@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+      "version": "10.0.1",
+      "description": "Abstractions for dependency injection.\n\nCommonly Used Types:\nMicrosoft.Extensions.DependencyInjection.IServiceCollection",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "91FA763DEC15C75A2C391C36A4DC7DCF8EF37786DB59FC65EB7079E89C967B5995869B089E055B7B407430C8BAA507FB6A26A640F049DBE3ADE0713016593B79"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Diagnostics.Abstractions@8.0.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Diagnostics.Abstractions",
+      "version": "8.0.0",
+      "description": "Diagnostic abstractions for Microsoft.Extensions.Diagnostics.\n\nCommonly Used Types:\nMicrosoft.Extensions.Diagnostics.Metrics.IMetricsBuilder\nMicrosoft.Extensions.Diagnostics.Metrics.IMetricsListener\nMicrosoft.Extensions.Diagnostics.Metrics.InstrumentRule\nMicrosoft.Extensions.Diagnostics.Metrics.MeterScope\nMicrosoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions\nMicrosoft.Extensions.Diagnostics.Metrics.MetricsOptions",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "A75DD040E3E03E90C8BAA006BD569DB9FD09983CF9C27BFCB246D96A73E2595CEA7AEE6116438989F8DF31B56BC7FE6ADAA7A7FCB6AB95EC5B1D64D0B17FF617"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Diagnostics.Abstractions@8.0.0",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.FileProviders.Abstractions@8.0.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.FileProviders.Abstractions",
+      "version": "8.0.0",
+      "description": "Abstractions of files and directories.\n\nCommonly Used Types:\nMicrosoft.Extensions.FileProviders.IDirectoryContents\nMicrosoft.Extensions.FileProviders.IFileInfo\nMicrosoft.Extensions.FileProviders.IFileProvider",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "FE9AA18F2E819694F20E322C93E075E27BEE2D57DDD5380624FC48A95669C526C270AB5C74F58C6A4721D18ECDB5B2FEBF0315F8794585AE65617831459E2A0B"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.FileProviders.Abstractions@8.0.0",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Hosting.Abstractions@8.0.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Hosting.Abstractions",
+      "version": "8.0.0",
+      "description": "Hosting and startup abstractions for applications.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "6788C16C139BA241CF2C65E4DED10B8AD8B38602B4490A5FF27DD52B02C90083B7CD40C7B4FAC48AED94742F6545DA959870B5D889B41078B22708ACD761DA66"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Hosting.Abstractions@8.0.0",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Logging@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Logging",
+      "version": "10.0.1",
+      "description": "Logging infrastructure default implementation for Microsoft.Extensions.Logging.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "A635E8C64047B2BA3222A156056F3E4FAC83FDA50B1AFAC5179B477BD4CFB245E516649DDD2ECDF0EF6E73EF4DCE9714A5AB5E16DC5134B5C0F70061EB268A50"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Logging@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Logging.Abstractions",
+      "version": "10.0.1",
+      "description": "Logging abstractions for Microsoft.Extensions.Logging.\n\nCommonly Used Types:\nMicrosoft.Extensions.Logging.ILogger\nMicrosoft.Extensions.Logging.ILoggerFactory\nMicrosoft.Extensions.Logging.ILogger\u003CTCategoryName\u003E\nMicrosoft.Extensions.Logging.LogLevel\nMicrosoft.Extensions.Logging.Logger\u003CT\u003E\nMicrosoft.Extensions.Logging.LoggerMessage\nMicrosoft.Extensions.Logging.Abstractions.NullLogger",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "551DDA0F204E56E97A47E74E48B3809DA5A4E1389B7533510F5FAA21D7963099188F94A2D9418FFCECCCCFBFFB0E78EBE9D624575B55D3A3C230DAE24519E734"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Logging.Configuration@8.0.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Logging.Configuration",
+      "version": "8.0.0",
+      "description": "Configuration support for Microsoft.Extensions.Logging.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "A6C7487B0DAABBF7987496ECE736B3A2C504298DA762C30093982850FC3786D7DF6EFD92DA5FE78D7EF194AD7D3E2632C8F5398CA70EA6C9EBCC1FC1C7BCA41B"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Logging.Configuration@8.0.0",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Options@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Options",
+      "version": "10.0.1",
+      "description": "Provides a strongly typed way of specifying and accessing settings using dependency injection.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "7F2EA7B9CD1D29802677D16A99AE611490F37496E00BE419DBD1CDC2E6D7F438600F905B13E3A785B20D52635BF86E70CBF801E1561C0535377B6C89ABFCE9C3"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Options@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Options.ConfigurationExtensions@8.0.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
+      "version": "8.0.0",
+      "description": "Provides additional configuration specific functionality related to Options.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "5C32AE67AE4E873216BBBEC15554778E0ACBEBC283862A2DEBCB11A995C42A5FD75F9436C8DA421AA51BC5C12DB4E6C4E82F12DA1FF942BC5A6E1A8CF3C77A7D"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Options.ConfigurationExtensions@8.0.0",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.Primitives@10.0.1",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.Primitives",
+      "version": "10.0.1",
+      "description": "Primitives shared by framework extensions. Commonly used types include:\n\nCommonly Used Types:\nMicrosoft.Extensions.Primitives.IChangeToken\nMicrosoft.Extensions.Primitives.StringValues\nMicrosoft.Extensions.Primitives.StringSegment",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "3452F6420712546622971F6A51E1AC676EBA410A1A3414F26628D3EA018CBA6A727128F2FBF566574B5E2BAACA30321187B23827E76F2E7107827DA0B3CCBAF4"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.Primitives@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.Extensions.VectorData.Abstractions@9.7.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.Extensions.VectorData.Abstractions",
+      "version": "9.7.0",
+      "description": "Abstractions for vector database access.\n\nCommonly Used Types:\nMicrosoft.Extensions.VectorData.IVectorStore\nMicrosoft.Extensions.VectorData.IVectorStoreRecordCollection\u003CTKey, TRecord\u003E",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "B8D2061D7216EC60E01BE283FFE6356E77AF74E52603663AFA4ECEEF7AC4DA5151DE3523CFB102149B7E102EC1D6C2373638262E7756B638D08F2390852C8B5F"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.Extensions.VectorData.Abstractions@9.7.0",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/microsoft/semantic-kernel",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.OpenApi@2.3.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.OpenApi",
+      "version": "2.3.0",
+      "description": ".NET models with JSON and YAML writers for OpenAPI specification",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "9E8174D2CBD8993D4D8FFF7259221BD8D1BF851E214268DCBD35ECFF7896C1558671D708E5AB305B18E7922008E777D842CC5976FAC1FD316B3DD4BEDD863D94"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.OpenApi@2.3.0",
+      "externalReferences": [
+        {
+          "url": "https://github.com/Microsoft/OpenAPI.NET",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/Microsoft/OpenAPI.NET",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.SemanticKernel.Abstractions@1.68.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.SemanticKernel.Abstractions",
+      "version": "1.68.0",
+      "description": "Semantic Kernel interfaces and abstractions. This package is automatically installed by Semantic Kernel packages if needed.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "F9C333CD27E64515FF7D598E90BB88219B5F8999027B6AC0BF50A5D263F10C36C62FE72E60CAF7BE69B19AEAAFA99C42BB07CA0ADA5609FF27E8564A408EE816"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.SemanticKernel.Abstractions@1.68.0",
+      "externalReferences": [
+        {
+          "url": "https://aka.ms/semantic-kernel",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/microsoft/semantic-kernel",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Microsoft.SemanticKernel.Core@1.68.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "Microsoft.SemanticKernel.Core",
+      "version": "1.68.0",
+      "description": "Semantic Kernel core orchestration, runtime and functions.\n      This package is automatically installed by \u0027Microsoft.SemanticKernel\u0027 package with other useful packages.\n      Install this package manually only if you are selecting individual Semantic Kernel components.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "2C5D8ECA43E510CDB3E082159AA5D31C92D70687B56E4674FC7A68A24A99640D8CDE83CA88A05BCF0B70542B09B790883C9D3BC050B637858CED45D8C0DAF22F"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/Microsoft.SemanticKernel.Core@1.68.0",
+      "externalReferences": [
+        {
+          "url": "https://aka.ms/semantic-kernel",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/microsoft/semantic-kernel",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Newtonsoft.Json@11.0.1",
+      "authors": [
+        {
+          "name": "James Newton-King"
+        }
+      ],
+      "name": "Newtonsoft.Json",
+      "version": "11.0.1",
+      "description": "Json.NET is a popular high-performance JSON framework for .NET",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "C2B7F92C15F5A2627FF0789829BCB6DAE055ECC3C27F0C57598DFDC36F156498D874DD426F77A24E4916939800924756F8DFC0D218129AAB623E8030B1BD3BAA"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "name": "Unknown - See URL",
+            "url": "https://raw.github.com/JamesNK/Newtonsoft.Json/master/LICENSE.md"
+          }
+        }
+      ],
+      "copyright": "Copyright \u00A9 James Newton-King 2008",
+      "purl": "pkg:nuget/Newtonsoft.Json@11.0.1",
+      "externalReferences": [
+        {
+          "url": "https://www.newtonsoft.com/json",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/JamesNK/Newtonsoft.Json",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/OpenTelemetry@1.9.0",
+      "authors": [
+        {
+          "name": "OpenTelemetry Authors"
+        }
+      ],
+      "name": "OpenTelemetry",
+      "version": "1.9.0",
+      "description": "OpenTelemetry .NET SDK",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "CC743FCE9599D59EEDFB5FCAAFF4B369290108BE40E2560473CCF575AAE0A5B55AAF4850F4FA73A4CA77A9385F8FDB01686106B5F81F23644C4D625D22029BFA"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright The OpenTelemetry Authors",
+      "purl": "pkg:nuget/OpenTelemetry@1.9.0",
+      "externalReferences": [
+        {
+          "url": "https://opentelemetry.io/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/OpenTelemetry.Api@1.10.0",
+      "authors": [
+        {
+          "name": "OpenTelemetry Authors"
+        }
+      ],
+      "name": "OpenTelemetry.Api",
+      "version": "1.10.0",
+      "description": "OpenTelemetry .NET API",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "0BE259C9613763DFCBCD49F1FF7D48BFA73805BF552A8A8368C0B0663FF491B316BFD147A7A2CF52499EFBFBBD071E2615AE3AE2E0F411CC4A68B24E5B7B2D81"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright The OpenTelemetry Authors",
+      "purl": "pkg:nuget/OpenTelemetry.Api@1.10.0",
+      "externalReferences": [
+        {
+          "url": "https://opentelemetry.io/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/OpenTelemetry.Api.ProviderBuilderExtensions@1.10.0",
+      "authors": [
+        {
+          "name": "OpenTelemetry Authors"
+        }
+      ],
+      "name": "OpenTelemetry.Api.ProviderBuilderExtensions",
+      "version": "1.10.0",
+      "description": "Contains extensions to register OpenTelemetry in applications using Microsoft.Extensions.DependencyInjection",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "F8C1BB4256EE96B162B7232FB7A49EBFD68ED1B2D9E40D55A0381F040976E701E7054431275D4D6330108AC925B0275731D98C9B652F9299EEAAEE11BCAB36F8"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright The OpenTelemetry Authors",
+      "purl": "pkg:nuget/OpenTelemetry.Api.ProviderBuilderExtensions@1.10.0",
+      "externalReferences": [
+        {
+          "url": "https://opentelemetry.io/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/OpenTelemetry.Exporter.OpenTelemetryProtocol@1.9.0",
+      "authors": [
+        {
+          "name": "OpenTelemetry Authors"
+        }
+      ],
+      "name": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+      "version": "1.9.0",
+      "description": "OpenTelemetry protocol exporter for OpenTelemetry .NET",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "D41B83D70249BC57870B7DA2B55954CDB7ED5C149906E943BD12A4C064FA0E133047B765861C23D52A7705E69900CD584406EDBF2F1BCE453D1B25C5DEA215A7"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright The OpenTelemetry Authors",
+      "purl": "pkg:nuget/OpenTelemetry.Exporter.OpenTelemetryProtocol@1.9.0",
+      "externalReferences": [
+        {
+          "url": "https://opentelemetry.io/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/OpenTelemetry.Extensions.Hosting@1.9.0",
+      "authors": [
+        {
+          "name": "OpenTelemetry Authors"
+        }
+      ],
+      "name": "OpenTelemetry.Extensions.Hosting",
+      "version": "1.9.0",
+      "description": "Contains extensions to start OpenTelemetry in applications using Microsoft.Extensions.Hosting",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "E9459A219D9D8BAB4BD3647622EF7187A4C9F673C1B28A4E81B1E5307E0440A78C5CFC242B2C9E59236CF30673FBA27C6A2AD955D49DC9584303D244AC41CDB7"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright The OpenTelemetry Authors",
+      "purl": "pkg:nuget/OpenTelemetry.Extensions.Hosting@1.9.0",
+      "externalReferences": [
+        {
+          "url": "https://opentelemetry.io/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/OpenTelemetry.Instrumentation.AspNetCore@1.9.0",
+      "authors": [
+        {
+          "name": "OpenTelemetry authors"
+        }
+      ],
+      "name": "OpenTelemetry.Instrumentation.AspNetCore",
+      "version": "1.9.0",
+      "description": "ASP.NET Core instrumentation for OpenTelemetry .NET",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "54E0626E76175DF26F3230802B0989B4507F82016120068D70D94AAA4E48FDE60805E6413769E2481C4F4AD9068DDF85FF53F32EF8E6EC170080DB4C2B67CC0B"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright The OpenTelemetry Authors",
+      "purl": "pkg:nuget/OpenTelemetry.Instrumentation.AspNetCore@1.9.0",
+      "externalReferences": [
+        {
+          "url": "https://opentelemetry.io/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-dotnet-contrib",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/OpenTelemetry.Instrumentation.EntityFrameworkCore@1.10.0-beta.1",
+      "authors": [
+        {
+          "name": "OpenTelemetry Authors"
+        }
+      ],
+      "name": "OpenTelemetry.Instrumentation.EntityFrameworkCore",
+      "version": "1.10.0-beta.1",
+      "description": "Microsoft.EntityFrameworkCore instrumentation for OpenTelemetry .NET.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "81C58ECF6E12B98D9093F3BF3ADA5C0B09B485AE80F2A9A9E2E762A6C56A6B126DECC8314F4A2B8686212FB79915760EFBE3F993F80592DA7F0D04E50F99313C"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright The OpenTelemetry Authors",
+      "purl": "pkg:nuget/OpenTelemetry.Instrumentation.EntityFrameworkCore@1.10.0-beta.1",
+      "externalReferences": [
+        {
+          "url": "https://opentelemetry.io/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-dotnet-contrib",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/OpenTelemetry.Instrumentation.Http@1.9.0",
+      "authors": [
+        {
+          "name": "OpenTelemetry authors"
+        }
+      ],
+      "name": "OpenTelemetry.Instrumentation.Http",
+      "version": "1.9.0",
+      "description": "Http instrumentation for OpenTelemetry .NET",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "17295A868F0094EF4C4B3A0A5A1E4B2359955B4DCFDE3AF988952F1AD4C0473EB94F185C021DB9241DEFB38701AD047F7559CB547BBB3DADE71F7407DEC64677"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "copyright": "Copyright The OpenTelemetry Authors",
+      "purl": "pkg:nuget/OpenTelemetry.Instrumentation.Http@1.9.0",
+      "externalReferences": [
+        {
+          "url": "https://opentelemetry.io/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-dotnet-contrib",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Scalar.AspNetCore@2.11.7",
+      "authors": [
+        {
+          "name": "Scalar"
+        }
+      ],
+      "name": "Scalar.AspNetCore",
+      "version": "2.11.7",
+      "description": "Generate beautiful interactive API documentation from OpenAPI/Swagger documents.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "DF0E222F482E937E204AEEB5796D0C03FD7B2EAD5F8E4E81BCAB3862EAC5342214B738DA8553C8BFC93834CF8172026DA417B2E108B36CBDD3645F60D8B0E490"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:nuget/Scalar.AspNetCore@2.11.7",
+      "externalReferences": [
+        {
+          "url": "https://scalar.com/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/scalar/scalar",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Swashbuckle.AspNetCore@10.0.1",
+      "authors": [
+        {
+          "name": "domaindrivendev"
+        }
+      ],
+      "name": "Swashbuckle.AspNetCore",
+      "version": "10.0.1",
+      "description": "Swagger tools for documenting APIs built on ASP.NET Core",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "765A0689CEC99B872F38C1B5CDDAEC68486D3FBA220BB86941E35EFC4CE5CE237CB9783E74AA6F37F271F4E1B23BD4A9FCCF9E9CCF053650FEE206D14EC8F7B3"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:nuget/Swashbuckle.AspNetCore@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Swashbuckle.AspNetCore.Swagger@10.0.1",
+      "authors": [
+        {
+          "name": "domaindrivendev"
+        }
+      ],
+      "name": "Swashbuckle.AspNetCore.Swagger",
+      "version": "10.0.1",
+      "description": "Middleware to expose Swagger JSON endpoints from APIs built on ASP.NET Core",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "728629A62513A109469DBFE616AF651604105A72AA49E9AC8D023EDF9D48F662F7AFF17ED6DF8F55D79B7FA4F499F44E6E627D6AFAC426A210F2939DFB0E2F3A"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "Copyright (c) 2016-2025 Richard Morris",
+      "purl": "pkg:nuget/Swashbuckle.AspNetCore.Swagger@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerGen@10.0.1",
+      "authors": [
+        {
+          "name": "domaindrivendev"
+        }
+      ],
+      "name": "Swashbuckle.AspNetCore.SwaggerGen",
+      "version": "10.0.1",
+      "description": "Swagger Generator for APIs built on ASP.NET Core",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "DA11A11A0C5C19CFBB6A1E6139214EFF75B9020180384D778EC0DEC4E0A8884DBBF2E5FD6AECD951EFBF686FC355AFC478E7100CC4B5B779924B46F8385DC0FF"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "Copyright (c) 2016-2025 Richard Morris",
+      "purl": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerGen@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerUI@10.0.1",
+      "authors": [
+        {
+          "name": "domaindrivendev"
+        }
+      ],
+      "name": "Swashbuckle.AspNetCore.SwaggerUI",
+      "version": "10.0.1",
+      "description": "Middleware to expose an embedded version of the swagger-ui from an ASP.NET Core application",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "25AD9DFB4204DBFEA0C0EACE46FC94925967417274EDB24AA95ED937F27FD389D82FCA399C06525630245F5735E01D2C91CC9E51B11257FF652461E7C848F750"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "Copyright (c) 2016-2025 Richard Morris",
+      "purl": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerUI@10.0.1",
+      "externalReferences": [
+        {
+          "url": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore.git",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/System.Numerics.Tensors@10.0.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "System.Numerics.Tensors",
+      "version": "10.0.0",
+      "description": "Provides support for operating over tensors.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "D83F820B7F65D1E393882E41AB60E7B18B2201BF74DF2DC1407E00E8C57FD54471921304503AA97CE43361256347D6B24041C919F196F4405DCBD26FF7A04EF7"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/System.Numerics.Tensors@10.0.0",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/System.Text.Json@10.0.0",
+      "authors": [
+        {
+          "name": "Microsoft"
+        }
+      ],
+      "name": "System.Text.Json",
+      "version": "10.0.0",
+      "description": "Provides high-performance and low-allocating types that serialize objects to JavaScript Object Notation (JSON) text and deserialize JSON text to objects, with UTF-8 support built-in. Also provides types to read and write JSON text encoded as UTF-8, and to create an in-memory document object model (DOM), that is read-only, for random access of the JSON elements within a structured view of the data.\n\nThe System.Text.Json library is built-in as part of the shared framework in .NET Runtime. The package can be installed when you need to use it in other target frameworks.",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "E56A6764797064CEF67B9FAEE29C750C12AF0EF9A177C5FC475ED2755202934861543DF7E2752B33DB3F6259A2D60EFE988A3983DAE23AA148ABC64794687438"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
+      "purl": "pkg:nuget/System.Text.Json@10.0.0",
+      "externalReferences": [
+        {
+          "url": "https://dot.net/",
+          "type": "website"
+        },
+        {
+          "url": "https://github.com/dotnet/dotnet",
+          "type": "vcs"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:nuget/ToolGood.Words@3.1.0",
+      "authors": [
+        {
+          "name": "ToolGood"
+        }
+      ],
+      "name": "ToolGood.Words",
+      "version": "3.1.0",
+      "description": "\u4E00\u6B3E\u9AD8\u6027\u80FD\u654F\u611F\u8BCD(\u975E\u6CD5\u8BCD/\u810F\u5B57)\u68C0\u6D4B\u8FC7\u6EE4\u7EC4\u4EF6\uFF0C\u9644\u5E26\u7E41\u4F53\u7B80\u4F53\u4E92\u6362\uFF0C\u652F\u6301\u5168\u89D2\u534A\u89D2\u4E92\u6362\uFF0C\u6C49\u5B57\u8F6C\u62FC\u97F3\uFF0C\u6A21\u7CCA\u641C\u7D22\u7B49\u529F\u80FD\u3002",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "CC7141B04F907DA70CDAFDB2E8ECB9B45419A374FB64356B7C8EBE1EE0E354FAD8AFAEBECE51C6C673A6502E566713E7274E8B19829A12EE70FCCAE0E8A31052"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "name": "Unknown - See URL",
+            "url": "https://aka.ms/deprecateLicenseUrl"
+          }
+        }
+      ],
+      "copyright": "Copyright 2017-2020 ToolGood",
+      "purl": "pkg:nuget/ToolGood.Words@3.1.0",
+      "externalReferences": [
+        {
+          "url": "https://github.com/toolgood/ToolGood.Words",
+          "type": "website"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "OctopusEx.WebCore@0.0.0",
+      "dependsOn": [
+        "pkg:nuget/Hangfire.AspNetCore@1.8.14",
+        "pkg:nuget/Hangfire.Core@1.8.14",
+        "pkg:nuget/Hangfire.MemoryStorage@1.8.1.2",
+        "pkg:nuget/Microsoft.AspNetCore.OpenApi@10.0.1",
+        "pkg:nuget/Microsoft.EntityFrameworkCore@10.0.1",
+        "pkg:nuget/Microsoft.SemanticKernel.Core@1.68.0",
+        "pkg:nuget/OpenTelemetry@1.9.0",
+        "pkg:nuget/OpenTelemetry.Exporter.OpenTelemetryProtocol@1.9.0",
+        "pkg:nuget/OpenTelemetry.Extensions.Hosting@1.9.0",
+        "pkg:nuget/OpenTelemetry.Instrumentation.AspNetCore@1.9.0",
+        "pkg:nuget/OpenTelemetry.Instrumentation.EntityFrameworkCore@1.10.0-beta.1",
+        "pkg:nuget/OpenTelemetry.Instrumentation.Http@1.9.0",
+        "pkg:nuget/Scalar.AspNetCore@2.11.7",
+        "pkg:nuget/Swashbuckle.AspNetCore@10.0.1",
+        "pkg:nuget/System.Text.Json@10.0.0",
+        "pkg:nuget/ToolGood.Words@3.1.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Google.Protobuf@3.22.5",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Grpc.Core.Api@2.52.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Grpc.Net.Client@2.52.0",
+      "dependsOn": [
+        "pkg:nuget/Grpc.Net.Common@2.52.0",
+        "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Grpc.Net.Common@2.52.0",
+      "dependsOn": [
+        "pkg:nuget/Grpc.Core.Api@2.52.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Hangfire.AspNetCore@1.8.14",
+      "dependsOn": [
+        "pkg:nuget/Hangfire.NetCore@1.8.14"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Hangfire.Core@1.8.14",
+      "dependsOn": [
+        "pkg:nuget/Newtonsoft.Json@11.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Hangfire.MemoryStorage@1.8.1.2",
+      "dependsOn": [
+        "pkg:nuget/Hangfire.Core@1.8.14"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Hangfire.NetCore@1.8.14",
+      "dependsOn": [
+        "pkg:nuget/Hangfire.Core@1.8.14",
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Hosting.Abstractions@8.0.0",
+        "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.AspNetCore.OpenApi@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.OpenApi@2.3.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Bcl.HashCode@1.1.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.EntityFrameworkCore.Abstractions@10.0.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.EntityFrameworkCore.Analyzers@10.0.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.EntityFrameworkCore@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.EntityFrameworkCore.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.EntityFrameworkCore.Analyzers@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Caching.Memory@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Logging@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.AI.Abstractions@10.0.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.AI@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.AI.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Caching.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@10.0.1",
+        "pkg:nuget/System.Numerics.Tensors@10.0.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.ApiDescription.Server@10.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Caching.Abstractions@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Primitives@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Caching.Memory@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Caching.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Options@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Primitives@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Configuration.Abstractions@9.0.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Primitives@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Configuration.Binder@8.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Configuration.Abstractions@9.0.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Configuration@9.0.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Configuration.Abstractions@9.0.0",
+        "pkg:nuget/Microsoft.Extensions.Primitives@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.DependencyInjection@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Diagnostics.Abstractions@8.0.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Options@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.FileProviders.Abstractions@8.0.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Primitives@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Hosting.Abstractions@8.0.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Configuration.Abstractions@9.0.0",
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Diagnostics.Abstractions@8.0.0",
+        "pkg:nuget/Microsoft.Extensions.FileProviders.Abstractions@8.0.0",
+        "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Logging.Configuration@8.0.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Configuration@9.0.0",
+        "pkg:nuget/Microsoft.Extensions.Configuration.Abstractions@9.0.0",
+        "pkg:nuget/Microsoft.Extensions.Configuration.Binder@8.0.1",
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Logging@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Options@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Options.ConfigurationExtensions@8.0.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Logging@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Options@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Options.ConfigurationExtensions@8.0.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Configuration.Abstractions@9.0.0",
+        "pkg:nuget/Microsoft.Extensions.Configuration.Binder@8.0.1",
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Options@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Primitives@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Options@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.Primitives@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.Primitives@10.0.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Extensions.VectorData.Abstractions@9.7.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.AI.Abstractions@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.OpenApi@2.3.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.SemanticKernel.Abstractions@1.68.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Bcl.HashCode@1.1.1",
+        "pkg:nuget/Microsoft.Extensions.AI@10.0.1",
+        "pkg:nuget/Microsoft.Extensions.VectorData.Abstractions@9.7.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.SemanticKernel.Core@1.68.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection@10.0.1",
+        "pkg:nuget/Microsoft.SemanticKernel.Abstractions@1.68.0",
+        "pkg:nuget/System.Numerics.Tensors@10.0.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Newtonsoft.Json@11.0.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/OpenTelemetry.Api.ProviderBuilderExtensions@1.10.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.DependencyInjection.Abstractions@10.0.1",
+        "pkg:nuget/OpenTelemetry.Api@1.10.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/OpenTelemetry.Api@1.10.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/OpenTelemetry.Exporter.OpenTelemetryProtocol@1.9.0",
+      "dependsOn": [
+        "pkg:nuget/Google.Protobuf@3.22.5",
+        "pkg:nuget/Grpc.Net.Client@2.52.0",
+        "pkg:nuget/Microsoft.Extensions.Configuration.Binder@8.0.1",
+        "pkg:nuget/OpenTelemetry@1.9.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/OpenTelemetry.Extensions.Hosting@1.9.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Hosting.Abstractions@8.0.0",
+        "pkg:nuget/OpenTelemetry@1.9.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/OpenTelemetry.Instrumentation.AspNetCore@1.9.0",
+      "dependsOn": [
+        "pkg:nuget/OpenTelemetry.Api.ProviderBuilderExtensions@1.10.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/OpenTelemetry.Instrumentation.EntityFrameworkCore@1.10.0-beta.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Configuration@9.0.0",
+        "pkg:nuget/Microsoft.Extensions.Options@10.0.1",
+        "pkg:nuget/OpenTelemetry.Api.ProviderBuilderExtensions@1.10.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/OpenTelemetry.Instrumentation.Http@1.9.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Configuration@9.0.0",
+        "pkg:nuget/Microsoft.Extensions.Options@10.0.1",
+        "pkg:nuget/OpenTelemetry.Api.ProviderBuilderExtensions@1.10.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/OpenTelemetry@1.9.0",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.Diagnostics.Abstractions@8.0.0",
+        "pkg:nuget/Microsoft.Extensions.Logging.Configuration@8.0.0",
+        "pkg:nuget/OpenTelemetry.Api.ProviderBuilderExtensions@1.10.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Scalar.AspNetCore@2.11.7",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Swashbuckle.AspNetCore.Swagger@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.OpenApi@2.3.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerGen@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Swashbuckle.AspNetCore.Swagger@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Swashbuckle.AspNetCore.SwaggerUI@10.0.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Swashbuckle.AspNetCore@10.0.1",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Extensions.ApiDescription.Server@10.0.0",
+        "pkg:nuget/Swashbuckle.AspNetCore.Swagger@10.0.1",
+        "pkg:nuget/Swashbuckle.AspNetCore.SwaggerGen@10.0.1",
+        "pkg:nuget/Swashbuckle.AspNetCore.SwaggerUI@10.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/System.Numerics.Tensors@10.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/System.Text.Json@10.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/ToolGood.Words@3.1.0",
+      "dependsOn": []
+    }
+  ]
+}

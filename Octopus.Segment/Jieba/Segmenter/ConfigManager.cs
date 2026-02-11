@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace JiebaNet.Segmenter;
+﻿namespace JiebaNet.Segmenter;
 
 public class ConfigManager
 {

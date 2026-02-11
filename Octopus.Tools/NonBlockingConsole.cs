@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-
-namespace Octopus.Tools;
+﻿namespace Octopus.Tools;
 
 /// <summary>
 /// 异步控制台输出类，提供非阻塞的彩色控制台写入功能

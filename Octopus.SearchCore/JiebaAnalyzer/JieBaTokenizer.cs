@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using JiebaNet.Segmenter;
-using JiebaNet.Segmenter.Common;
-using Lucene.Net.Analysis;
+﻿using JiebaNet.Segmenter.Common;
 using Lucene.Net.Analysis.Jieba;
 using Lucene.Net.Analysis.TokenAttributes;
 using Token = JiebaNet.Segmenter.Token;
