@@ -4,7 +4,55 @@
 
 ## 🚀 特性概述
 
-### 1. API UI 扩展 (ApiUIExtensions)
+### 1. 服务健康检测扩展 (HealthCheckExtensions)
+**全面的服务健康监控和检查端点**
+
+```csharp
+// 添加通用健康检查
+builder.AddCommonHealthChecks();
+
+// 添加数据库健康检查
+builder.AddDatabaseHealthCheck(
+    name: "my-database",
+    connectionString: "Server=myserver;Database=mydb;User Id=user;Password=pass;",
+    databaseType: "PostgreSQL");
+
+// 添加外部 API 健康检查
+builder.AddExternalApiHealthCheck(
+    name: "payment-service",
+    apiEndpoint: "https://paymentservice.mycompany.com/health");
+
+// 添加缓存健康检查
+builder.AddCacheHealthCheck(
+    name: "redis-cache",
+    cacheType: "Redis",
+    connectionString: "redis.mycompany.com:6379");
+
+// 添加自定义业务逻辑健康检查
+builder.AddBusinessLogicHealthCheck("order-processing", async (cancellationToken) =>
+{
+    // 自定义业务逻辑验证
+    await Task.Delay(100, cancellationToken);
+    return Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy("Order processing is healthy");
+});
+
+// 映射所有健康检查端点
+app.MapHealthCheckEndpoints();
+```
+
+**可用的健康检查端点：**
+- `GET /health/ready` - 就绪探针（检查所有标记为 "ready" 的检查）
+- `GET /health/live` - 存活探针（检查所有标记为 "live" 的检查）
+- `GET /health/full` - 完整健康检查（所有检查）
+- `GET /health` - 详细健康状态和指标
+
+**内置健康检查类型：**
+- `DatabaseHealthCheck` - 数据库连接性监控
+- `ExternalApiHealthCheck` - 外部服务/API 监控
+- `CacheHealthCheck` - 缓存服务监控
+- 自定义健康检查 - 支持自定义业务逻辑验证
+
+### 2. API UI 扩展 (ApiUIExtensions)
 **支持 Swagger UI 和 Scalar UI 的灵活配置**
 
 ```csharp
@@ -23,7 +71,7 @@ if (app.Environment.IsDevelopment())
 }
 ```
 
-### 2. .NET Aspire 扩展 (AspireExtensions)
+### 3. .NET Aspire 扩展 (AspireExtensions)
 **简化分布式应用的可观测性配置**
 
 ```csharp
@@ -31,7 +79,7 @@ if (app.Environment.IsDevelopment())
 builder.AddAspireOpenTelemetry();
 ```
 
-### 3. 数据库审计扩展 (AuditServiceExtensions)
+### 4. 数据库审计扩展 (AuditServiceExtensions)
 **基于领域的细粒度审计配置**
 
 ```csharp
@@ -67,7 +115,7 @@ builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =
 
 **完整示例项目**: [auditing-demo.zip](https://github.com/Fat-Snail/X-Net-Mod/blob/main/auditing-demo.zip)
 
-### 4. Hangfire 扩展 (HangfireExtensions)
+### 5. Hangfire 扩展 (HangfireExtensions)
 **简化后台作业配置，支持单任务执行和 Dashboard 认证**
 
 ```csharp
@@ -127,7 +175,7 @@ app.UseHangfireDashboard("/hangfire",
 - `HangfireDashboard.Password` - Dashboard 登录密码
 - `HangfireAuthorizationFilter` - 内置认证过滤器，自动从配置读取凭据
 
-### 5. 敏感词过滤插件 (SensitiveWordFilterPlugin)
+### 6. 敏感词过滤插件 (SensitiveWordFilterPlugin)
 **基于 Semantic Kernel 和 AI 的智能敏感词检测**
 
 结合 ToolGood.Words 的快速匹配和 AI 的智能识别，提供多层次的敏感词过滤方案。
@@ -229,7 +277,7 @@ public class CombinedDetectionResult
 }
 ```
 
-### 6. 领域仓储层 (DomainCore)
+### 7. 领域仓储层 (DomainCore)
 **泛型仓储和 CRUD 服务基类，快速搭建通用功能**
 
 提供完整的仓储模式实现，包含泛型仓储、工作单元、CRUD 服务和控制器基类。
@@ -633,7 +681,7 @@ builder.Services.AddControllers();
 
 **完整示例项目**: [auditing-demo.zip](https://github.com/Fat-Snail/X-Net-Mod/blob/main/auditing-demo.zip)
 
-### 7. 自动依赖注入
+### 8. 自动依赖注入
 **基于接口的智能依赖注入系统**
 
 ```csharp
@@ -702,7 +750,15 @@ builder.Services.AddSwaggerUIServices();
 builder.AddAspireOpenTelemetry();
 builder.Services.AddSimpleHangfire();
 
+// 添加健康检查
+builder.AddCommonHealthChecks();
+builder.AddDatabaseHealthCheck("app-db", "Data Source=app.db");
+builder.AddExternalApiHealthCheck("external-service", "https://api.example.com/health");
+
 var app = builder.Build();
+
+// 映射健康检查端点
+app.MapHealthCheckEndpoints();
 
 // 配置 Hangfire Dashboard（带认证）
 app.UseHangfireDashboard("/hangfire",
@@ -802,6 +858,15 @@ builder.Services.AddScoped<ProductService>();
 - `CURDControllerBase<TEntity, TKey, TDto>` - CRUD 控制器基类
 - `AddGenericRepositoryEfCoreInMemory()` - 注册内存数据库仓储服务
 
+### HealthCheckExtensions
+- `AddCommonHealthChecks()` - 添加通用健康检查
+- `AddDatabaseHealthCheck()` - 添加数据库健康检查
+- `AddExternalApiHealthCheck()` - 添加外部 API 健康检查
+- `AddCacheHealthCheck()` - 添加缓存健康检查
+- `AddBusinessLogicHealthCheck()` - 添加自定义业务逻辑健康检查
+- `MapHealthCheckEndpoints()` - 映射所有健康检查端点
+- `GetHealthCheckConfiguration()` - 获取健康检查配置
+
 ### HostBuilderExtensions
 - `AsBuild().AddUtil()` - 启用自动依赖注入
 
@@ -822,6 +887,7 @@ builder.Services.AddScoped<ProductService>();
 - 链路追踪配置
 - 敏感词过滤演示
 - 领域仓储层（CRUD 服务和控制器）
+- 健康检查端点配置
 
 下载地址: [auditing-demo.zip](https://github.com/Fat-Snail/X-Net-Mod/blob/main/auditing-demo.zip)
 

@@ -1,5 +1,28 @@
 # 更新日志
 
+## [1.2.2] - 2026-02-12
+
+### 新增
+- ✨ **OctopusEx.WebCore** - 服务健康检测扩展
+  - 🔍 **HealthCheckExtensions** - 全面的服务健康监控和检查端点
+    - 🆕 `AddCommonHealthChecks()` - 添加通用健康检查（数据库、外部API、缓存）
+    - 🆕 `AddDatabaseHealthCheck()` - 添加数据库健康检查（支持自定义连接字符串和数据库类型）
+    - 🆕 `AddExternalApiHealthCheck()` - 添加外部 API 健康检查（支持超时配置）
+    - 🆕 `AddCacheHealthCheck()` - 添加缓存健康检查（支持 Redis、Memory Cache 等）
+    - 🆕 `AddBusinessLogicHealthCheck()` - 添加自定义业务逻辑健康检查
+    - 🆕 `MapHealthCheckEndpoints()` - 映射所有健康检查端点
+    - 🆕 `GetHealthCheckConfiguration()` - 获取健康检查配置
+  - 🏥 **内置健康检查实现**
+    - 🆕 `DatabaseHealthCheck` - 数据库连接性监控（支持连接字符串脱敏）
+    - 🆕 `ExternalApiHealthCheck` - 外部服务/API 监控（支持响应时间统计）
+    - 🆕 `CacheHealthCheck` - 缓存服务监控（支持命中率统计）
+    - 🆕 `ICustomHealthCheck` - 自定义健康检查接口
+  - 🌐 **健康检查端点**
+    - 🆕 `GET /health/ready` - 就绪探针（检查所有标记为 "ready" 的检查）
+    - 🆕 `GET /health/live` - 存活探针（检查所有标记为 "live" 的检查）
+    - 🆕 `GET /health/full` - 完整健康检查（所有检查）
+    - 🆕 `GET /health` - 详细健康状态和指标（包含每个检查的详细信息）
+
 ## [1.2.1] - 2026-02-07
 
 ### 新增
