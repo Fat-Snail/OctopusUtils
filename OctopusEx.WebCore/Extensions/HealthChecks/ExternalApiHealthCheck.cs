@@ -1,4 +1,4 @@
-﻿namespace Octopus.Extensions.HealthChecks;
+﻿namespace OctopusEx.WebCore.Extensions.HealthChecks;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;

@@ -4,7 +4,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>12</LangVersion>
     <AssemblyName>OctopusEx.WebCore</AssemblyName>
-    <RootNamespace>Octopus</RootNamespace>
     <AssemblyTitle>Octopus核心库</AssemblyTitle>
     <Description>Web核心基础组件，公共类。</Description>
     <Company>Fatty Coder</Company>

@@ -1,4 +1,4 @@
-﻿namespace Octopus.Extensions;
+﻿namespace OctopusEx.WebCore.Extensions;
 
 using HealthChecks;
 using Microsoft.AspNetCore.Builder;
@@ -17,11 +17,24 @@ public static class HealthCheckExtensions
     /// </summary>
     public static TBuilder AddCommonHealthChecks<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        builder.Services.AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"])
-            .AddCheck<DatabaseHealthCheck>("database", tags: ["database", "ready"])
-            .AddCheck<ExternalApiHealthCheck>("external-api", tags: ["external", "ready"])
-            .AddCheck<CacheHealthCheck>("cache", tags: ["cache", "live"]);
+        var healthChecks = builder.Services.AddHealthChecks()
+            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
+
+        // 检查并添加已注册的健康检查
+        if (builder.Services.Any(sd => sd.ServiceType == typeof(DatabaseHealthCheck)))
+        {
+            healthChecks.AddCheck<DatabaseHealthCheck>("database", tags: ["database", "ready"]);
+        }
+
+        if (builder.Services.Any(sd => sd.ServiceType == typeof(ExternalApiHealthCheck)))
+        {
+            healthChecks.AddCheck<ExternalApiHealthCheck>("external-api", tags: ["external", "ready"]);
+        }
+
+        if (builder.Services.Any(sd => sd.ServiceType == typeof(CacheHealthCheck)))
+        {
+            healthChecks.AddCheck<CacheHealthCheck>("cache", tags: ["cache", "live"]);
+        }
 
         return builder;
     }
@@ -83,7 +96,7 @@ public static class HealthCheckExtensions
         string[]? tags = null) where TBuilder : IHostApplicationBuilder
     {
         tags ??= ["business", "ready"];
-
+        
         builder.Services.AddHealthChecks()
             .AddAsyncCheck(name, checkFunction, tags);
 
@@ -114,7 +127,7 @@ public static class HealthCheckExtensions
         app.MapGet("/health", async (Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckService healthCheckService) =>
         {
             var report = await healthCheckService.CheckHealthAsync();
-
+            
             return Microsoft.AspNetCore.Http.Results.Ok(new
             {
                 Service = app.Environment.ApplicationName,
