@@ -21,17 +21,17 @@ public static class HealthCheckExtensions
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
         // 检查并添加已注册的健康检查
-        if (builder.Services.Any(sd => sd.ServiceType == typeof(DatabaseHealthCheck)))
+        if ( builder.Services.Any(sd => sd.ServiceType == typeof(DatabaseHealthCheck)) )
         {
             healthChecks.AddCheck<DatabaseHealthCheck>("database", tags: ["database", "ready"]);
         }
 
-        if (builder.Services.Any(sd => sd.ServiceType == typeof(ExternalApiHealthCheck)))
+        if ( builder.Services.Any(sd => sd.ServiceType == typeof(ExternalApiHealthCheck)) )
         {
             healthChecks.AddCheck<ExternalApiHealthCheck>("external-api", tags: ["external", "ready"]);
         }
 
-        if (builder.Services.Any(sd => sd.ServiceType == typeof(CacheHealthCheck)))
+        if ( builder.Services.Any(sd => sd.ServiceType == typeof(CacheHealthCheck)) )
         {
             healthChecks.AddCheck<CacheHealthCheck>("cache", tags: ["cache", "live"]);
         }
@@ -96,7 +96,7 @@ public static class HealthCheckExtensions
         string[]? tags = null) where TBuilder : IHostApplicationBuilder
     {
         tags ??= ["business", "ready"];
-        
+
         builder.Services.AddHealthChecks()
             .AddAsyncCheck(name, checkFunction, tags);
 
@@ -127,7 +127,7 @@ public static class HealthCheckExtensions
         app.MapGet("/health", async (Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckService healthCheckService) =>
         {
             var report = await healthCheckService.CheckHealthAsync();
-            
+
             return Microsoft.AspNetCore.Http.Results.Ok(new
             {
                 Service = app.Environment.ApplicationName,
