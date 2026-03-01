@@ -71,6 +71,8 @@ if (app.Environment.IsDevelopment())
 }
 ```
 
+运行后可访问/swagger或/scalar浏览接口文档
+
 ### 3. .NET Aspire 扩展 (AspireExtensions)
 **简化分布式应用的可观测性配置**
 

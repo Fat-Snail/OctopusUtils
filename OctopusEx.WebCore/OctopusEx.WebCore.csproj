@@ -44,31 +44,32 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\favicon.png" Link="favicon.png" PackagePath="\"/>
+    <Content Include="..\favicon.png" Link="favicon.png" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="../README.md" Pack="true" PackagePath="/"/>
+    <None Include="../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14"/>
-    <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2"/>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.1"/>
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.23" />
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.3" />
-    <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.68.0" />
-    <PackageReference Include="OpenTelemetry" Version="1.13.1" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.13.1" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.13.1" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.13.0" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.13.0" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.10.0-beta.1"/>
-    <PackageReference Include="Hangfire.Core" Version="1.8.14"/>
-    <PackageReference Include="Scalar.AspNetCore" Version="2.11.7"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1"/>
-    <PackageReference Include="System.Text.Json" Version="10.0.0"/>
-    <PackageReference Include="ToolGood.Words" Version="3.1.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.72.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="OpenTelemetry" Version="1.15.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.10.0-beta.1" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.23" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.12.48" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.4" />
+    <PackageReference Include="System.Text.Json" Version="10.0.3" />
+    <PackageReference Include="ToolGood.Words" Version="3.1.0.3" />
   </ItemGroup>
 
   <ItemGroup>
