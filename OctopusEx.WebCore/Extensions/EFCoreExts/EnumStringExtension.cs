@@ -1,4 +1,4 @@
-namespace OctopusEx.WebCore.Extensions.EFCoreExts;
+﻿namespace OctopusEx.WebCore.Extensions.EFCoreExts;
 
 using System.Collections;
 using Attributes.EFCoreAttrs;
@@ -15,7 +15,7 @@ public static class EnumStringExtension
 
         var maped = new Hashtable();
         var props = context.GetType().GetProperties().Where(x => x.PropertyType.FullName.StartsWith("Microsoft.EntityFrameworkCore.DbSet")).ToList();
-        foreach (var typeProp in props)
+        foreach ( var typeProp in props )
         {
             var table = typeProp.PropertyType.GenericTypeArguments[0];
 
@@ -25,7 +25,7 @@ public static class EnumStringExtension
 
 
 
-            foreach (var item in keyTableProps)
+            foreach ( var item in keyTableProps )
             {
                 modelBuilder.Entity(table).Property(item.PropertyType, item.Name).HasConversion<string>();
             }
