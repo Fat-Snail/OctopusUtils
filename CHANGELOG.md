@@ -1,5 +1,28 @@
 # 更新日志
 
+## [1.2.3] - 2026-03-07
+
+### 更新
+- 📝 完善自动依赖注入最佳实践说明
+  - 📖 添加不推荐直接继承生命周期接口的说明
+  - ✅ 推荐使用服务接口继承生命周期接口
+  - 📝 添加完整的示例代码展示最佳实践
+- 📝 新增 `EFQueryableExtensions.WhereIf()` 文档
+  - 🆕 支持条件查询扩展方法（WhereIf）
+  - ✅ 简化带条件的查询表达式编写
+  - 📝 添加多种 WhereIf 重载方法说明
+  - 📝 添加完整的查询示例代码
+
+### 新增特性
+- 🔧 **EFQueryableExtensions** - Entity Framework 查询扩展
+  - 🆕 `WhereIf<T>(IQueryable, Expression, Boolean)` - 条件查询扩展
+  - 🆕 `WhereIf<T>(IQueryable, Boolean, Expression)` - 条件在前版本
+  - 🆕 `WhereIf<T>(IQueryable, Expression<Func<T,Int32,Boolean>>, Boolean)` - 带索引版本
+  - 🆕 `WhereIf<T>(IEnumerable, Func<T,Boolean>, Boolean)` - IEnumerable 版本
+  - 🆕 `WhereIf<T>(IEnumerable, Func<T,int,bool>, Boolean)` - IEnumerable 带索引版本
+
+---
+
 ## [1.2.2] - 2026-02-12
 
 ### 新增
@@ -23,6 +46,8 @@
     - 🆕 `GET /health/full` - 完整健康检查（所有检查）
     - 🆕 `GET /health` - 详细健康状态和指标（包含每个检查的详细信息）
 
+---
+
 ## [1.2.1] - 2026-02-07
 
 ### 新增
@@ -37,7 +62,7 @@
     - 🆕 完整的验证和异常处理机制
     - 🆕 灵活的扩展点和自定义能力
 
-## [1.2.0] - 2026-01-17
+## [1.2.0] - 2026-02-07
 
 ### 新增
 - ✨ **OctopusEx.WebCore** - ASP.NET Core Web 应用脚手架
@@ -47,6 +72,15 @@
   - ⚡ **HangfireExtensions** - 后台作业调度扩展（支持单任务执行）
     - 🆕 支持 appsettings.json 配置 Dashboard 用户名密码
     - 🆕 内置 `HangfireAuthorizationFilter` 认证过滤器
+  - 🗄️ **DomainCore** - 领域仓储层和 CRUD 脚手架
+    - 🆕 泛型仓储接口和实现 `IRepository<TEntity, TKey>` 和 `Repository<TEntity, TKey>`
+    - 🆕 工作单元模式 `IUnitOfWork` 和 `UnitOfWork`
+    - 🆕 CRUD 服务基类 `CrudServiceBase<TEntity, TKey, TDto>`
+    - 🆕 CRUD 控制器基类 `CURDControllerBase<TEntity, TKey, TDto>`
+    - 🆕 支持批量操作、复杂查询、事务处理
+    - 🆕 支持联表查询、查询构建器模式
+    - 🆕 完整的验证和异常处理机制
+    - 🆕 灵活的扩展点和自定义能力
   - 🛡️ **SensitiveWordFilterPlugin** - 智能敏感词过滤插件
     - ⚡ 基于 ToolGood.Words 快速匹配
     - 🧠 结合 Semantic Kernel AI 智能识别
@@ -75,6 +109,7 @@
   - `IUnitOfWork` - 管理多个仓储的事务
   - `CrudServiceBase<TEntity, TKey, TDto>` - 服务层基类
   - `CURDControllerBase<TEntity, TKey, TDto>` - 控制器基类
+  - `EFQueryableExtensions.WhereIf()` - 条件查询扩展方法
   - 支持批量操作：`AddRangeAsync`, `UpdateRangeAsync`, `DeleteRangeAsync`
   - 支持复杂查询：`FindAllAsync` 多重载，查询构建器
   - 支持联表查询：Include, Join, 复杂聚合
@@ -87,6 +122,10 @@
   - `SetSensitiveWords()` - 批量配置敏感词库
   - `AddSensitiveWord()` - 添加单个敏感词
 - **自动依赖注入** - 基于接口的智能服务注册
+  - `IScopeDependency` - 作用域生命周期接口
+  - `ISingletonDependency` - 单例生命周期接口
+  - `ITransientDependency` - 瞬态生命周期接口
+  - 推荐使用服务接口继承生命周期接口
 
 ### 更新 (2026-01-17)
 - 📝 更新 **OctopusEx.WebCore/README.md** - 新增领域仓储层文档

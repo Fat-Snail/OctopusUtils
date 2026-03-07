@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Util.Dependency;
@@ -34,6 +36,7 @@ public class DependencyServiceRegistrar : IServiceRegistrar
     {
         return () =>
         {
+            Console.WriteLine($"[DependencyServiceRegistrar] 开始注册依赖服务 (Enabled={Enabled})");
             serviceContext.HostBuilder.ConfigureServices((context, services) =>
             {
                 RegisterDependency<ISingletonDependency>(services, serviceContext.TypeFinder,
@@ -41,6 +44,7 @@ public class DependencyServiceRegistrar : IServiceRegistrar
                 RegisterDependency<IScopeDependency>(services, serviceContext.TypeFinder, ServiceLifetime.Scoped);
                 RegisterDependency<ITransientDependency>(services, serviceContext.TypeFinder,
                     ServiceLifetime.Transient);
+                Console.WriteLine($"[DependencyServiceRegistrar] 依赖服务注册完成");
             });
         };
     }
@@ -67,7 +71,21 @@ public class DependencyServiceRegistrar : IServiceRegistrar
         foreach ( var classType in classTypes )
         {
             var interfaceTypes = Util.Helpers.Reflection.GetInterfaceTypes(classType, typeof(TDependencyInterface));
-            interfaceTypes.ForEach(interfaceType => result.Add((interfaceType, classType)));
+            if ( interfaceTypes.Count == 0 )
+            {
+                // 如果类没有实现任何继承自TDependencyInterface的接口，但直接实现了TDependencyInterface本身
+                // 则注册类本身（自注册）
+                result.Add((classType, classType));
+                Console.WriteLine($"[DependencyServiceRegistrar] 注册自注册服务: {classType.Name} 作为 {classType.Name}");
+            }
+            else
+            {
+                interfaceTypes.ForEach(interfaceType => 
+                {
+                    result.Add((interfaceType, classType));
+                    Console.WriteLine($"[DependencyServiceRegistrar] 注册服务: {classType.Name} 作为 {interfaceType.Name}");
+                });
+            }
         }
 
         return result;
@@ -129,6 +147,7 @@ public class DependencyServiceRegistrar : IServiceRegistrar
     /// </summary>
     private void RegisterType(IServiceCollection services, Type interfaceType, Type classType, ServiceLifetime lifetime)
     {
+        Console.WriteLine($"[DependencyServiceRegistrar] 尝试注册: {classType.Name} 作为 {interfaceType.Name} ({lifetime})");
         services.TryAdd(new ServiceDescriptor(interfaceType, classType, lifetime));
     }
 }

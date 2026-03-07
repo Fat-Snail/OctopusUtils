@@ -423,6 +423,60 @@ var products4 = await productRepo.FindAllAsync(
     });
 ```
 
+**使用 WhereIf 简化条件查询**
+
+`EFQueryableExtensions` 提供了 `WhereIf` 扩展方法，用于简化带条件的查询表达式，避免编写冗长的 if 判断逻辑。
+
+```csharp
+// 使用 WhereIf 进行条件查询
+public class CompanyQuery
+{
+    private readonly IDbContext _dbContext;
+
+    public CompanyQuery(IDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<List<Company>> QueryAsync(CompanySearchParam param, bool skipPermission = false)
+    {
+        var companies = _dbContext.Set<Company>()
+            .WhereIf(!string.IsNullOrWhiteSpace(param.Name), x =>
+                x.Name.Contains(param.Name) ||
+                _dbContext.Accounts.Where(t =>
+                    t.CompanyId == x.Id &&
+                    t.AccountName.Contains(param.Name)).Any())
+            .WhereIf(param.MinPrice.HasValue, x => x.Price >= param.MinPrice.Value)
+            .WhereIf(param.MaxPrice.HasValue, x => x.Price <= param.MaxPrice.Value)
+            .Where(x => x.IsDeleted == IsDeletedTypeEnum.未删除)
+            .ToList();
+
+        return companies;
+    }
+}
+
+// 搜索参数类
+public class CompanySearchParam
+{
+    public string? Name { get; set; }
+    public decimal? MinPrice { get; set; }
+    public decimal? MaxPrice { get; set; }
+}
+```
+
+**WhereIf 方法重载：**
+
+```csharp
+// 条件在前，表达式在后
+query.WhereIf(condition, x => x.Name.Contains(keyword))
+
+// 表达式在前，条件在后
+query.WhereIf(x => x.IsActive, isFilterActive)
+
+// 带索引的版本
+query.WhereIf((x, index) => x.IsActive && index < 10, useIndexFilter)
+```
+
 #### 5. 联表查询
 
 ```csharp
@@ -691,21 +745,92 @@ builder.Services.AddControllers();
 builder.AsBuild().AddUtil();
 
 var app = builder.Build();
+```
 
-// 服务实现示例
-public interface IJobExecutionService : Util.Dependency.IScopeDependency
-{
-    Task ExecuteApiServiceCleanupAsync();
-    Task ExecuteApiServiceGenerateReportAsync();
-    Task ExecuteApiServiceSyncDataAsync();
-    Task ExecuteApiServiceSendNotificationsAsync();
-}
+**支持的生命周期接口：**
+- `IScopeDependency` - 作用域生命周期（推荐用于请求作用域的服务）
+- `ISingletonDependency` - 单例生命周期（推荐用于无状态服务）
+- `ITransientDependency` - 瞬态生命周期（推荐用于轻量级服务）
 
-public class JobExecutionService : IJobExecutionService
+**⚠️ 重要提示：不推荐直接继承生命周期接口**
+
+虽然支持直接继承生命周期接口，但**不推荐**这种做法：
+
+```csharp
+// ❌ 不推荐的做法
+public class UserService : ITransientDependency
 {
-    // 实现方法...
+    // 实现...
 }
 ```
+
+**✅ 推荐的做法：使用服务接口**
+
+让服务接口继承生命周期接口，这样能更好地遵循依赖倒置原则：
+
+```csharp
+// ✅ 推荐的做法
+public interface ICompanyService : ITransientDependency
+{
+    Task<List<Company>> GetCompaniesAsync();
+    Task<Company?> GetCompanyByIdAsync(int id);
+}
+
+public class CompanyService : ICompanyService
+{
+    private readonly IDbContext _dbContext;
+
+    public CompanyService(IDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<List<Company>> GetCompaniesAsync()
+    {
+        return await _dbContext.Set<Company>().ToListAsync();
+    }
+
+    public async Task<Company?> GetCompanyByIdAsync(int id)
+    {
+        return await _dbContext.Set<Company>().FindAsync(id);
+    }
+}
+
+// 在控制器中使用依赖注入
+public class CompanyController : Controller
+{
+    private readonly ICompanyService _companyService;
+
+    public CompanyController(ICompanyService companyService)
+    {
+        _companyService = companyService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCompanies()
+    {
+        var companies = await _companyService.GetCompaniesAsync();
+        return Ok(companies);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCompany(int id)
+    {
+        var company = await _companyService.GetCompanyByIdAsync(id);
+        if (company == null)
+        {
+            return NotFound();
+        }
+        return Ok(company);
+    }
+}
+```
+
+**为什么推荐使用服务接口？**
+1. **依赖倒置原则** - 控制器依赖于抽象而不是具体实现
+2. **更好的可测试性** - 可以轻松模拟服务接口进行单元测试
+3. **解耦** - 服务实现可以被替换而不影响调用方
+4. **符合 DDD 领域驱动设计** - 服务接口代表领域服务契约
 
 ## 📦 安装
 
@@ -859,6 +984,7 @@ builder.Services.AddScoped<ProductService>();
 - `CrudServiceBase<TEntity, TKey, TDto>` - CRUD 服务基类
 - `CURDControllerBase<TEntity, TKey, TDto>` - CRUD 控制器基类
 - `AddGenericRepositoryEfCoreInMemory()` - 注册内存数据库仓储服务
+- `EFQueryableExtensions.WhereIf()` - 条件查询扩展方法（支持 IQueryable 和 IEnumerable）
 
 ### HealthCheckExtensions
 - `AddCommonHealthChecks()` - 添加通用健康检查
