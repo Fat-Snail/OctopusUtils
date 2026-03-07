@@ -80,7 +80,7 @@ public class DependencyServiceRegistrar : IServiceRegistrar
             }
             else
             {
-                interfaceTypes.ForEach(interfaceType => 
+                interfaceTypes.ForEach(interfaceType =>
                 {
                     result.Add((interfaceType, classType));
                     Console.WriteLine($"[DependencyServiceRegistrar] 注册服务: {classType.Name} 作为 {interfaceType.Name}");
