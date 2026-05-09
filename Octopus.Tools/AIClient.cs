@@ -1,5 +1,11 @@
 ﻿namespace Octopus.Tools;
 
+/// <summary>
+/// [已废弃] 旧版手写 OpenAI HTTP 客户端，仅保留向后兼容。
+/// 新代码请使用 <see cref="Octopus.AI.IOctopusChatService"/>，它基于 Microsoft.Extensions.AI
+/// 标准接口，支持 OpenAI / Azure OpenAI / Ollama / 本地 Llama 等多 Provider 一致调用。
+/// </summary>
+[Obsolete("Use Octopus.AI.IOctopusChatService (Microsoft.Extensions.AI based) instead. Will be removed in v2.0.")]
 public class AIClient : IDisposable
 {
     #region >配置实例，简单粗暴<

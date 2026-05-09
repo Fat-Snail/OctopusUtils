@@ -84,4 +84,8 @@
     <Folder Include="DomainCore\Abstractions\Interfaces\DataAccess\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Octopus.Tools\Octopus.Tools.csproj" />
+  </ItemGroup>
+
 </Project>

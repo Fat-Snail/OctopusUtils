@@ -67,8 +67,9 @@ public class SensitiveWordFilterPlugin
 
     private WordsSearch _wordSearch;
     private readonly Kernel? _kernel;
+    private readonly Octopus.AI.IOctopusChatService? _aiChat;
 
-    public SensitiveWordFilterPlugin() : this(null) { }
+    public SensitiveWordFilterPlugin() : this((Kernel?)null) { }
 
     public SensitiveWordFilterPlugin(Kernel? kernel = null)
     {
@@ -76,6 +77,64 @@ public class SensitiveWordFilterPlugin
         _wordSearch = new WordsSearch();
         // 初始化敏感词库 - 实际应用中可以从数据库或文件加载
         _wordSearch.SetKeywords(_sensitiveWords);
+    }
+
+    /// <summary>
+    /// 推荐：基于 Microsoft.Extensions.AI 的构造方式。比 Kernel 路径更轻量、与 Provider 解耦。
+    /// </summary>
+    public SensitiveWordFilterPlugin(Octopus.AI.IOctopusChatService aiChat)
+    {
+        _aiChat = aiChat ?? throw new ArgumentNullException(nameof(aiChat));
+        _wordSearch = new WordsSearch();
+        _wordSearch.SetKeywords(_sensitiveWords);
+    }
+
+    /// <summary>
+    /// 使用 IOctopusChatService 做语义敏感词识别。
+    /// 优先于 Kernel 路径；返回结构化结果，无需手动解析 JSON。
+    /// </summary>
+    public async Task<AITextAnalysisResult> DetectWithAiAsync(string input, CancellationToken cancellationToken = default)
+    {
+        if ( _aiChat == null )
+        {
+            return new AITextAnalysisResult
+            {
+                OriginalText = input,
+                HasSensitiveWords = false,
+                SensitiveWords = new List<string>(),
+                SensitiveTypes = new List<string>(),
+                Confidence = 0.0,
+                DetectionMethod = "AI",
+                ErrorMessage = "请先注入 IOctopusChatService（builder.Services.AddOctopusAI()）",
+                Code = 0,
+            };
+        }
+
+        var prompt = $"请分析以下文本是否包含敏感内容（色情/低俗/暴力/政治/违法等）。\n\n文本：{input}\n\n" +
+                     "返回 JSON：{\"originalText\":\"...\",\"hasSensitiveWords\":bool,\"sensitiveWords\":[],\"sensitiveTypes\":[],\"confidence\":0~1,\"detectionMethod\":\"AI\"}";
+
+        try
+        {
+            var result = await _aiChat.AskAsync<AITextAnalysisResult>(prompt, maxRetries: 2, cancellationToken);
+            result.OriginalText = input;
+            result.DetectionMethod = "AI";
+            result.Code = 1;
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return new AITextAnalysisResult
+            {
+                OriginalText = input,
+                HasSensitiveWords = false,
+                SensitiveWords = new List<string>(),
+                SensitiveTypes = new List<string>(),
+                Confidence = 0.0,
+                DetectionMethod = "AI",
+                ErrorMessage = ex.Message,
+                Code = 0,
+            };
+        }
     }
 
     /// <summary>

@@ -1,7 +1,7 @@
 # OctopusUtils Roadmap
 
-> 当前版本：**v1.3.3**（2026-05-09）  
-> 下一里程碑：**v1.4.0**（预计 2026-11）
+> 当前版本：**v1.4.0**（2026-05-09）  
+> 下一里程碑：**v1.4.1**（预计 2026-12）
 
 ---
 
@@ -19,6 +19,7 @@
 | ✅ v1.3.1 | 2026-05 | v1.3.0 收尾强化、ICurrentUser、ProjectTo、单元测试项目落地 |
 | ✅ v1.3.2 | 2026-05 | 多级缓存（L1+L2+穿透/雪崩/击穿防护）、Hangfire 持久化存储 |
 | ✅ v1.3.3 | 2026-05 | JWT 脚手架（含 refresh token）、ASP.NET Core 限流封装 |
+| ✅ v1.4.0 | 2026-05 | Microsoft.Extensions.AI 集成、PromptTemplate、ChatHistory、结构化输出 |
 
 ---
 
