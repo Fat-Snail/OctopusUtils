@@ -9,18 +9,13 @@
 
     <ItemGroup>
       <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00017" />
-      <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.7" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.7" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Interfaces\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.Extensions.Logging">
-        <HintPath>..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\8.0.0\Microsoft.Extensions.Logging.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
     <ItemGroup>

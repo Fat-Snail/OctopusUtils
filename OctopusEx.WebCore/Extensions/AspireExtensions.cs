@@ -35,12 +35,7 @@ public static class AspireExtensions
                 tracing
                     .AddAspNetCoreInstrumentation(options => { options.RecordException = true; })
                     .AddHttpClientInstrumentation(options => { options.RecordException = true; })
-                    .AddEntityFrameworkCoreInstrumentation(options =>
-                    {
-                        // 启用 SQL 语句显示
-                        options.SetDbStatementForText = true;
-                        options.SetDbStatementForStoredProcedure = true;
-                    })
+                    .AddEntityFrameworkCoreInstrumentation()
                     .AddOtlpExporter(options =>
                     {
                         // Check if OTLP endpoint is configured (Aspire will set this automatically)

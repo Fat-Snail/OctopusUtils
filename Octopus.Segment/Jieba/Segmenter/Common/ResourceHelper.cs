@@ -23,9 +23,17 @@
     /// </summary>
     /// <param name="resourceName">resourceName</param>
     /// <returns></returns>
-    public static Stream GetResourceInputStream(String resourceName)
+    public static Stream? GetResourceInputStream(String resourceName)
     {
-        return Asm.GetManifestResourceStream(String.Format("{0}.{1}", Asm.GetName().Name, resourceName));
+        // 优先精确匹配（AssemblyName 前缀）
+        var exact = Asm.GetManifestResourceStream($"{Asm.GetName().Name}.{resourceName}");
+        if (exact != null) return exact;
+
+        // 后缀匹配：兼容 AssemblyName ≠ RootNamespace 的场景
+        var suffix = resourceName.Replace('/', '.').Replace('\\', '.');
+        var match = Asm.GetManifestResourceNames()
+            .FirstOrDefault(n => n.EndsWith(suffix, StringComparison.OrdinalIgnoreCase));
+        return match != null ? Asm.GetManifestResourceStream(match) : null;
     }
 
     public static String GetResourceInputString(String resourceName)
