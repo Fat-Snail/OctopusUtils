@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctopusEx.WebCore.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctopusEx.SearchCore.Tests", "tests\OctopusEx.SearchCore.Tests\OctopusEx.SearchCore.Tests.csproj", "{5908CC29-E1D1-40E0-9E69-346B4293E096}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctopusEx.Segment.Tests", "tests\OctopusEx.Segment.Tests\OctopusEx.Segment.Tests.csproj", "{8E27A2A7-25CF-490F-B680-D028AC699D06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -216,6 +218,36 @@ Global
 		{5908CC29-E1D1-40E0-9E69-346B4293E096}.String版本|x64.Build.0 = Debug|Any CPU
 		{5908CC29-E1D1-40E0-9E69-346B4293E096}.String版本|x86.ActiveCfg = Debug|Any CPU
 		{5908CC29-E1D1-40E0-9E69-346B4293E096}.String版本|x86.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Debug|x64.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Debug|x86.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Guid版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Guid版本|Any CPU.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Guid版本|x64.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Guid版本|x64.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Guid版本|x86.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Guid版本|x86.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Long版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Long版本|Any CPU.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Long版本|x64.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Long版本|x64.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Long版本|x86.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Long版本|x86.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Release|x64.ActiveCfg = Release|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Release|x64.Build.0 = Release|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Release|x86.ActiveCfg = Release|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.Release|x86.Build.0 = Release|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.String版本|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.String版本|Any CPU.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.String版本|x64.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.String版本|x64.Build.0 = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.String版本|x86.ActiveCfg = Debug|Any CPU
+		{8E27A2A7-25CF-490F-B680-D028AC699D06}.String版本|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -223,6 +255,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8423DE22-FBA9-4C68-9070-B8EA57A41F13} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{5908CC29-E1D1-40E0-9E69-346B4293E096} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{8E27A2A7-25CF-490F-B680-D028AC699D06} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5C40C6B-2856-4202-A102-44DD07D576E4}
