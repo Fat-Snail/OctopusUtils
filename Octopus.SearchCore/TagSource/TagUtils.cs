@@ -8,7 +8,9 @@ public class TagUtils
     private static String _tagRoleEmbeddedPath = "TagSource.tag_role.txt";
     private static String _tagSceneEmbeddedPath = "TagSource.tag_scene.txt";
 
-    private static Assembly _asm = Assembly.GetExecutingAssembly();
+    private static readonly Assembly _asm = Assembly.GetExecutingAssembly();
+    private static readonly String _asmName = _asm.GetName().Name;
+    private static readonly String[] _resourceNames = _asm.GetManifestResourceNames();
 
     public static JiebaNet.Segmenter.JiebaSegmenter GetSegmenter()
     {
@@ -78,19 +80,19 @@ public class TagUtils
         return tags;
     }
 
-    public static Stream GetResourceInputStream(String resourceName)
+    private static Stream? GetResourceInputStream(String resourceName)
     {
-        return _asm.GetManifestResourceStream(String.Format("{0}.{1}", _asm.GetName().Name, resourceName));
+        var exact = _asm.GetManifestResourceStream($"{_asmName}.{resourceName}");
+        if (exact != null) return exact;
+
+        // AssemblyName ≠ RootNamespace 时后缀匹配兜底
+        var match = _resourceNames.FirstOrDefault(n => n.EndsWith(resourceName, StringComparison.OrdinalIgnoreCase));
+        return match != null ? _asm.GetManifestResourceStream(match) : null;
     }
 
-    public static String GetResourceInputString(String resourceName)
+    private static String GetResourceInputString(String resourceName)
     {
-        var result = String.Empty;
-        using ( var sr = new StreamReader(GetResourceInputStream(resourceName)) )
-        {
-            result = sr.ReadToEnd();
-            sr.Close();
-        }
-        return result;
+        using var sr = new StreamReader(GetResourceInputStream(resourceName)!);
+        return sr.ReadToEnd();
     }
 }
