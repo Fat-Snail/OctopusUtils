@@ -8,10 +8,11 @@
 
 聚合全文搜索 · 中文分词 · 异步控制台 · 重试机制 · AI 客户端 · Web 脚手架
 
-[![OctopusEx.Tools](https://img.shields.io/badge/OctopusEx.Tools-v1.2.3-004880?style=flat-square&logo=nuget)](https://www.nuget.org/packages/OctopusEx.Tools)
-[![OctopusEx.Segment](https://img.shields.io/badge/OctopusEx.Segment-v1.2.3-004880?style=flat-square&logo=nuget)](https://www.nuget.org/packages/OctopusEx.Segment)
-[![OctopusEx.SearchCore](https://img.shields.io/badge/OctopusEx.SearchCore-v1.2.3-004880?style=flat-square&logo=nuget)](https://www.nuget.org/packages/OctopusEx.SearchCore)
-[![OctopusEx.WebCore](https://img.shields.io/badge/OctopusEx.WebCore-v1.2.3-004880?style=flat-square&logo=nuget)](https://www.nuget.org/packages/OctopusEx.WebCore)
+[![OctopusEx.Tools](https://img.shields.io/nuget/v/OctopusEx.Tools?style=flat-square&logo=nuget&label=OctopusEx.Tools&color=004880)](https://www.nuget.org/packages/OctopusEx.Tools)
+[![OctopusEx.Segment](https://img.shields.io/nuget/v/OctopusEx.Segment?style=flat-square&logo=nuget&label=OctopusEx.Segment&color=004880)](https://www.nuget.org/packages/OctopusEx.Segment)
+[![OctopusEx.SearchCore](https://img.shields.io/nuget/v/OctopusEx.SearchCore?style=flat-square&logo=nuget&label=OctopusEx.SearchCore&color=004880)](https://www.nuget.org/packages/OctopusEx.SearchCore)
+[![OctopusEx.WebCore](https://img.shields.io/nuget/v/OctopusEx.WebCore?style=flat-square&logo=nuget&label=OctopusEx.WebCore&color=004880)](https://www.nuget.org/packages/OctopusEx.WebCore)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/OctopusEx.WebCore?style=flat-square&logo=nuget&label=downloads&color=004880)](https://www.nuget.org/packages/OctopusEx.WebCore)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-Standard%202.0%20%7C%20net8%20%7C%20net10-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com)
 [![Build](https://img.shields.io/github/actions/workflow/status/Fat-Snail/OctopusUtils/dotnet.yml?style=flat-square&logo=github)](https://github.com/Fat-Snail/OctopusUtils/actions)
