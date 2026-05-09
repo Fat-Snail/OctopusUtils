@@ -77,13 +77,13 @@ DDD + CQRS + Repository，自动依赖注入、审计日志、健康检查、Han
 
 ```bash
 # 核心工具（控制台、重试、AI客户端、缓存）
-dotnet add package Octopus.Tools
+dotnet add package OctopusEx.Tools
 
 # 中文分词
-dotnet add package Octopus.Segment
+dotnet add package OctopusEx.Segment
 
 # 全文搜索引擎
-dotnet add package Octopus.SearchCore
+dotnet add package OctopusEx.SearchCore
 
 # ASP.NET Core Web 脚手架
 dotnet add package OctopusEx.WebCore
