@@ -51,8 +51,10 @@
 
     <ItemGroup>
       <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00017" />
+      <PackageReference Include="Microsoft.Extensions.AI.Abstractions" Version="9.5.0" />
       <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.7" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.7" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.7" />
     </ItemGroup>
 
