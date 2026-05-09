@@ -28,3 +28,22 @@ public class UnauthorizedException : BusinessException
 {
     public UnauthorizedException(String message = "请先登录") : base(message, 401) { }
 }
+
+/// <summary>
+/// 字段级验证失败异常，映射到 HTTP 422。
+/// 携带字段级错误字典，前端可据此做表单错误高亮。
+/// </summary>
+public class FieldValidationException : BusinessException
+{
+    /// <summary>字段错误字典：key 为字段名，value 为错误消息列表</summary>
+    public IDictionary<String, String[]> Errors { get; }
+
+    public FieldValidationException(IDictionary<String, String[]> errors, String message = "请求参数校验失败")
+        : base(message, 422)
+    {
+        Errors = errors;
+    }
+
+    public FieldValidationException(String field, String error, String message = "请求参数校验失败")
+        : this(new Dictionary<String, String[]> { [field] = new[] { error } }, message) { }
+}

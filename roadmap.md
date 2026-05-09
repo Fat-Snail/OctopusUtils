@@ -47,7 +47,51 @@
 
 ---
 
-### v1.3.1 — 多级缓存（预计 2026-08）
+### v1.3.1 — v1.3.0 收尾 + 健壮性强化（预计 2026-06）
+
+> **缘起：** v1.3.0 落地后审核发现若干潜在问题与设计可改进项，先把 v1.3.0 打磨完整再进入下一个大功能。
+
+**🔴 Bug 修复**
+
+- `EFRepository.DeleteRangeAsync` 重写，确保批量删除也走软删除流程（避免绕过软删除直接物理删除）
+- `GlobalExceptionMiddleware` 检查 `Response.HasStarted`，避免响应已开始时二次写入崩溃
+- `GlobalExceptionMiddleware` 显式处理 `OperationCanceledException`，客户端断开返回 499 而非 500
+- `GlobalExceptionMiddleware` 改用 `IOptions<JsonOptions>` 序列化，与框架统一命名规则
+- `SoftDeleteModelBuilderExtensions` 用 `AndAlso` 合并已有查询过滤器，避免覆盖租户隔离等已有过滤逻辑
+
+**🟡 设计改进**
+
+- **`ICurrentUser` 抽象**（新）
+  - 统一封装"当前操作人"获取逻辑（HttpContext / JWT / Hangfire 后台任务）
+  - 同时打通 `AuditInterceptor` 与 `EFRepository` 软删除的 `DeletedBy` 自动填充
+  - 提供 `NullCurrentUser` 默认实现，无 HttpContext 场景下静默降级
+
+- **`IObjectMapper` 增强**
+  - 新增 `ProjectTo<TDest>(IQueryable<TSrc>)` — 在 SQL 层投影列，列表查询性能提升显著
+  - 新增 `MapList<TSrc, TDest>` 集合映射快捷方法
+  - `AddSimpleMapper(Action<TypeAdapterConfig>? configure)` 提供配置回调，DI 风格自定义映射规则
+
+- **软删除 API 完善**
+  - 新增 `IgnoreSoftDelete<T>()` `IQueryable` 扩展（语义比裸 `IgnoreQueryFilters` 清晰）
+  - 新增 `EFRepository.RestoreAsync(TKey id)` 恢复软删除实体
+  - `EFRepository.DeleteAsync` 自动填充 `DeletedBy`（来自 `ICurrentUser`）
+
+- **异常响应增强**
+  - 响应增加 `traceId` 字段（W3C TraceContext / `Activity.Current.Id`），方便排查
+  - 开发环境堆栈裁剪到顶层 N 帧，避免响应体过大
+  - 新增 `ValidationException` 携带字段级错误 `IDictionary<string, string[]>`，前端可做表单错误高亮
+  - `BaseResponse` 新增可选 `Errors` 字段
+
+**🟢 工程质量**
+
+- **单元测试项目落地**（`OctopusEx.WebCore.Tests`）
+  - xUnit + FluentAssertions + Moq + EF Core InMemory
+  - 覆盖核心：异常映射、软删除流程、Mapster 集成、CrudServiceBase 钩子
+  - 路线图技术债"无单元测试项目"由此开始消化
+
+---
+
+### v1.3.2 — 多级缓存（预计 2026-08）
 
 **OctopusEx.WebCore**
 
@@ -56,7 +100,7 @@
   - L1 内存缓存 + L2 Redis 分布式缓存，自动降级
   - 缓存穿透防护（空值缓存 + BloomFilter）
   - 缓存雪崩防护（随机过期时间 + 互斥锁）
-  - 缓存击穿防护（SemaphoreSlim 单飞模式）
+  - 缓存击穿防护(SemaphoreSlim 单飞模式)
 
 - **`[Cache]` 特性装饰器**
   - 标注在 Service 方法上，自动拦截并缓存返回值
@@ -70,7 +114,7 @@
 
 ---
 
-### v1.3.2 — 限流 + JWT 开箱即用（预计 2026-09）
+### v1.3.3 — 限流 + JWT 开箱即用（预计 2026-09）
 
 **OctopusEx.WebCore**
 
@@ -211,9 +255,9 @@
 ## 版本节奏
 
 ```
-v1.2.3 ──► v1.3.0 ──► v1.3.1 ──► v1.3.2
-  当前      对象映射     多级缓存    限流+JWT
-  2026-03   2026-07     2026-08    2026-09
+v1.2.3 ──► v1.3.0 ──► v1.3.1 ──► v1.3.2 ──► v1.3.3
+  已完成    已完成      收尾强化    多级缓存    限流+JWT
+  2026-03   2026-05     2026-06    2026-08    2026-09
 
            ──► v1.4.0 ──► v1.4.1 ──► v1.4.2
                 AI集成    向量搜索    分词升级
