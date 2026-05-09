@@ -1,48 +1,235 @@
 # OctopusUtils Roadmap
 
-## 1. ✅ 控制台设置输出字体颜色 (已完成)
-- 新增一个模块或工具类，支持在控制台中输出彩色文本。
-- 功能点：
-  - ✅ 支持常见颜色（如红色、绿色、黄色等）。
-  - ✅ 提供简单的 API 调用方式。
-  - ✅ 异步非阻塞输出，提高性能
-  - ✅ 完整的XML文档注释，支持智能提示
-  - ✅ 优雅关闭机制，确保消息正确处理
+> 当前版本：**v1.2.3**（2026-03-07）  
+> 下一里程碑：**v1.3.0**（预计 2026-07）
 
-**实现细节：**
-- **类名：** `ConsoleEx` (扩展类) + `AsyncConsole` (核心实现) + `ConsoleMessage` (数据结构)
-- **特性：** 异步队列处理、彩色输出、异常安全、资源管理
-- **性能：** 非阻塞写入、内存优化、支持高频率输出
-- **示例：** 已在 README.md 中提供详细使用示例
+---
 
-## 2. 支持多种 Mapper
-- 扩展现有功能，支持多种数据映射器。
-- 功能点：
-  - 对象到对象的映射。
-  - JSON 到对象的映射。
-  - 自定义映射规则。
+## 已完成
 
-## 3. 专门的 WEB 高效开发工具
-- 开发一个独立的工具模块，专注于 WEB 开发的高效工具。
-- 功能点：
-  - 快速生成 HTML/CSS/JavaScript 模板。
-  - 自动化部署脚本。
-  - 集成常用 WEB 开发库（如 jQuery、Bootstrap）。
+| 版本 | 时间 | 主要内容 |
+|------|------|---------|
+| ✅ v1.0.0 | 2024-11 | 全文搜索、中文分词、控制台工具、AI 客户端 |
+| ✅ v1.1.0 | 2024-11 | 单元测试工具、MiniProfiler、类型名规范化 |
+| ✅ v1.2.0 | 2026-02 | OctopusEx.WebCore 初版：DDD脚手架、Hangfire、审计、敏感词 |
+| ✅ v1.2.1 | 2026-02 | DomainCore 完整 CRUD 脚手架 |
+| ✅ v1.2.2 | 2026-02 | HealthCheckExtensions，四个健康端点 |
+| ✅ v1.2.3 | 2026-03 | WhereIf 条件查询扩展，自动注入最佳实践 |
 
-## 临时
-- nuget包加图标
+---
 
-## 时间规划
-- ✅ **第一阶段（2025年11月）：**完成控制台字体颜色功能。(*提前完成！*)
-- 第二阶段（2026年1月）：实现多种 Mapper 支持。
-- 第三阶段（2026年2月）：开发 WEB 高效开发工具。
+## v1.3.x — 工程效率升级
 
-## 更新记录
-- **2025年11月25日：** 提前完成第一阶段控制台字体颜色功能
-  - 实现了 `ConsoleEx`、`AsyncConsole` 和 `ConsoleMessage` 类
-  - 支持异步非阻塞彩色输出
-  - 添加了完整文档和使用示例
+> **主题：** 补全 Web 开发中最高频的横切需求，让脚手架更完整。
 
-## 备注
-- 欢迎贡献者参与开发！
-- 具体实现细节将在后续讨论中确定。
+### v1.3.0 — 对象映射 + 全局异常处理（预计 2026-07）
+
+**OctopusEx.WebCore**
+
+- **对象映射集成**（`MapperExtensions`）
+  - 内置轻量映射引擎，无需手写 `MapToDto` / `MapToEntity`
+  - 支持 Mapster / AutoMapper 双适配器，注册时按需选择
+  - `CrudServiceBase` 自动接入映射器，子类可选择零配置 CRUD
+  - 支持扁平化映射、忽略字段、自定义规则
+
+- **全局异常处理中间件**（`GlobalExceptionMiddleware`）
+  - 统一捕获业务异常 / 验证异常 / 未处理异常
+  - 按异常类型映射 HTTP 状态码（400 / 401 / 403 / 404 / 422 / 500）
+  - 输出标准 `BaseResponse` 格式，与现有控制器响应一致
+  - 生产环境自动屏蔽堆栈信息，开发环境完整输出
+  - 一行注册：`app.UseGlobalExceptionHandler()`
+
+- **软删除支持**（`ISoftDelete`）
+  - 接口标记：`IsDeleted`、`DeletedAt`、`DeletedBy`
+  - EF Core 全局查询过滤器自动注入，查询默认过滤已删除数据
+  - `DeleteAsync` 自动判断软删除，不需要修改业务代码
+  - 提供 `IgnoreSoftDelete()` 扩展方法查询回收站数据
+
+---
+
+### v1.3.1 — 多级缓存（预计 2026-08）
+
+**OctopusEx.WebCore**
+
+- **缓存抽象层**（`ICacheService`）
+  - 统一接口：`GetAsync` / `SetAsync` / `RemoveAsync` / `ExistsAsync`
+  - L1 内存缓存 + L2 Redis 分布式缓存，自动降级
+  - 缓存穿透防护（空值缓存 + BloomFilter）
+  - 缓存雪崩防护（随机过期时间 + 互斥锁）
+  - 缓存击穿防护（SemaphoreSlim 单飞模式）
+
+- **`[Cache]` 特性装饰器**
+  - 标注在 Service 方法上，自动拦截并缓存返回值
+  - 支持参数模板 key：`[Cache("user:{0}", ttl: 300)]`
+  - 支持手动失效：`[CacheEvict("user:*")]`
+
+- **Hangfire 持久化存储**
+  - 当前内存存储 → 支持 Redis / SQL Server / PostgreSQL
+  - 一行切换：`AddSimpleHangfire(storage: HangfireStorage.Redis)`
+  - 重启后任务不丢失，适合生产环境
+
+---
+
+### v1.3.2 — 限流 + JWT 开箱即用（预计 2026-09）
+
+**OctopusEx.WebCore**
+
+- **请求限流**（`RateLimitExtensions`）
+  - 固定窗口 / 滑动窗口 / 令牌桶三种策略
+  - 支持 IP、用户、接口维度独立限流
+  - 与 ASP.NET Core 原生 Rate Limiting 中间件集成
+  - 一行注册：`builder.AddSimpleRateLimit()`
+
+- **JWT 认证脚手架**（`JwtExtensions`）
+  - `AddSimpleJwt(secret, issuer)` 一行开启 JWT
+  - 内置 `TokenService`：生成 / 刷新 / 吊销 token
+  - 刷新 token 支持滑动过期
+  - Claims 扩展：`GetUserId()` / `GetUserName()` / `GetRoles()`
+
+---
+
+## v1.4.x — AI 与搜索增强
+
+> **主题：** 拥抱 AI Native 开发范式，让搜索从关键词走向语义理解。
+
+### v1.4.0 — Microsoft.Extensions.AI 集成（预计 2026-11）
+
+**OctopusEx.Tools**
+
+- **重写 AIClient**
+  - 迁移至 `Microsoft.Extensions.AI` 标准接口（`IChatClient`）
+  - 支持 OpenAI、Azure OpenAI、Ollama、本地 Llama 一致调用
+  - 流式输出（Streaming）支持
+  - 内置对话历史管理（滑动窗口，防 token 超限）
+  - Prompt 模板引擎：变量替换 + 多轮上下文注入
+
+- **结构化输出**
+  - `AskAsync<T>()` 泛型方法，AI 返回自动反序列化为强类型对象
+  - 内置重试 + 格式校验
+
+**OctopusEx.WebCore**
+
+- **AI 中间件集成**（`AiExtensions`）
+  - `AddOctopusAI()` 一行注册，配置注入 `IChatClient`
+  - 与 `SensitiveWordFilterPlugin` 深度融合，敏感词检测自动走 AI 语义通道
+
+---
+
+### v1.4.1 — 向量搜索 + 混合检索（预计 2026-12）
+
+**OctopusEx.SearchCore**
+
+- **向量搜索支持**（`IVectorSearchEngine`）
+  - 接入 Milvus / Qdrant / PostgreSQL pgvector
+  - 文本嵌入：调用本地或远程 Embedding 模型生成向量
+  - 语义相似度搜索：`SearchBySimilarity(text, topK)`
+
+- **混合检索**（`HybridSearchEngine`）
+  - 关键词（BM25）+ 语义（向量余弦相似度）双路召回
+  - RRF（倒数排名融合）重排序
+  - 一个接口同时驱动 Lucene 和向量库
+
+- **增量索引管道**
+  - 基于 Channel 的异步索引队列，批量写入替代逐条 commit
+  - 写入吞吐量提升 10x+
+
+---
+
+### v1.4.2 — 中文分词升级（预计 2027-01）
+
+**OctopusEx.Segment**
+
+- **盘古分词接入**（`PanguSegmenter`）
+  - 作为 JiebaSegmenter 的可替换实现
+  - 共同实现 `IChineseSegmenter` 接口，运行时按需切换
+
+- **分词质量提升**
+  - 基于词频统计的动态词典热更新（无需重启）
+  - 新词发现：自动识别高频未登录词并建议加入词典
+
+- **NER 命名实体识别**（`NamedEntityRecognizer`）
+  - 识别人名、地名、机构名、时间表达式
+  - 基于规则 + HMM 双路实现
+
+---
+
+## v1.5.x — 云原生 + 生态扩展
+
+> **主题：** 让组件库与现代云原生基础设施无缝对接。
+
+### v1.5.0 — 事件总线（预计 2027-03）
+
+**OctopusEx.WebCore**
+
+- **领域事件总线**（`IEventBus`）
+  - 内存模式（进程内，零依赖）开箱即用
+  - Redis Pub/Sub 模式（跨进程）
+  - 事件处理器自动扫描注册（继承 `IEventHandler<T>`）
+  - 支持事件溯源（Event Sourcing）基础结构
+
+- **集成事件**
+  - 事务提交后自动发布领域事件（与 `IUnitOfWork` 深度集成）
+  - 死信队列 + 重试机制
+  - 与现有 `AuditInterceptor` 协同，审计变更自动触发事件
+
+---
+
+### v1.5.1 — 多租户支持（预计 2027-04）
+
+**OctopusEx.WebCore**
+
+- **多租户解析**（`ITenantResolver`）
+  - 支持子域名 / Header / Query / JWT Claims 解析租户 ID
+  - `IMultiTenant` 实体接口，EF Core 全局过滤器自动隔离
+  - Hangfire 任务按租户隔离队列
+
+---
+
+### v1.5.2 — .NET Aspire 深度集成（预计 2027-05）
+
+- Aspire ServiceDefaults 集成包（`OctopusEx.Aspire`，新包）
+- 开箱即用的 Aspire AppHost 模板
+- 统一服务发现 + 配置中心支持
+
+---
+
+## 长期技术债
+
+> 不绑定版本，持续改进。
+
+| 项目 | 问题 | 计划 |
+|------|------|------|
+| `OctopusEx.SearchCore` | 目标框架 net8.0，其他包已 net10 | 升级为 net9/net10 |
+| `OctopusEx.SearchCore` | Lucene.NET 仍为 beta | 跟进正式版发布 |
+| `OctopusEx.Tools` | `DictionaryCache` 标记 Obsolete 但未提供替代 | v1.3.1 缓存层落地后正式迁移 |
+| 全局 | 693 个 CS1591 XML 注释警告 | 逐版本补全核心公开 API 注释 |
+| 全局 | 无单元测试项目 | v1.3.0 起同步补充核心逻辑测试 |
+| `ResourceHelper` | 后缀匹配性能低于精确匹配 | 初始化时缓存资源名映射表 |
+
+---
+
+## 版本节奏
+
+```
+v1.2.3 ──► v1.3.0 ──► v1.3.1 ──► v1.3.2
+  当前      对象映射     多级缓存    限流+JWT
+  2026-03   2026-07     2026-08    2026-09
+
+           ──► v1.4.0 ──► v1.4.1 ──► v1.4.2
+                AI集成    向量搜索    分词升级
+                2026-11   2026-12    2027-01
+
+           ──► v1.5.0 ──► v1.5.1 ──► v1.5.2
+                事件总线   多租户     Aspire
+                2027-03   2027-04    2027-05
+```
+
+---
+
+## 参与贡献
+
+- 功能建议：提交 [Issue](https://github.com/Fat-Snail/OctopusUtils/issues) 并打 `enhancement` 标签
+- 认领任务：查看 [Projects](https://github.com/Fat-Snail/OctopusUtils/projects) 看板
+- 代码贡献：Fork → 分支 → PR，提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/)
+
+> 欢迎通过 Issue 讨论优先级，社区反馈将直接影响版本排期。
