@@ -3,6 +3,7 @@
 using System.Linq.Expressions;
 using Abstractions.Interfaces.Services;
 using APICommon;
+using Mapping;
 using Microsoft.Extensions.Logging;
 using Repositories.Interfaces;
 
@@ -27,14 +28,22 @@ public abstract class CrudServiceBase<TEntity, TKey, TDto, TCreateDto, TUpdateDt
     protected virtual IRepository<TEntity, TKey> Repository => _repositoryLazy.Value;
 
     /// <summary>
+    /// 对象映射器（可选）。注入后 MapToDto / MapToEntity / UpdateEntityFromDto 默认使用映射器，无需子类重写。
+    /// </summary>
+    protected IObjectMapper? Mapper { get; }
+
+    /// <summary>
     /// 构造函数
     /// </summary>
     /// <param name="unitOfWork">工作单元</param>
     /// <param name="logger">日志记录器（可选）</param>
+    /// <param name="mapper">对象映射器（可选，注入后可零配置 CRUD 映射）</param>
     protected CrudServiceBase(IUnitOfWork unitOfWork,
-        ILogger<CrudServiceBase<TEntity, TKey, TDto, TCreateDto, TUpdateDto>>? logger = null)
+        ILogger<CrudServiceBase<TEntity, TKey, TDto, TCreateDto, TUpdateDto>>? logger = null,
+        IObjectMapper? mapper = null)
         : base(unitOfWork, logger)
     {
+        Mapper = mapper;
         _repositoryLazy = new Lazy<IRepository<TEntity, TKey>>(() => unitOfWork.GetRepository<TEntity, TKey>());
     }
 
@@ -48,34 +57,32 @@ public abstract class CrudServiceBase<TEntity, TKey, TDto, TCreateDto, TUpdateDt
     /// <returns>DTO</returns>
     protected virtual TDto MapToDto(TEntity entity)
     {
-        // 默认实现：使用反射或手动映射
-        // 子类应该重写此方法以实现具体的映射逻辑
-        // 建议使用AutoMapper或其他映射工具
-        throw new NotImplementedException($"请重写 {nameof(MapToDto)} 方法以实现实体到DTO的映射");
+        if (Mapper != null)
+            return Mapper.Map<TEntity, TDto>(entity);
+        throw new NotImplementedException($"请重写 {nameof(MapToDto)} 方法，或注入 IObjectMapper 以启用零配置映射");
     }
 
     /// <summary>
     /// 将DTO映射到实体（用于创建）
     /// </summary>
-    /// <param name="createDto">创建DTO</param>
-    /// <returns>实体</returns>
     protected virtual TEntity MapToEntity(TCreateDto createDto)
     {
-        // 默认实现：使用反射或手动映射
-        // 子类应该重写此方法以实现具体的映射逻辑
-        throw new NotImplementedException($"请重写 {nameof(MapToEntity)} 方法以实现创建DTO到实体的映射");
+        if (Mapper != null)
+            return Mapper.Map<TCreateDto, TEntity>(createDto);
+        throw new NotImplementedException($"请重写 {nameof(MapToEntity)} 方法，或注入 IObjectMapper 以启用零配置映射");
     }
 
     /// <summary>
     /// 使用更新DTO更新实体
     /// </summary>
-    /// <param name="entity">现有实体</param>
-    /// <param name="updateDto">更新DTO</param>
     protected virtual void UpdateEntityFromDto(TEntity entity, TUpdateDto updateDto)
     {
-        // 默认实现：使用反射或手动映射
-        // 子类应该重写此方法以实现具体的更新逻辑
-        throw new NotImplementedException($"请重写 {nameof(UpdateEntityFromDto)} 方法以实现从更新DTO更新实体");
+        if (Mapper != null)
+        {
+            Mapper.Map(updateDto, entity);
+            return;
+        }
+        throw new NotImplementedException($"请重写 {nameof(UpdateEntityFromDto)} 方法，或注入 IObjectMapper 以启用零配置映射");
     }
 
     /// <summary>
