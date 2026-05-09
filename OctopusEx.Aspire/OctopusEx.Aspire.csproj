@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>OctopusEx.Aspire</AssemblyName>
+    <RootNamespace>OctopusEx.Aspire</RootNamespace>
+    <AssemblyTitle>OctopusEx Aspire 集成</AssemblyTitle>
+    <Description>OctopusUtils 与 .NET Aspire 的深度集成包：ServiceDefaults、统一 OTel、健康检查、服务发现的开箱即用预设。</Description>
+    <Company>Fatty Coder</Company>
+    <Copyright>©2024-2026 Fatty Coder</Copyright>
+    <VersionPrefix>1.5</VersionPrefix>
+    <VersionSuffix>$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</VersionSuffix>
+    <Version>$(VersionPrefix).$(VersionSuffix)</Version>
+    <FileVersion>$(Version)</FileVersion>
+    <AssemblyVersion>$(VersionPrefix).$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</AssemblyVersion>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../octopus-key.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>OctopusEx.Aspire</PackageId>
+    <Authors>Fatty Coder</Authors>
+    <RepositoryUrl>https://github.com/Fat-Snail/OctopusUtils</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>OctopusEx;Aspire;ServiceDefaults;OpenTelemetry</PackageTags>
+    <PackageIcon>favicon.png</PackageIcon>
+    <PackageReleaseNotes>OctopusEx 与 .NET Aspire 集成</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\favicon.png" Link="favicon.png" PackagePath="\" />
+    <None Include="../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.5.0" />
+    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.3.1" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0" />
+  </ItemGroup>
+
+</Project>

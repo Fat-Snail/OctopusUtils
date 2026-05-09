@@ -1,7 +1,7 @@
 # OctopusUtils Roadmap
 
-> 当前版本：**v1.4.2**（2026-05-09）  
-> 下一里程碑：**v1.5.0**（预计 2027-03）
+> 当前版本：**v1.5.2**（2026-05-10）  
+> 下一里程碑：长期技术债治理
 
 ---
 
@@ -22,6 +22,9 @@
 | ✅ v1.4.0 | 2026-05 | Microsoft.Extensions.AI 集成、PromptTemplate、ChatHistory、结构化输出 |
 | ✅ v1.4.1 | 2026-05 | 向量搜索抽象、内存实现、混合检索（RRF）、Channel 索引管道 |
 | ✅ v1.4.2 | 2026-05 | IChineseSegmenter 抽象、词典热加载、新词发现、POS 驱动 NER |
+| ✅ v1.5.0 | 2026-05 | 领域事件总线（IEventBus）、IDomainEventCollector、死信队列、自动扫描注册处理器 |
+| ✅ v1.5.1 | 2026-05 | 多租户（ICurrentTenant、Header/Query/Subdomain/JWT 解析、EF 全局过滤器） |
+| ✅ v1.5.2 | 2026-05 | OctopusEx.Aspire 包：ServiceDefaults、OTLP、HTTP 弹性、服务发现 |
 
 ---
 
