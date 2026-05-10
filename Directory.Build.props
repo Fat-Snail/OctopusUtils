@@ -1,0 +1,20 @@
+<Project>
+
+  <!--
+    解决方案级 MSBuild 默认配置。所有子项目自动继承。
+    注意：测试项目通过自身 csproj 已设置 GenerateDocumentationFile=false，
+    它们不会被这里的 GenerateDocumentationFile=true 影响（子级覆盖父级）。
+  -->
+
+  <PropertyGroup>
+    <!--
+      CS1591 (缺少 XML 注释)：当前代码库存在大量公开类型缺少 XML 注释，
+      包括从 JiebaNet / NewLife.Core / Util 等第三方项目 vendor 的代码。
+      逐个补全成本极高，因此全局抑制此警告，新代码通过 code review 保证 XML 完整。
+
+      跟踪在 roadmap.md → "长期技术债" 章节。
+    -->
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+</Project>

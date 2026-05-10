@@ -4,7 +4,7 @@
 /// <remarks>常用匿名函数或者Lambda表达式作为委托。</remarks>
 /// <typeparam name="TKey">键类型</typeparam>
 /// <typeparam name="TValue">值类型</typeparam>
-[Obsolete("请使用Newlife的MemoryCache")]
+[Obsolete("v1.5+ 已统一缓存抽象，请改用 OctopusEx.WebCore.Caching.ICacheService（builder.Services.AddSimpleCache() / AddMultiLevelCache()）。本类型计划在 v2.0 移除。")]
 public class DictionaryCache<TKey, TValue> : IDictionary<TKey, TValue>, IDisposable
 {
     #region IEnumerable<KeyValuePair<TKey,TValue>> 成员

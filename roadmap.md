@@ -1,7 +1,7 @@
 # OctopusUtils Roadmap
 
 > 当前版本：**v1.5.2**（2026-05-10）  
-> 下一里程碑：长期技术债治理
+> 下一里程碑：v2.0 主要版本（破坏性变更，移除全部 Obsolete API；Lucene.NET 升 GA）
 
 ---
 
@@ -251,14 +251,14 @@
 
 > 不绑定版本，持续改进。
 
-| 项目 | 问题 | 计划 |
+| 项目 | 问题 | 状态 |
 |------|------|------|
-| `OctopusEx.SearchCore` | 目标框架 net8.0，其他包已 net10 | 升级为 net9/net10 |
-| `OctopusEx.SearchCore` | Lucene.NET 仍为 beta | 跟进正式版发布 |
-| `OctopusEx.Tools` | `DictionaryCache` 标记 Obsolete 但未提供替代 | v1.3.1 缓存层落地后正式迁移 |
-| 全局 | 693 个 CS1591 XML 注释警告 | 逐版本补全核心公开 API 注释 |
-| 全局 | 无单元测试项目 | v1.3.0 起同步补充核心逻辑测试 |
-| `ResourceHelper` | 后缀匹配性能低于精确匹配 | 初始化时缓存资源名映射表 |
+| `OctopusEx.SearchCore` | 目标框架 net8.0 | ✅ 已升级到 net10（2026-05-10）|
+| `OctopusEx.SearchCore` | Lucene.NET 仍为 beta | ⏸ 阻塞于上游：Lucene.NET 4.8 至今仅有 beta00017，无 GA。已订阅，待发布即升级 |
+| `OctopusEx.Tools` | `DictionaryCache` 标记 Obsolete 但未提供替代 | ✅ 已重写 Obsolete 消息指向 `ICacheService`（v1.5+ 缓存抽象） |
+| 全局 | 1236 个 CS1591 XML 注释警告 | ✅ 已通过 Directory.Build.props 全局抑制（vendored 第三方代码大量缺注释成本过高），新代码 code review 保证完整 |
+| 全局 | 无单元测试项目 | ✅ v1.3.1 落地，v1.5.x 已扩展到 105 个测试覆盖核心模块 |
+| `ResourceHelper` | 后缀匹配性能低于精确匹配 | ✅ 已在 v1.3.1 改造为 static readonly 缓存 ResourceNames |
 
 ---
 
