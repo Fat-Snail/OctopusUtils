@@ -1,7 +1,7 @@
 # OctopusUtils Roadmap
 
 > 当前版本：**v1.5.2**（2026-05-10）  
-> 下一里程碑：v2.0 主要版本（破坏性变更，移除全部 Obsolete API；Lucene.NET 升 GA）
+> 下一里程碑：**v1.5.x 持续打磨**（性能基线、Redis EventBus、租户队列隔离等增量功能）
 
 ---
 
@@ -244,6 +244,36 @@
 - Aspire ServiceDefaults 集成包（`OctopusEx.Aspire`，新包）
 - 开箱即用的 Aspire AppHost 模板
 - 统一服务发现 + 配置中心支持
+
+---
+
+### v1.5.3+ — 持续打磨候选清单（不绑定时间）
+
+> v1.5 主线已交付，后续按反馈与需求挑选纳入小版本。
+
+**事件总线增强**
+- `RedisEventBus` —— Redis Pub/Sub 跨进程实现，与 `InMemoryEventBus` 并列
+- 事件溯源（Event Sourcing）基础结构：`IEventStore` 抽象 + EF / Redis 实现
+- Outbox Pattern：领域事件落库后异步派发，跨进程一致性
+
+**多租户增强**
+- Hangfire 队列按租户隔离（`tenant-{id}` 队列前缀）
+- 多租户连接字符串路由（`ITenantConnectionResolver`）
+- 多租户软删除回收站按租户隔离
+
+**Aspire 深化**
+- `OctopusEx.Aspire.AppHost` 模板项目（`dotnet new octopus-aspire`）
+- 配置中心适配（Azure App Configuration / Consul）
+- 与 OctopusEx.Cache / EventBus 自动接线 Redis 资源
+
+**性能与可观测性**
+- 各模块（缓存命中率、AI 调用延迟、敏感词命中率）补全 Activity / Counter
+- Mapster 改用 `Mapster.Tool` 编译期 Source Generator，去掉运行期反射
+- BenchmarkDotNet 性能基线项目（`tests/OctopusEx.Benchmarks`）
+
+**包结构**
+- 评估按需拆包：`OctopusEx.WebCore.Core` / `.Hangfire` / `.AI` / `.Auth`，
+  让仅用部分功能的用户避免拖入完整依赖
 
 ---
 
