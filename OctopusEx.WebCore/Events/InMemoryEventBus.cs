@@ -1,5 +1,7 @@
 namespace OctopusEx.WebCore.Events;
 
+using Observability;
+
 /// <summary>
 /// 进程内事件总线。
 /// - 通过 IServiceProvider 解析 IEventHandler&lt;TEvent&gt;，所有匹配处理器并行执行
@@ -37,6 +39,8 @@ public class InMemoryEventBus : IEventBus
 
     private async Task DispatchAsync(IDomainEvent @event, Type eventType, CancellationToken cancellationToken)
     {
+        OctopusTelemetry.EventsPublished.Add(1, new KeyValuePair<String, Object?>("event", eventType.Name));
+
         var handlerInterface = typeof(IEventHandler<>).MakeGenericType(eventType);
         var handlers = ((IEnumerable<Object>)_serviceProvider.GetServices(handlerInterface)).ToList();
 
@@ -77,6 +81,10 @@ public class InMemoryEventBus : IEventBus
                 catch (OperationCanceledException) { return; }
             }
         }
+
+        OctopusTelemetry.EventHandlerFailures.Add(1,
+            new KeyValuePair<String, Object?>("handler", handler.GetType().Name),
+            new KeyValuePair<String, Object?>("event", eventType.Name));
 
         await _deadLetters.RecordAsync(new DeadLetter(
             @event.EventId,

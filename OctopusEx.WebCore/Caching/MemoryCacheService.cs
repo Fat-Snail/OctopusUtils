@@ -1,6 +1,7 @@
 namespace OctopusEx.WebCore.Caching;
 
 using Microsoft.Extensions.Caching.Memory;
+using Observability;
 
 /// <summary>
 /// 基于 IMemoryCache 的进程内缓存（L1）。
@@ -21,7 +22,9 @@ public class MemoryCacheService : ICacheService, IDisposable
     public Task<T?> GetAsync<T>(String key, CancellationToken cancellationToken = default)
     {
         var fullKey = _options.BuildKey(key);
-        return Task.FromResult(_cache.TryGetValue<T>(fullKey, out var value) ? value : default);
+        var hit = _cache.TryGetValue<T>(fullKey, out var value);
+        OctopusTelemetry.CacheHits.Add(1, new KeyValuePair<String, Object?>("layer", hit ? "L1" : "MISS"));
+        return Task.FromResult(hit ? value : default);
     }
 
     public Task SetAsync<T>(String key, T value, TimeSpan? ttl = null, CancellationToken cancellationToken = default)
@@ -60,6 +63,7 @@ public class MemoryCacheService : ICacheService, IDisposable
             if (_cache.TryGetValue<CacheEntry<T>>(fullKey, out entry) && entry != null)
                 return entry.Value;
 
+            OctopusTelemetry.CacheFactoryExecutions.Add(1);
             var value = await factory(cancellationToken);
 
             if (value != null)

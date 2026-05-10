@@ -1,7 +1,7 @@
 # OctopusUtils Roadmap
 
-> 当前版本：**v1.5.2**（2026-05-10）  
-> 下一里程碑：**v1.5.x 持续打磨**（性能基线、Redis EventBus、租户队列隔离等增量功能）
+> 当前版本：**v1.5.3**（2026-05-10）  
+> 下一里程碑：v1.5.x 长期维护（用户反馈驱动）
 
 ---
 
@@ -25,6 +25,7 @@
 | ✅ v1.5.0 | 2026-05 | 领域事件总线（IEventBus）、IDomainEventCollector、死信队列、自动扫描注册处理器 |
 | ✅ v1.5.1 | 2026-05 | 多租户（ICurrentTenant、Header/Query/Subdomain/JWT 解析、EF 全局过滤器） |
 | ✅ v1.5.2 | 2026-05 | OctopusEx.Aspire 包：ServiceDefaults、OTLP、HTTP 弹性、服务发现 |
+| ✅ v1.5.3 | 2026-05 | RedisEventBus、Outbox、租户连接路由 + Hangfire 队列、Aspire 接线、Telemetry、Benchmarks |
 
 ---
 
@@ -247,33 +248,34 @@
 
 ---
 
-### v1.5.3+ — 持续打磨候选清单（不绑定时间）
+### v1.5.3 — 全方位增强（2026-05-10 落地）
 
-> v1.5 主线已交付，后续按反馈与需求挑选纳入小版本。
+**事件总线**
+- ✅ `RedisEventBus` + `IRedisEventBusConnection` 抽象（不强绑 StackExchange.Redis）
+- ✅ Outbox Pattern：`IOutboxStore` + `InMemoryOutboxStore` + `OutboxDispatcher` 后台服务
+- ⏸ 独立 `IEventStore`：Outbox 已覆盖事件溯源主要场景，推迟到有明确需求
 
-**事件总线增强**
-- `RedisEventBus` —— Redis Pub/Sub 跨进程实现，与 `InMemoryEventBus` 并列
-- 事件溯源（Event Sourcing）基础结构：`IEventStore` 抽象 + EF / Redis 实现
-- Outbox Pattern：领域事件落库后异步派发，跨进程一致性
-
-**多租户增强**
-- Hangfire 队列按租户隔离（`tenant-{id}` 队列前缀）
-- 多租户连接字符串路由（`ITenantConnectionResolver`）
-- 多租户软删除回收站按租户隔离
+**多租户**
+- ✅ `ITenantConnectionResolver` + `DictionaryTenantConnectionResolver`（每租户独立数据库路由）
+- ✅ `HangfireTenantQueueAttribute` —— 按租户路由到 `tenant-{id}` 队列
 
 **Aspire 深化**
-- `OctopusEx.Aspire.AppHost` 模板项目（`dotnet new octopus-aspire`）
-- 配置中心适配（Azure App Configuration / Consul）
-- 与 OctopusEx.Cache / EventBus 自动接线 Redis 资源
+- ✅ `AddOctopusAspireWiring()` —— 自动检测 Redis / 配置中心资源
+- ✅ `AddRemoteKvSource` 远程 KV 配置源占位（用户扩展具体 Provider）
+- ⏸ AppHost 模板：单独的 `dotnet new` 模板包工程，留待后续
 
-**性能与可观测性**
-- 各模块（缓存命中率、AI 调用延迟、敏感词命中率）补全 Activity / Counter
-- Mapster 改用 `Mapster.Tool` 编译期 Source Generator，去掉运行期反射
-- BenchmarkDotNet 性能基线项目（`tests/OctopusEx.Benchmarks`）
+**可观测性**
+- ✅ `OctopusTelemetry`：单一 ActivitySource + Meter，5 类核心指标
+- ✅ Cache + EventBus 已接入指标
+- ✅ Mapster.Tool Source Generator 集成指引（CLI 工具，按需安装）
+
+**性能基线**
+- ✅ `tests/OctopusEx.Benchmarks` 项目落地（BenchmarkDotNet 0.14.0）
+- ✅ Cache / Mapster / VectorMath 三组基准
 
 **包结构**
-- 评估按需拆包：`OctopusEx.WebCore.Core` / `.Hangfire` / `.AI` / `.Auth`，
-  让仅用部分功能的用户避免拖入完整依赖
+- ✅ [docs/PACKAGE-SPLIT-ANALYSIS.md](docs/PACKAGE-SPLIT-ANALYSIS.md)：评估结论"v1.5.x 暂不拆"
+- 触发条件已记录，命名空间已按未来拆包预留
 
 ---
 
