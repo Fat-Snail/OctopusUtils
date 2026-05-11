@@ -1,7 +1,7 @@
 # OctopusUtils Roadmap
 
-> 当前版本：**v1.5.3**（2026-05-10）  
-> 下一里程碑：v1.5.x 长期维护（用户反馈驱动）
+> 当前版本：**v1.5.3**（2026-05-11，含 22 项 code review 修复）  
+> 下一里程碑：**v1.5.4** —— 持久化层补全 + 幂等性（预计 2026-06）
 
 ---
 
@@ -276,6 +276,142 @@
 **包结构**
 - ✅ [docs/PACKAGE-SPLIT-ANALYSIS.md](docs/PACKAGE-SPLIT-ANALYSIS.md)：评估结论"v1.5.x 暂不拆"
 - 触发条件已记录，命名空间已按未来拆包预留
+
+---
+
+### v1.5.4 — 持久化层补全 + 幂等性（预计 2026-06）
+
+> **主题：** 把 v1.5.0–v1.5.3 留下的"仅 InMemory"实现升级为生产可用的持久化实现，并补齐配套的幂等性保证。
+
+**Outbox 持久化**
+- `EFOutboxStore`（`OctopusEx.WebCore`）—— EF Core 实现，与业务事务同 `DbContext` 同事务落库
+  - 自动生成 `outbox_messages` 表；用户 `DbContext.OnModelCreating` 调用 `modelBuilder.AddOctopusOutbox()` 接入
+  - 支持 SQL Server / PostgreSQL / SQLite，按各 DB 的 `RowVersion` / `xmin` 做乐观并发
+  - `FetchPendingAsync` 用 `FOR UPDATE SKIP LOCKED`（PG）/ `READPAST + UPDLOCK`（MSSQL）保证多 dispatcher 实例不冲突
+
+**审计日志持久化**
+- `EFAuditStore`（替换 v1.2 的占位实现）—— `AuditInterceptor` 写入持久存储
+- 按租户 / 时间分区索引
+- 保留期清理后台任务（每日凌晨）
+
+**幂等性保证**
+- `IIdempotencyStore` 抽象 + `EFIdempotencyStore` / `RedisIdempotencyStore` 实现
+- `IdempotencyMiddleware`：基于 `Idempotency-Key` 请求头去重（标准 RFC 草案）
+- 事件消费幂等：`IEventHandler` 装饰器 `[Idempotent]` 自动按 `EventId` 去重
+- 配合 Outbox "至少一次"语义，避免重复消费
+
+**Outbox 重试策略可配**
+- `OutboxOptions.RetryStrategy = Linear | Exponential | ExponentialWithJitter`
+- 失败后 next-retry 时间字段持久化，dispatcher 跳过未到期消息
+
+---
+
+### v1.5.5 — 健康检查、诊断与示例项目（预计 2026-07）
+
+> **主题：** 提升运维可观测性与开发者上手体验。
+
+**模块健康检查**（基于 `IHealthCheck`，挂到 v1.2 已有的 `/health/full` 端点）
+- `CacheHealthCheck` —— Memory 容量、L2 连通性
+- `EventBusHealthCheck` —— DeadLetterQueue size 阈值告警
+- `OutboxHealthCheck` —— 待处理消息积压告警（超过 N 条标 Degraded，超过 M 条标 Unhealthy）
+- `TenantHealthCheck` —— 检查 `ICurrentTenant` / `ITenantConnectionResolver` 已正确注册
+
+**诊断端点**
+- `app.MapOctopusDiagnostics()` —— 暴露 `/octopus/diagnostics`（仅 Development 默认开启）
+- 输出：缓存 hit ratio、Outbox 积压、DeadLetter 列表、当前 ICurrentUser/ICurrentTenant
+- JSON + 简单 HTML 视图
+
+**Hangfire Dashboard 多租户扩展**
+- 按 `JobParameter:TenantId` 过滤任务列表
+- 仅显示当前请求租户的任务（隔离）
+- 全局视图（admin 角色可见所有租户）
+
+**示例项目**
+- 新建 `samples/OctopusEx.Sample.WebApi` —— 完整 demo：
+  - 用户登录（JWT）+ 多租户 Header + 软删除实体 + Mapster 映射 + Hangfire 任务 + 领域事件 + Outbox + AI 客户端
+  - README 含 docker-compose（Postgres + Redis）一键启动
+- 配套 `samples/OctopusEx.Sample.Worker` —— 后台服务 demo（订阅 RedisEventBus、处理 Outbox 消息）
+
+---
+
+### v1.5.6 — 分布式协调（预计 2026-08）
+
+> **主题：** 多实例部署常用的协调原语。
+
+**分布式锁**
+- `IDistributedLock` 抽象 + 3 种实现：
+  - `InMemoryDistributedLock`（单实例 / 测试）
+  - `RedisDistributedLock`（RedLock 算法变体，TTL 自动续期）
+  - `EFDistributedLock`（基于唯一索引的 advisory lock，适合无 Redis 场景）
+- `using var l = await lockSvc.AcquireAsync("key", TimeSpan.FromSeconds(30))` 用法
+- 超时、续期、Token 错误（其他实例已抢到锁）三类错误明确建模
+
+**缓存注解式失效**
+- `[CacheEvict("user:*")]` 标在 Service 方法上，方法执行后按 pattern 失效
+- 内存模式遍历前缀；Redis 模式用 `SCAN + UNLINK`（避免 `KEYS` 阻塞）
+- 与 v1.3.2 的 `[Cache]` 装饰器配套
+
+**分布式 Rate Limiter**
+- `RedisRateLimiter` —— 基于 Redis 的固定/滑动窗口实现
+- 替换 v1.3.3 内存版的 PartitionedRateLimiter（多实例下不再各自计数）
+- 同 `AddSimpleRateLimit` API，仅 backend 切换
+
+**读写分离**
+- `IDbContextRouter` —— 查询路由到 read replica，命令路由到 primary
+- `[ReadReplica]` 标在 Repository 方法上自动切换
+- 主从延迟容忍配置（默认 1s 内的查询仍走 primary，避免读不到刚写入的数据）
+
+---
+
+### v1.5.7 — 批量操作 + 安全合规（预计 2026-09）
+
+> **主题：** 高吞吐数据操作与合规需求。
+
+**批量数据操作**
+- `IRepository<T,K>.BulkInsertAsync / BulkUpdateAsync / BulkDeleteAsync`
+- 默认用 EF Core 10 原生 `ExecuteUpdateAsync` / `ExecuteDeleteAsync`；
+  超过 1000 条自动切换到 `EFCore.BulkExtensions` 路径（按需引用）
+- 进度回调：`onBatchCommitted: (int batchIdx, int count) => ...`
+
+**字段级加密**
+- `[Encrypted]` 标在 Entity 属性上 —— EF Core ValueConverter 自动加解密
+- AES-GCM，密钥从 `IDataProtectionProvider`（ASP.NET Core 内置）派生
+- 密钥轮换支持（旧密钥可读、新密钥写）
+
+**响应级 PII 脱敏**
+- `[Sensitive]` / `[Sensitive(MaskPattern = "***-****-{last4}")]` 标在 DTO 属性上
+- ASP.NET Core OutputFormatter 响应序列化时按当前用户角色脱敏
+- 与 Audit Log 联动：记录原始值与脱敏值，便于合规审计
+
+**审计日志保留期**
+- `AuditOptions.RetentionDays = 90`，每日自动清理过期记录
+- 清理前可选导出到对象存储（`IAuditArchiver` 抽象，用户实现 S3 / OSS / Azure Blob）
+
+**Secret Manager 集成**
+- `ISecretProvider` 抽象 + `EnvSecretProvider` / `AzureKeyVaultSecretProvider` / `HashiCorpVaultSecretProvider`
+- `IConfiguration` 扩展：`config.AddOctopusSecrets()` 把 `secret://path` 占位符替换为真实值
+
+---
+
+## v1.5.x 路线图节奏
+
+```
+v1.5.0 ─► v1.5.1 ─► v1.5.2 ─► v1.5.3 ─┐
+事件总线  多租户    Aspire    全方位    │
+2026-05   2026-05   2026-05   2026-05  │
+                                       │
+v1.5.4 ◄── 持久化 + 幂等性 ◄───────────┤
+2026-06                                │
+                                       │
+v1.5.5 ◄── 健康检查 + 诊断 + 示例 ◄────┤
+2026-07                                │
+                                       │
+v1.5.6 ◄── 分布式协调 ◄────────────────┤
+2026-08                                │
+                                       │
+v1.5.7 ◄── 批量 + 安全合规 ◄───────────┘
+2026-09
+```
 
 ---
 
