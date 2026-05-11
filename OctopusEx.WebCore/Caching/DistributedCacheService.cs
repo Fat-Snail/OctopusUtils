@@ -11,14 +11,20 @@ public class DistributedCacheService : ICacheService
     private readonly IDistributedCache _cache;
     private readonly CacheOptions _options;
     private readonly ILogger<DistributedCacheService> _logger;
+    private readonly IDistributedCacheKeyChecker? _keyChecker;
 
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
 
-    public DistributedCacheService(IDistributedCache cache, CacheOptions options, ILogger<DistributedCacheService> logger)
+    public DistributedCacheService(
+        IDistributedCache cache,
+        CacheOptions options,
+        ILogger<DistributedCacheService> logger,
+        IDistributedCacheKeyChecker? keyChecker = null)
     {
         _cache = cache;
         _options = options;
         _logger = logger;
+        _keyChecker = keyChecker;
     }
 
     public async Task<T?> GetAsync<T>(String key, CancellationToken cancellationToken = default)
@@ -44,8 +50,17 @@ public class DistributedCacheService : ICacheService
     public Task RemoveAsync(String key, CancellationToken cancellationToken = default)
         => _cache.RemoveAsync(_options.BuildKey(key), cancellationToken);
 
-    public async Task<Boolean> ExistsAsync(String key, CancellationToken cancellationToken = default)
-        => (await _cache.GetAsync(_options.BuildKey(key), cancellationToken)) != null;
+    public Task<Boolean> ExistsAsync(String key, CancellationToken cancellationToken = default)
+    {
+        var fullKey = _options.BuildKey(key);
+        // 优先用注入的 key checker（典型 Redis 场景调 EXISTS 命令，零 payload 传输）
+        if (_keyChecker != null)
+            return _keyChecker.ExistsAsync(fullKey, cancellationToken);
+        // Fallback：拉 payload 后判 null。大值场景浪费带宽，建议注册 IDistributedCacheKeyChecker
+        return Fallback();
+
+        async Task<Boolean> Fallback() => (await _cache.GetAsync(fullKey, cancellationToken)) != null;
+    }
 
     public async Task<T?> GetOrAddAsync<T>(
         String key,
