@@ -1,14 +1,19 @@
 namespace OctopusEx.WebCore.Events.Outbox;
 
 /// <summary>
-/// Outbox 消息持久化记录。事务提交时与业务数据一起落库；后台 dispatcher 定期取出并发布。
+/// Outbox 持久化记录。事务内与业务数据一起落库；后台 dispatcher 取出并发布。
+///
+/// 字段为 init-only，构造后只能由 IOutboxStore 实现内部修改 ProcessedAt / AttemptCount / LastError。
 /// </summary>
 public sealed class OutboxMessage
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public String EventType { get; set; } = "";
-    public String Payload { get; set; } = "";
-    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public Guid Id { get; init; } = Guid.NewGuid();
+    public String EventType { get; init; } = "";
+    public String Payload { get; init; } = "";
+    public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
+
+    // 这三个字段在 dispatch 过程中由 IOutboxStore 实现更新。
+    // 设为 public set 以兼容外部存储实现（如 EFOutboxStore 在独立 assembly）。
     public DateTimeOffset? ProcessedAt { get; set; }
     public Int32 AttemptCount { get; set; }
     public String? LastError { get; set; }
@@ -35,14 +40,21 @@ public interface IOutboxStore
     Task MarkFailedAsync(Guid messageId, String error, CancellationToken cancellationToken = default);
 }
 
-/// <summary>进程内 Outbox 存储，用于单元测试与开发环境。</summary>
+/// <summary>
+/// 进程内 Outbox 存储。调用 EnqueueAsync 时若注册了 IOutboxNotifier，会立即唤醒 dispatcher。
+/// 用于单元测试与开发环境。
+/// </summary>
 public class InMemoryOutboxStore : IOutboxStore
 {
     private readonly System.Collections.Concurrent.ConcurrentDictionary<Guid, OutboxMessage> _store = new();
+    private readonly IOutboxNotifier? _notifier;
+
+    public InMemoryOutboxStore(IOutboxNotifier? notifier = null) => _notifier = notifier;
 
     public Task EnqueueAsync(OutboxMessage message, CancellationToken cancellationToken = default)
     {
         _store[message.Id] = message;
+        _notifier?.Notify();
         return Task.CompletedTask;
     }
 

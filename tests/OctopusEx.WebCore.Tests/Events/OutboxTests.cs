@@ -62,6 +62,41 @@ public class OutboxTests
     }
 
     [Fact]
+    public async Task ChannelOutboxNotifier_NotifyWakesWaitImmediately()
+    {
+        var notifier = new ChannelOutboxNotifier();
+        notifier.Notify();
+
+        var waited = await notifier.WaitForNotificationAsync(CancellationToken.None);
+        waited.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ChannelOutboxNotifier_MultipleNotifyCollapseToSingle()
+    {
+        var notifier = new ChannelOutboxNotifier();
+        notifier.Notify();
+        notifier.Notify();
+        notifier.Notify();
+
+        (await notifier.WaitForNotificationAsync(CancellationToken.None)).Should().BeTrue();
+
+        // 第二次等待应阻塞直至超时（通过短取消验证）
+        using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(50));
+        (await notifier.WaitForNotificationAsync(cts.Token)).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task InMemoryOutboxStore_EnqueueTriggersNotifier()
+    {
+        var notifier = new ChannelOutboxNotifier();
+        var store = new InMemoryOutboxStore(notifier);
+        await store.EnqueueAsync(new OutboxMessage { EventType = "T", Payload = "{}" });
+
+        (await notifier.WaitForNotificationAsync(CancellationToken.None)).Should().BeTrue();
+    }
+
+    [Fact]
     public async Task FetchPending_RespectsBatchSize()
     {
         var store = new InMemoryOutboxStore();
