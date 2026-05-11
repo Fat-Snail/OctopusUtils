@@ -27,6 +27,13 @@ public class DistributedCacheService : ICacheService
         return bytes == null ? default : Deserialize<T>(bytes);
     }
 
+    public async Task<CacheResult<T>> TryGetAsync<T>(String key, CancellationToken cancellationToken = default)
+    {
+        // L2 layer: bytes == null → miss; bytes != null → hit (Deserialize 可能返回 null = cached null)
+        var bytes = await _cache.GetAsync(_options.BuildKey(key), cancellationToken);
+        return bytes == null ? CacheResult<T>.Miss : CacheResult<T>.Hit(Deserialize<T>(bytes));
+    }
+
     public Task SetAsync<T>(String key, T value, TimeSpan? ttl = null, CancellationToken cancellationToken = default)
     {
         var actualTtl = _options.ApplyJitter(ttl ?? _options.DefaultTtl);

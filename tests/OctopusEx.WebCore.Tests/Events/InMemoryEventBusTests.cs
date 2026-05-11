@@ -122,6 +122,19 @@ public class InMemoryEventBusTests
     }
 
     [Fact]
+    public async Task PublishAsync_DispatchesByRuntimeType_NotDeclaredType()
+    {
+        // 调用方以基类引用持有派生事件，应按运行时类型路由到对应 handler
+        var derivedHandler = new TrackingHandler();
+        var (bus, _, _) = BuildBus((typeof(IEventHandler<OrderPlacedEvent>), derivedHandler));
+
+        IDomainEvent ev = new OrderPlacedEvent { OrderId = "RT" };
+        await bus.PublishAsync(ev);
+
+        derivedHandler.Handled.Should().Equal("RT");
+    }
+
+    [Fact]
     public void DomainEventCollector_DrainReturnsAndClears()
     {
         var collector = new DomainEventCollector();

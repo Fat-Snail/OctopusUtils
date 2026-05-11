@@ -4,24 +4,27 @@ using Observability;
 
 /// <summary>
 /// 进程内事件总线。
-/// - 通过 IServiceProvider 解析 IEventHandler&lt;TEvent&gt;，所有匹配处理器并行执行
-/// - 单个处理器失败按 maxRetries 指数退避重试；耗尽后写入 IDeadLetterStore
+/// - 每次发布创建独立 DI scope 解析 IEventHandler&lt;TEvent&gt;，避免 captive dependency
+/// - 所有匹配处理器并行执行；单个失败按 maxRetries 指数退避重试，耗尽写 IDeadLetterStore
 /// - 一个处理器失败不影响其他处理器
+/// - 客户端取消（OperationCanceledException）原样抛出，不计入重试与死信
 /// </summary>
 public class InMemoryEventBus : IEventBus
 {
-    private readonly IServiceProvider _serviceProvider;
+    private static readonly ConcurrentDictionary<Type, MethodInfo> HandleMethodCache = new();
+
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly IDeadLetterStore _deadLetters;
     private readonly ILogger<InMemoryEventBus> _logger;
     private readonly EventBusOptions _options;
 
     public InMemoryEventBus(
-        IServiceProvider serviceProvider,
+        IServiceScopeFactory scopeFactory,
         IDeadLetterStore deadLetters,
         ILogger<InMemoryEventBus> logger,
         EventBusOptions? options = null)
     {
-        _serviceProvider = serviceProvider;
+        _scopeFactory = scopeFactory;
         _deadLetters = deadLetters;
         _logger = logger;
         _options = options ?? new EventBusOptions();
@@ -29,7 +32,7 @@ public class InMemoryEventBus : IEventBus
 
     public Task PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
         where TEvent : IDomainEvent
-        => DispatchAsync(@event, typeof(TEvent), cancellationToken);
+        => DispatchAsync(@event, @event!.GetType(), cancellationToken);
 
     public async Task PublishManyAsync(IEnumerable<IDomainEvent> events, CancellationToken cancellationToken = default)
     {
@@ -41,8 +44,12 @@ public class InMemoryEventBus : IEventBus
     {
         OctopusTelemetry.EventsPublished.Add(1, new KeyValuePair<String, Object?>("event", eventType.Name));
 
+        // 关键：每次发布创建独立 scope，避免 Singleton EventBus 持有 Scoped handlers
+        // 造成的 captive dependency（DbContext / HttpClient 等被错误共享）
+        using var scope = _scopeFactory.CreateScope();
+
         var handlerInterface = typeof(IEventHandler<>).MakeGenericType(eventType);
-        var handlers = ((IEnumerable<Object>)_serviceProvider.GetServices(handlerInterface)).ToList();
+        var handlers = ((IEnumerable<Object>)scope.ServiceProvider.GetServices(handlerInterface)).ToList();
 
         if (handlers.Count == 0)
         {
@@ -56,7 +63,8 @@ public class InMemoryEventBus : IEventBus
 
     private async Task InvokeWithRetryAsync(Object handler, IDomainEvent @event, Type eventType, CancellationToken ct)
     {
-        var method = handler.GetType().GetMethod(nameof(IEventHandler<IDomainEvent>.HandleAsync))!;
+        var method = HandleMethodCache.GetOrAdd(handler.GetType(),
+            t => t.GetMethod(nameof(IEventHandler<IDomainEvent>.HandleAsync))!);
         var attempt = 0;
         Exception? last = null;
 
@@ -67,6 +75,11 @@ public class InMemoryEventBus : IEventBus
                 var task = (Task)method.Invoke(handler, new Object[] { @event, ct })!;
                 await task;
                 return;
+            }
+            // 客户端取消不算处理器失败：直接抛出，不计入重试 / 死信
+            catch (OperationCanceledException) when (ct.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception ex)
             {

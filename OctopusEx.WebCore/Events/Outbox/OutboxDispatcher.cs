@@ -33,15 +33,10 @@ public class OutboxDispatcher : BackgroundService
                 var store = scope.ServiceProvider.GetRequiredService<IOutboxStore>();
                 var bus = scope.ServiceProvider.GetRequiredService<IEventBus>();
 
-                var pending = await store.FetchPendingAsync(_options.BatchSize, stoppingToken);
+                // 存储层已过滤超限消息，无需 dispatcher 端二次判断
+                var pending = await store.FetchPendingAsync(_options.BatchSize, _options.MaxAttempts, stoppingToken);
                 foreach (var msg in pending)
                 {
-                    if (msg.AttemptCount >= _options.MaxAttempts)
-                    {
-                        _logger.LogWarning("Outbox message {Id} exceeded MaxAttempts ({Max}), skipping", msg.Id, _options.MaxAttempts);
-                        continue;
-                    }
-
                     try
                     {
                         var type = Type.GetType(msg.EventType)

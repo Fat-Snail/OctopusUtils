@@ -90,6 +90,18 @@ public class MemoryCacheServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task TryGetAsync_DistinguishesMissFromCachedNull()
+    {
+        await _service.SetAsync<String?>("explicit-null", null);
+
+        (await _service.TryGetAsync<String>("never-set")).Found.Should().BeFalse();
+
+        var cachedNull = await _service.TryGetAsync<String>("explicit-null");
+        cachedNull.Found.Should().BeTrue();
+        cachedNull.Value.Should().BeNull();
+    }
+
+    [Fact]
     public async Task KeyPrefix_IsApplied()
     {
         var prefixed = new MemoryCacheService(_memoryCache, new CacheOptions { KeyPrefix = "myapp:" });

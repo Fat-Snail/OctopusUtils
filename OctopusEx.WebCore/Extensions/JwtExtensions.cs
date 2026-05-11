@@ -37,6 +37,7 @@ public static class JwtExtensions
     private sealed class NoopCacheService : Caching.ICacheService
     {
         public Task<T?> GetAsync<T>(String key, CancellationToken ct = default) => Task.FromResult<T?>(default);
+        public Task<Caching.CacheResult<T>> TryGetAsync<T>(String key, CancellationToken ct = default) => Task.FromResult(Caching.CacheResult<T>.Miss);
         public Task SetAsync<T>(String key, T value, TimeSpan? ttl = null, CancellationToken ct = default) => Task.CompletedTask;
         public Task RemoveAsync(String key, CancellationToken ct = default) => Task.CompletedTask;
         public Task<Boolean> ExistsAsync(String key, CancellationToken ct = default) => Task.FromResult(false);

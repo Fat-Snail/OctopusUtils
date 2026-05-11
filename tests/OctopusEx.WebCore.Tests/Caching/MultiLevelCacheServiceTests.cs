@@ -59,6 +59,19 @@ public class MultiLevelCacheServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task GetAsync_RespectsL1CachedNull_DoesNotFallThroughToL2()
+    {
+        // L1 缓存了 null（穿透防护）。即使 L2 有值也不应被查询。
+        await _l1.SetAsync<String?>("k", null);
+        await _l2.SetAsync("k", "from-l2");
+
+        var result = await _multi.TryGetAsync<String>("k");
+
+        result.Found.Should().BeTrue();
+        result.Value.Should().BeNull();
+    }
+
+    [Fact]
     public async Task GetOrAddAsync_FactoryRunsOnce_AcrossLevels()
     {
         var calls = 0;

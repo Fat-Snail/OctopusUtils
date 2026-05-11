@@ -26,21 +26,25 @@ public class MultiLevelCacheService : ICacheService
     }
 
     public async Task<T?> GetAsync<T>(String key, CancellationToken cancellationToken = default)
+        => (await TryGetAsync<T>(key, cancellationToken)).Value;
+
+    public async Task<CacheResult<T>> TryGetAsync<T>(String key, CancellationToken cancellationToken = default)
     {
-        var l1Hit = await _l1.GetAsync<T>(key, cancellationToken);
-        if (l1Hit != null) return l1Hit;
+        // L1 命中（包括缓存了 null 的穿透防护项）直接返回，不再查 L2
+        var l1 = await _l1.TryGetAsync<T>(key, cancellationToken);
+        if (l1.Found) return l1;
 
         try
         {
-            var l2Hit = await _l2.GetAsync<T>(key, cancellationToken);
-            if (l2Hit != null)
-                await _l1.SetAsync(key, l2Hit, _l1Ttl, cancellationToken);
-            return l2Hit;
+            var l2 = await _l2.TryGetAsync<T>(key, cancellationToken);
+            if (l2.Found)
+                await _l1.SetAsync(key, l2.Value!, _l1Ttl, cancellationToken);
+            return l2;
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "L2 cache unavailable, degrading to L1 only for key {Key}", key);
-            return default;
+            return CacheResult<T>.Miss;
         }
     }
 

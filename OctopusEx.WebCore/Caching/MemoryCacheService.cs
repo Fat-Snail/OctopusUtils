@@ -22,16 +22,30 @@ public class MemoryCacheService : ICacheService, IDisposable
     public Task<T?> GetAsync<T>(String key, CancellationToken cancellationToken = default)
     {
         var fullKey = _options.BuildKey(key);
-        var hit = _cache.TryGetValue<T>(fullKey, out var value);
+        // 通过 CacheEntry<T> 包装区分 miss 与 cached null
+        var hit = _cache.TryGetValue<CacheEntry<T>>(fullKey, out var entry) && entry != null;
         OctopusTelemetry.CacheHits.Add(1, new KeyValuePair<String, Object?>("layer", hit ? "L1" : "MISS"));
-        return Task.FromResult(hit ? value : default);
+        return Task.FromResult(hit ? entry!.Value : default);
+    }
+
+    public Task<CacheResult<T>> TryGetAsync<T>(String key, CancellationToken cancellationToken = default)
+    {
+        var fullKey = _options.BuildKey(key);
+        if (_cache.TryGetValue<CacheEntry<T>>(fullKey, out var entry) && entry != null)
+        {
+            OctopusTelemetry.CacheHits.Add(1, new KeyValuePair<String, Object?>("layer", "L1"));
+            return Task.FromResult(CacheResult<T>.Hit(entry.Value));
+        }
+        OctopusTelemetry.CacheHits.Add(1, new KeyValuePair<String, Object?>("layer", "MISS"));
+        return Task.FromResult(CacheResult<T>.Miss);
     }
 
     public Task SetAsync<T>(String key, T value, TimeSpan? ttl = null, CancellationToken cancellationToken = default)
     {
         var fullKey = _options.BuildKey(key);
         var actualTtl = _options.ApplyJitter(ttl ?? _options.DefaultTtl);
-        _cache.Set(fullKey, value, actualTtl);
+        // 统一存储为 CacheEntry<T>，让 GetAsync / TryGetAsync 能区分 miss 与 cached null
+        _cache.Set(fullKey, new CacheEntry<T>(value), actualTtl);
         return Task.CompletedTask;
     }
 
@@ -81,17 +95,23 @@ public class MemoryCacheService : ICacheService, IDisposable
         finally
         {
             semaphore.Release();
-            // 简单清理：信号量空闲时移除（避免无限增长）
-            if (semaphore.CurrentCount == 1 && _locks.TryRemove(fullKey, out var removed) && removed != semaphore)
-                _locks.TryAdd(fullKey, removed);
+            // 注意：故意不清理 _locks 字典。
+            // 之前版本的 TryRemove 清理逻辑存在竞态：清理后另一并发请求会创建新信号量，
+            // 双方拿的不是同一把锁，单飞机制失效；同时已等待者可能拿到 disposed semaphore。
+            // 字典随 unique key 数量增长，但典型场景（key 数量有界）可接受。
+            // 如需严格 GC，请用 LRU 缓存包裹本服务。
         }
     }
 
     public void Dispose()
     {
+        if (_disposed) return;
+        _disposed = true;
         foreach (var sem in _locks.Values) sem.Dispose();
         _locks.Clear();
     }
+
+    private Boolean _disposed;
 
     /// <summary>包装类，区分"未命中"与"命中但值为 null"</summary>
     private sealed record CacheEntry<T>(T Value);

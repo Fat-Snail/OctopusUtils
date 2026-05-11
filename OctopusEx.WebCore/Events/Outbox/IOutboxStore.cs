@@ -23,8 +23,10 @@ public interface IOutboxStore
     /// <summary>把待发送的事件落库（业务事务内调用）。</summary>
     Task EnqueueAsync(OutboxMessage message, CancellationToken cancellationToken = default);
 
-    /// <summary>取出未处理的批次（按时间升序）。</summary>
-    Task<IReadOnlyList<OutboxMessage>> FetchPendingAsync(Int32 batchSize, CancellationToken cancellationToken = default);
+    /// <summary>取出未处理且 AttemptCount &lt; maxAttempts 的批次（按时间升序）。</summary>
+    /// <param name="batchSize">单次最多取出的消息数</param>
+    /// <param name="maxAttempts">已达此重试次数的消息会被跳过（仍保留在存储中供人工处理）</param>
+    Task<IReadOnlyList<OutboxMessage>> FetchPendingAsync(Int32 batchSize, Int32 maxAttempts, CancellationToken cancellationToken = default);
 
     /// <summary>标记成功处理。</summary>
     Task MarkProcessedAsync(Guid messageId, CancellationToken cancellationToken = default);
@@ -44,10 +46,10 @@ public class InMemoryOutboxStore : IOutboxStore
         return Task.CompletedTask;
     }
 
-    public Task<IReadOnlyList<OutboxMessage>> FetchPendingAsync(Int32 batchSize, CancellationToken cancellationToken = default)
+    public Task<IReadOnlyList<OutboxMessage>> FetchPendingAsync(Int32 batchSize, Int32 maxAttempts, CancellationToken cancellationToken = default)
     {
         IReadOnlyList<OutboxMessage> list = _store.Values
-            .Where(m => m.ProcessedAt == null)
+            .Where(m => m.ProcessedAt == null && m.AttemptCount < maxAttempts)
             .OrderBy(m => m.CreatedAt)
             .Take(batchSize)
             .ToList();

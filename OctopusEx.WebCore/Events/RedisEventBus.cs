@@ -47,9 +47,12 @@ public class RedisEventBus : IEventBus, IAsyncDisposable
     public async Task PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
         where TEvent : IDomainEvent
     {
-        var envelope = new EventEnvelope(typeof(TEvent).AssemblyQualifiedName!, JsonSerializer.Serialize(@event, _jsonOptions));
+        // 用运行时类型而非编译期 TEvent，避免调用方持有基类引用时派生类字段被序列化丢失
+        var runtimeType = @event!.GetType();
+        var envelope = new EventEnvelope(runtimeType.AssemblyQualifiedName!,
+            JsonSerializer.Serialize(@event, runtimeType, _jsonOptions));
         var payload = JsonSerializer.Serialize(envelope, _jsonOptions);
-        await _connection.PublishAsync(_channelPrefix + typeof(TEvent).Name, payload, cancellationToken);
+        await _connection.PublishAsync(_channelPrefix + runtimeType.Name, payload, cancellationToken);
     }
 
     public async Task PublishManyAsync(IEnumerable<IDomainEvent> events, CancellationToken cancellationToken = default)

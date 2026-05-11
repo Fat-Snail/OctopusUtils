@@ -15,7 +15,7 @@ public class OutboxTests
         await store.EnqueueAsync(later);
         await store.EnqueueAsync(earlier);
 
-        var batch = await store.FetchPendingAsync(10);
+        var batch = await store.FetchPendingAsync(10, maxAttempts: 5);
         batch[0].EventType.Should().Be("T1");
         batch[1].EventType.Should().Be("T2");
     }
@@ -29,7 +29,7 @@ public class OutboxTests
 
         await store.MarkProcessedAsync(msg.Id);
 
-        (await store.FetchPendingAsync(10)).Should().BeEmpty();
+        (await store.FetchPendingAsync(10, maxAttempts: 5)).Should().BeEmpty();
     }
 
     [Fact]
@@ -49,12 +49,25 @@ public class OutboxTests
     }
 
     [Fact]
+    public async Task FetchPending_FiltersOutMessagesAtOrAboveMaxAttempts()
+    {
+        var store = new InMemoryOutboxStore();
+        var alive = new OutboxMessage { EventType = "T", Payload = "{}", AttemptCount = 2 };
+        var dead = new OutboxMessage { EventType = "T", Payload = "{}", AttemptCount = 5 };
+        await store.EnqueueAsync(alive);
+        await store.EnqueueAsync(dead);
+
+        var batch = await store.FetchPendingAsync(10, maxAttempts: 5);
+        batch.Should().ContainSingle().Which.Id.Should().Be(alive.Id);
+    }
+
+    [Fact]
     public async Task FetchPending_RespectsBatchSize()
     {
         var store = new InMemoryOutboxStore();
         for (var i = 0; i < 50; i++)
             await store.EnqueueAsync(new OutboxMessage { EventType = $"T{i}", Payload = "{}" });
 
-        (await store.FetchPendingAsync(10)).Should().HaveCount(10);
+        (await store.FetchPendingAsync(10, maxAttempts: 5)).Should().HaveCount(10);
     }
 }
