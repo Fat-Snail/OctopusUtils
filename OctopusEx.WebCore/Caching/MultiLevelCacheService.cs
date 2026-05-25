@@ -90,10 +90,11 @@ public class MultiLevelCacheService : ICacheService
         // L1 单飞执行：内部 factory 先查 L2，再 fallback 到外部 factory
         return await _l1.GetOrAddAsync(key, async ct =>
         {
+            // 用 TryGetAsync 区分 miss 与 cached null：L2 cached null 直接返回，不触发外部 factory（穿透防护）
             try
             {
-                var l2Hit = await _l2.GetAsync<T>(key, ct);
-                if (l2Hit != null) return l2Hit;
+                var l2 = await _l2.TryGetAsync<T>(key, ct);
+                if (l2.Found) return l2.Value;
             }
             catch (Exception ex)
             {

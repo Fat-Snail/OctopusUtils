@@ -68,10 +68,11 @@ public class DistributedCacheService : ICacheService
         TimeSpan? ttl = null,
         CancellationToken cancellationToken = default)
     {
+        // 用 TryGetAsync 区分 miss 与 cached null：cached null 直接返回，不再触发 factory（穿透防护）
         try
         {
-            var existing = await GetAsync<T>(key, cancellationToken);
-            if (existing != null) return existing;
+            var existing = await TryGetAsync<T>(key, cancellationToken);
+            if (existing.Found) return existing.Value;
         }
         catch (Exception ex)
         {

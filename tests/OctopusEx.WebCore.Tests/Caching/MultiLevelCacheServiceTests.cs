@@ -86,6 +86,21 @@ public class MultiLevelCacheServiceTests : IDisposable
         calls.Should().Be(1);
     }
 
+    [Fact]
+    public async Task GetOrAddAsync_L2CachedNull_DoesNotTriggerFactory()
+    {
+        // L2 缓存了 null（穿透防护）。L1 miss → L2 命中 null → 直接返回，不应触发 factory。
+        await _l2.SetAsync<String?>("k", null);
+
+        var calls = 0;
+        Task<String?> Factory(CancellationToken _) { Interlocked.Increment(ref calls); return Task.FromResult<String?>("would-be-fetched"); }
+
+        var result = await _multi.GetOrAddAsync("k", Factory);
+
+        result.Should().BeNull();
+        calls.Should().Be(0, "L2 cached null 必须短路，避免穿透到底层数据源");
+    }
+
     /// <summary>
     /// 简单的 IDistributedCache 内存实现，避免引入 Redis 依赖。
     /// </summary>
