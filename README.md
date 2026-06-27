@@ -19,6 +19,12 @@
 
 [快速开始](#-快速开始) · [功能模块](#-功能模块) · [文档](#-文档) · [更新日志](CHANGELOG.md) · [贡献指南](#-贡献)
 
+<br />
+
+[![OctopusUtils 介绍](docs/intro.gif)](docs/intro.mp4)
+
+<sub>▶️ 点击查看 <a href="docs/intro.mp4">高清完整版 (MP4)</a></sub>
+
 </div>
 
 ---
