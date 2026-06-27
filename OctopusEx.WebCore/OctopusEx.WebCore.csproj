@@ -54,6 +54,10 @@
   <ItemGroup>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.23" />
     <PackageReference Include="Mapster" Version="7.4.0" />
+    <!-- Source Generator 集成：Mapster.Tool 是 dotnet CLI 工具（不是 NuGet 库）。
+         运行 `dotnet tool install -g Mapster.Tool` 后通过 `dotnet mapster model -a <asm>`
+         编译期生成映射代码，运行时无反射开销。详见 Mapster 文档。 -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
     <PackageReference Include="Hangfire.Core" Version="1.8.23" />
     <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
@@ -81,6 +85,10 @@
 
   <ItemGroup>
     <Folder Include="DomainCore\Abstractions\Interfaces\DataAccess\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Octopus.Tools\Octopus.Tools.csproj" />
   </ItemGroup>
 
 </Project>

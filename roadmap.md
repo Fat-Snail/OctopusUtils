@@ -1,7 +1,7 @@
 # OctopusUtils Roadmap
 
-> 当前版本：**v1.2.3**（2026-03-07）  
-> 下一里程碑：**v1.3.0**（预计 2026-07）
+> 当前版本：**v1.5.3**（2026-05-11，含 22 项 code review 修复）  
+> 下一里程碑：**v1.5.4** —— 持久化层补全 + 幂等性（预计 2026-06）
 
 ---
 
@@ -15,6 +15,17 @@
 | ✅ v1.2.1 | 2026-02 | DomainCore 完整 CRUD 脚手架 |
 | ✅ v1.2.2 | 2026-02 | HealthCheckExtensions，四个健康端点 |
 | ✅ v1.2.3 | 2026-03 | WhereIf 条件查询扩展，自动注入最佳实践 |
+| ✅ v1.3.0 | 2026-05 | 对象映射（Mapster）、全局异常中间件、软删除（ISoftDelete） |
+| ✅ v1.3.1 | 2026-05 | v1.3.0 收尾强化、ICurrentUser、ProjectTo、单元测试项目落地 |
+| ✅ v1.3.2 | 2026-05 | 多级缓存（L1+L2+穿透/雪崩/击穿防护）、Hangfire 持久化存储 |
+| ✅ v1.3.3 | 2026-05 | JWT 脚手架（含 refresh token）、ASP.NET Core 限流封装 |
+| ✅ v1.4.0 | 2026-05 | Microsoft.Extensions.AI 集成、PromptTemplate、ChatHistory、结构化输出 |
+| ✅ v1.4.1 | 2026-05 | 向量搜索抽象、内存实现、混合检索（RRF）、Channel 索引管道 |
+| ✅ v1.4.2 | 2026-05 | IChineseSegmenter 抽象、词典热加载、新词发现、POS 驱动 NER |
+| ✅ v1.5.0 | 2026-05 | 领域事件总线（IEventBus）、IDomainEventCollector、死信队列、自动扫描注册处理器 |
+| ✅ v1.5.1 | 2026-05 | 多租户（ICurrentTenant、Header/Query/Subdomain/JWT 解析、EF 全局过滤器） |
+| ✅ v1.5.2 | 2026-05 | OctopusEx.Aspire 包：ServiceDefaults、OTLP、HTTP 弹性、服务发现 |
+| ✅ v1.5.3 | 2026-05 | RedisEventBus、Outbox、租户连接路由 + Hangfire 队列、Aspire 接线、Telemetry、Benchmarks |
 
 ---
 
@@ -47,7 +58,51 @@
 
 ---
 
-### v1.3.1 — 多级缓存（预计 2026-08）
+### v1.3.1 — v1.3.0 收尾 + 健壮性强化（预计 2026-06）
+
+> **缘起：** v1.3.0 落地后审核发现若干潜在问题与设计可改进项，先把 v1.3.0 打磨完整再进入下一个大功能。
+
+**🔴 Bug 修复**
+
+- `EFRepository.DeleteRangeAsync` 重写，确保批量删除也走软删除流程（避免绕过软删除直接物理删除）
+- `GlobalExceptionMiddleware` 检查 `Response.HasStarted`，避免响应已开始时二次写入崩溃
+- `GlobalExceptionMiddleware` 显式处理 `OperationCanceledException`，客户端断开返回 499 而非 500
+- `GlobalExceptionMiddleware` 改用 `IOptions<JsonOptions>` 序列化，与框架统一命名规则
+- `SoftDeleteModelBuilderExtensions` 用 `AndAlso` 合并已有查询过滤器，避免覆盖租户隔离等已有过滤逻辑
+
+**🟡 设计改进**
+
+- **`ICurrentUser` 抽象**（新）
+  - 统一封装"当前操作人"获取逻辑（HttpContext / JWT / Hangfire 后台任务）
+  - 同时打通 `AuditInterceptor` 与 `EFRepository` 软删除的 `DeletedBy` 自动填充
+  - 提供 `NullCurrentUser` 默认实现，无 HttpContext 场景下静默降级
+
+- **`IObjectMapper` 增强**
+  - 新增 `ProjectTo<TDest>(IQueryable<TSrc>)` — 在 SQL 层投影列，列表查询性能提升显著
+  - 新增 `MapList<TSrc, TDest>` 集合映射快捷方法
+  - `AddSimpleMapper(Action<TypeAdapterConfig>? configure)` 提供配置回调，DI 风格自定义映射规则
+
+- **软删除 API 完善**
+  - 新增 `IgnoreSoftDelete<T>()` `IQueryable` 扩展（语义比裸 `IgnoreQueryFilters` 清晰）
+  - 新增 `EFRepository.RestoreAsync(TKey id)` 恢复软删除实体
+  - `EFRepository.DeleteAsync` 自动填充 `DeletedBy`（来自 `ICurrentUser`）
+
+- **异常响应增强**
+  - 响应增加 `traceId` 字段（W3C TraceContext / `Activity.Current.Id`），方便排查
+  - 开发环境堆栈裁剪到顶层 N 帧，避免响应体过大
+  - 新增 `ValidationException` 携带字段级错误 `IDictionary<string, string[]>`，前端可做表单错误高亮
+  - `BaseResponse` 新增可选 `Errors` 字段
+
+**🟢 工程质量**
+
+- **单元测试项目落地**（`OctopusEx.WebCore.Tests`）
+  - xUnit + FluentAssertions + Moq + EF Core InMemory
+  - 覆盖核心：异常映射、软删除流程、Mapster 集成、CrudServiceBase 钩子
+  - 路线图技术债"无单元测试项目"由此开始消化
+
+---
+
+### v1.3.2 — 多级缓存（预计 2026-08）
 
 **OctopusEx.WebCore**
 
@@ -56,7 +111,7 @@
   - L1 内存缓存 + L2 Redis 分布式缓存，自动降级
   - 缓存穿透防护（空值缓存 + BloomFilter）
   - 缓存雪崩防护（随机过期时间 + 互斥锁）
-  - 缓存击穿防护（SemaphoreSlim 单飞模式）
+  - 缓存击穿防护(SemaphoreSlim 单飞模式)
 
 - **`[Cache]` 特性装饰器**
   - 标注在 Service 方法上，自动拦截并缓存返回值
@@ -70,7 +125,7 @@
 
 ---
 
-### v1.3.2 — 限流 + JWT 开箱即用（预计 2026-09）
+### v1.3.3 — 限流 + JWT 开箱即用（预计 2026-09）
 
 **OctopusEx.WebCore**
 
@@ -193,27 +248,194 @@
 
 ---
 
+### v1.5.3 — 全方位增强（2026-05-10 落地）
+
+**事件总线**
+- ✅ `RedisEventBus` + `IRedisEventBusConnection` 抽象（不强绑 StackExchange.Redis）
+- ✅ Outbox Pattern：`IOutboxStore` + `InMemoryOutboxStore` + `OutboxDispatcher` 后台服务
+- ⏸ 独立 `IEventStore`：Outbox 已覆盖事件溯源主要场景，推迟到有明确需求
+
+**多租户**
+- ✅ `ITenantConnectionResolver` + `DictionaryTenantConnectionResolver`（每租户独立数据库路由）
+- ✅ `HangfireTenantQueueAttribute` —— 按租户路由到 `tenant-{id}` 队列
+
+**Aspire 深化**
+- ✅ `AddOctopusAspireWiring()` —— 自动检测 Redis / 配置中心资源
+- ✅ `AddRemoteKvSource` 远程 KV 配置源占位（用户扩展具体 Provider）
+- ⏸ AppHost 模板：单独的 `dotnet new` 模板包工程，留待后续
+
+**可观测性**
+- ✅ `OctopusTelemetry`：单一 ActivitySource + Meter，5 类核心指标
+- ✅ Cache + EventBus 已接入指标
+- ✅ Mapster.Tool Source Generator 集成指引（CLI 工具，按需安装）
+
+**性能基线**
+- ✅ `tests/OctopusEx.Benchmarks` 项目落地（BenchmarkDotNet 0.14.0）
+- ✅ Cache / Mapster / VectorMath 三组基准
+
+**包结构**
+- ✅ [docs/PACKAGE-SPLIT-ANALYSIS.md](docs/PACKAGE-SPLIT-ANALYSIS.md)：评估结论"v1.5.x 暂不拆"
+- 触发条件已记录，命名空间已按未来拆包预留
+
+---
+
+### v1.5.4 — 持久化层补全 + 幂等性（预计 2026-06）
+
+> **主题：** 把 v1.5.0–v1.5.3 留下的"仅 InMemory"实现升级为生产可用的持久化实现，并补齐配套的幂等性保证。
+
+**Outbox 持久化**
+- `EFOutboxStore`（`OctopusEx.WebCore`）—— EF Core 实现，与业务事务同 `DbContext` 同事务落库
+  - 自动生成 `outbox_messages` 表；用户 `DbContext.OnModelCreating` 调用 `modelBuilder.AddOctopusOutbox()` 接入
+  - 支持 SQL Server / PostgreSQL / SQLite，按各 DB 的 `RowVersion` / `xmin` 做乐观并发
+  - `FetchPendingAsync` 用 `FOR UPDATE SKIP LOCKED`（PG）/ `READPAST + UPDLOCK`（MSSQL）保证多 dispatcher 实例不冲突
+
+**审计日志持久化**
+- `EFAuditStore`（替换 v1.2 的占位实现）—— `AuditInterceptor` 写入持久存储
+- 按租户 / 时间分区索引
+- 保留期清理后台任务（每日凌晨）
+
+**幂等性保证**
+- `IIdempotencyStore` 抽象 + `EFIdempotencyStore` / `RedisIdempotencyStore` 实现
+- `IdempotencyMiddleware`：基于 `Idempotency-Key` 请求头去重（标准 RFC 草案）
+- 事件消费幂等：`IEventHandler` 装饰器 `[Idempotent]` 自动按 `EventId` 去重
+- 配合 Outbox "至少一次"语义，避免重复消费
+
+**Outbox 重试策略可配**
+- `OutboxOptions.RetryStrategy = Linear | Exponential | ExponentialWithJitter`
+- 失败后 next-retry 时间字段持久化，dispatcher 跳过未到期消息
+
+---
+
+### v1.5.5 — 健康检查、诊断与示例项目（预计 2026-07）
+
+> **主题：** 提升运维可观测性与开发者上手体验。
+
+**模块健康检查**（基于 `IHealthCheck`，挂到 v1.2 已有的 `/health/full` 端点）
+- `CacheHealthCheck` —— Memory 容量、L2 连通性
+- `EventBusHealthCheck` —— DeadLetterQueue size 阈值告警
+- `OutboxHealthCheck` —— 待处理消息积压告警（超过 N 条标 Degraded，超过 M 条标 Unhealthy）
+- `TenantHealthCheck` —— 检查 `ICurrentTenant` / `ITenantConnectionResolver` 已正确注册
+
+**诊断端点**
+- `app.MapOctopusDiagnostics()` —— 暴露 `/octopus/diagnostics`（仅 Development 默认开启）
+- 输出：缓存 hit ratio、Outbox 积压、DeadLetter 列表、当前 ICurrentUser/ICurrentTenant
+- JSON + 简单 HTML 视图
+
+**Hangfire Dashboard 多租户扩展**
+- 按 `JobParameter:TenantId` 过滤任务列表
+- 仅显示当前请求租户的任务（隔离）
+- 全局视图（admin 角色可见所有租户）
+
+**示例项目**
+- 新建 `samples/OctopusEx.Sample.WebApi` —— 完整 demo：
+  - 用户登录（JWT）+ 多租户 Header + 软删除实体 + Mapster 映射 + Hangfire 任务 + 领域事件 + Outbox + AI 客户端
+  - README 含 docker-compose（Postgres + Redis）一键启动
+- 配套 `samples/OctopusEx.Sample.Worker` —— 后台服务 demo（订阅 RedisEventBus、处理 Outbox 消息）
+
+---
+
+### v1.5.6 — 分布式协调（预计 2026-08）
+
+> **主题：** 多实例部署常用的协调原语。
+
+**分布式锁**
+- `IDistributedLock` 抽象 + 3 种实现：
+  - `InMemoryDistributedLock`（单实例 / 测试）
+  - `RedisDistributedLock`（RedLock 算法变体，TTL 自动续期）
+  - `EFDistributedLock`（基于唯一索引的 advisory lock，适合无 Redis 场景）
+- `using var l = await lockSvc.AcquireAsync("key", TimeSpan.FromSeconds(30))` 用法
+- 超时、续期、Token 错误（其他实例已抢到锁）三类错误明确建模
+
+**缓存注解式失效**
+- `[CacheEvict("user:*")]` 标在 Service 方法上，方法执行后按 pattern 失效
+- 内存模式遍历前缀；Redis 模式用 `SCAN + UNLINK`（避免 `KEYS` 阻塞）
+- 与 v1.3.2 的 `[Cache]` 装饰器配套
+
+**分布式 Rate Limiter**
+- `RedisRateLimiter` —— 基于 Redis 的固定/滑动窗口实现
+- 替换 v1.3.3 内存版的 PartitionedRateLimiter（多实例下不再各自计数）
+- 同 `AddSimpleRateLimit` API，仅 backend 切换
+
+**读写分离**
+- `IDbContextRouter` —— 查询路由到 read replica，命令路由到 primary
+- `[ReadReplica]` 标在 Repository 方法上自动切换
+- 主从延迟容忍配置（默认 1s 内的查询仍走 primary，避免读不到刚写入的数据）
+
+---
+
+### v1.5.7 — 批量操作 + 安全合规（预计 2026-09）
+
+> **主题：** 高吞吐数据操作与合规需求。
+
+**批量数据操作**
+- `IRepository<T,K>.BulkInsertAsync / BulkUpdateAsync / BulkDeleteAsync`
+- 默认用 EF Core 10 原生 `ExecuteUpdateAsync` / `ExecuteDeleteAsync`；
+  超过 1000 条自动切换到 `EFCore.BulkExtensions` 路径（按需引用）
+- 进度回调：`onBatchCommitted: (int batchIdx, int count) => ...`
+
+**字段级加密**
+- `[Encrypted]` 标在 Entity 属性上 —— EF Core ValueConverter 自动加解密
+- AES-GCM，密钥从 `IDataProtectionProvider`（ASP.NET Core 内置）派生
+- 密钥轮换支持（旧密钥可读、新密钥写）
+
+**响应级 PII 脱敏**
+- `[Sensitive]` / `[Sensitive(MaskPattern = "***-****-{last4}")]` 标在 DTO 属性上
+- ASP.NET Core OutputFormatter 响应序列化时按当前用户角色脱敏
+- 与 Audit Log 联动：记录原始值与脱敏值，便于合规审计
+
+**审计日志保留期**
+- `AuditOptions.RetentionDays = 90`，每日自动清理过期记录
+- 清理前可选导出到对象存储（`IAuditArchiver` 抽象，用户实现 S3 / OSS / Azure Blob）
+
+**Secret Manager 集成**
+- `ISecretProvider` 抽象 + `EnvSecretProvider` / `AzureKeyVaultSecretProvider` / `HashiCorpVaultSecretProvider`
+- `IConfiguration` 扩展：`config.AddOctopusSecrets()` 把 `secret://path` 占位符替换为真实值
+
+---
+
+## v1.5.x 路线图节奏
+
+```
+v1.5.0 ─► v1.5.1 ─► v1.5.2 ─► v1.5.3 ─┐
+事件总线  多租户    Aspire    全方位    │
+2026-05   2026-05   2026-05   2026-05  │
+                                       │
+v1.5.4 ◄── 持久化 + 幂等性 ◄───────────┤
+2026-06                                │
+                                       │
+v1.5.5 ◄── 健康检查 + 诊断 + 示例 ◄────┤
+2026-07                                │
+                                       │
+v1.5.6 ◄── 分布式协调 ◄────────────────┤
+2026-08                                │
+                                       │
+v1.5.7 ◄── 批量 + 安全合规 ◄───────────┘
+2026-09
+```
+
+---
+
 ## 长期技术债
 
 > 不绑定版本，持续改进。
 
-| 项目 | 问题 | 计划 |
+| 项目 | 问题 | 状态 |
 |------|------|------|
-| `OctopusEx.SearchCore` | 目标框架 net8.0，其他包已 net10 | 升级为 net9/net10 |
-| `OctopusEx.SearchCore` | Lucene.NET 仍为 beta | 跟进正式版发布 |
-| `OctopusEx.Tools` | `DictionaryCache` 标记 Obsolete 但未提供替代 | v1.3.1 缓存层落地后正式迁移 |
-| 全局 | 693 个 CS1591 XML 注释警告 | 逐版本补全核心公开 API 注释 |
-| 全局 | 无单元测试项目 | v1.3.0 起同步补充核心逻辑测试 |
-| `ResourceHelper` | 后缀匹配性能低于精确匹配 | 初始化时缓存资源名映射表 |
+| `OctopusEx.SearchCore` | 目标框架 net8.0 | ✅ 已升级到 net10（2026-05-10）|
+| `OctopusEx.SearchCore` | Lucene.NET 仍为 beta | ⏸ 阻塞于上游：Lucene.NET 4.8 至今仅有 beta00017，无 GA。已订阅，待发布即升级 |
+| `OctopusEx.Tools` | `DictionaryCache` 标记 Obsolete 但未提供替代 | ✅ 已重写 Obsolete 消息指向 `ICacheService`（v1.5+ 缓存抽象） |
+| 全局 | 1236 个 CS1591 XML 注释警告 | ✅ 已通过 Directory.Build.props 全局抑制（vendored 第三方代码大量缺注释成本过高），新代码 code review 保证完整 |
+| 全局 | 无单元测试项目 | ✅ v1.3.1 落地，v1.5.x 已扩展到 105 个测试覆盖核心模块 |
+| `ResourceHelper` | 后缀匹配性能低于精确匹配 | ✅ 已在 v1.3.1 改造为 static readonly 缓存 ResourceNames |
 
 ---
 
 ## 版本节奏
 
 ```
-v1.2.3 ──► v1.3.0 ──► v1.3.1 ──► v1.3.2
-  当前      对象映射     多级缓存    限流+JWT
-  2026-03   2026-07     2026-08    2026-09
+v1.2.3 ──► v1.3.0 ──► v1.3.1 ──► v1.3.2 ──► v1.3.3
+  已完成    已完成      收尾强化    多级缓存    限流+JWT
+  2026-03   2026-05     2026-06    2026-08    2026-09
 
            ──► v1.4.0 ──► v1.4.1 ──► v1.4.2
                 AI集成    向量搜索    分词升级

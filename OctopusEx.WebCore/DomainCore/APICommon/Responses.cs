@@ -95,6 +95,20 @@ public class BaseResponse
     public long Timestamp { get; set; } = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
     /// <summary>
+    /// 链路追踪 ID（仅在错误响应中填充，方便排查）
+    /// </summary>
+    [JsonPropertyName("traceId")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public String? TraceId { get; set; }
+
+    /// <summary>
+    /// 字段级错误（仅在表单验证失败 422 时填充）
+    /// </summary>
+    [JsonPropertyName("errors")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public IDictionary<String, String[]>? Errors { get; set; }
+
+    /// <summary>
     /// 创建一个成功的响应
     /// </summary>
     /// <param name="message">响应消息</param>

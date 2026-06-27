@@ -22,24 +22,41 @@ public static class HangfireExtensions
     }
 
     /// <summary>
-    /// 添加简化的 Hangfire 配置（使用内存存储）
+    /// 添加简化的 Hangfire 配置（默认使用内存存储）
     /// </summary>
     /// <param name="services">服务集合</param>
     /// <param name="workerCount">工作进程数量，默认为 1</param>
     /// <returns>服务集合</returns>
     public static IServiceCollection AddSimpleHangfire(this IServiceCollection services, Int32 workerCount = 1)
-    {
-        services.AddHangfire(configuration => configuration
-            .SetDataCompatibilityLevel(Hangfire.CompatibilityLevel.Version_180)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UseMemoryStorage());
+        => services.AddSimpleHangfire(cfg => cfg.UseMemoryStorage(), workerCount);
 
-        services.AddHangfireServer(options =>
+    /// <summary>
+    /// 添加 Hangfire 配置，自定义存储后端（Redis / SQL Server / PostgreSQL 等）。
+    ///
+    /// 用例：
+    /// <code>
+    /// services.AddSimpleHangfire(cfg =>
+    ///     cfg.UseRedisStorage("localhost:6379", new RedisStorageOptions { Db = 1 }),
+    ///     workerCount: 4);
+    /// </code>
+    ///
+    /// 调用方负责安装具体存储包（如 Hangfire.Pro.Redis / Hangfire.SqlServer / Hangfire.PostgreSql）。
+    /// </summary>
+    public static IServiceCollection AddSimpleHangfire(
+        this IServiceCollection services,
+        Action<IGlobalConfiguration> storageConfigurator,
+        Int32 workerCount = 1)
+    {
+        services.AddHangfire(configuration =>
         {
-            options.WorkerCount = workerCount;
+            configuration
+                .SetDataCompatibilityLevel(Hangfire.CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings();
+            storageConfigurator(configuration);
         });
 
+        services.AddHangfireServer(options => { options.WorkerCount = workerCount; });
         return services;
     }
 
