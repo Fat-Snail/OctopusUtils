@@ -32,6 +32,27 @@ public static class AuditServiceExtensions
     }
 
     /// <summary>
+    /// 注册 EF Core 审计日志存储。需与业务 DbContext 同实例以保证同事务落库。
+    /// </summary>
+    public static IServiceCollection AddAuditStore<TContext>(this IServiceCollection services,
+        Action<AuditRetentionOptions>? configureRetention = null)
+        where TContext : DbContext
+    {
+        services.AddScoped<IAuditStore>(sp => new EFAuditStore(sp.GetRequiredService<TContext>()));
+
+        var retention = new AuditRetentionOptions();
+        configureRetention?.Invoke(retention);
+        services.AddSingleton(retention);
+
+        if (retention.EnableAutoCleanup)
+        {
+            services.AddHostedService<AuditCleanupBackgroundService>();
+        }
+
+        return services;
+    }
+
+    /// <summary>
     /// 配置DbContext使用审计拦截器
     /// </summary>
     public static DbContextOptionsBuilder UseAuditing(this DbContextOptionsBuilder optionsBuilder,
