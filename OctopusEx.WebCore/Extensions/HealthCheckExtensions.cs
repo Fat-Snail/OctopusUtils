@@ -13,7 +13,8 @@ using Microsoft.Extensions.Hosting;
 public static class HealthCheckExtensions
 {
     /// <summary>
-    /// Adds common health checks to the service
+    /// Adds common health checks to the service.
+    /// Auto-detects registered IHealthCheck / ICustomHealthCheck implementations and wires them to the correct tags.
     /// </summary>
     public static TBuilder AddCommonHealthChecks<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
@@ -34,6 +35,27 @@ public static class HealthCheckExtensions
         if ( builder.Services.Any(sd => sd.ServiceType == typeof(CacheHealthCheck)) )
         {
             healthChecks.AddCheck<CacheHealthCheck>("cache", tags: ["cache", "live"]);
+        }
+
+        // v1.5.5 — 新的模块健康检查
+        if ( builder.Services.Any(sd => sd.ServiceType == typeof(OctopusCacheHealthCheck)) )
+        {
+            healthChecks.AddCheck<OctopusCacheHealthCheck>("cache", tags: ["cache", "live"]);
+        }
+
+        if ( builder.Services.Any(sd => sd.ServiceType == typeof(EventBusHealthCheck)) )
+        {
+            healthChecks.AddCheck<EventBusHealthCheck>("event-bus", tags: ["eventbus", "ready"]);
+        }
+
+        if ( builder.Services.Any(sd => sd.ServiceType == typeof(OutboxHealthCheck)) )
+        {
+            healthChecks.AddCheck<OutboxHealthCheck>("outbox", tags: ["outbox", "ready"]);
+        }
+
+        if ( builder.Services.Any(sd => sd.ServiceType == typeof(TenantHealthCheck)) )
+        {
+            healthChecks.AddCheck<TenantHealthCheck>("tenant", tags: ["tenant", "ready"]);
         }
 
         return builder;
@@ -155,5 +177,62 @@ public static class HealthCheckExtensions
     public static IConfigurationSection GetHealthCheckConfiguration(this IHostApplicationBuilder builder)
     {
         return builder.Configuration.GetSection("HealthCheck");
+    }
+
+    // ---- v1.5.5 新增模块健康检查注册 ----
+
+    /// <summary>
+    /// 注册基于 ICacheService 的真实缓存健康检查（替代模拟版 CacheHealthCheck）。
+    /// 需要先注册 ICacheService（通过 AddSimpleCache / AddMultiLevelCache）。
+    /// </summary>
+    public static TBuilder AddOctopusCacheHealthCheck<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    {
+        builder.Services.AddSingleton<OctopusCacheHealthCheck>();
+        builder.Services.AddHealthChecks()
+            .AddCheck<OctopusCacheHealthCheck>("cache", tags: ["cache", "live"]);
+        return builder;
+    }
+
+    /// <summary>
+    /// 注册事件总线健康检查（监控死信队列积压量）。
+    /// </summary>
+    public static TBuilder AddEventBusHealthCheck<TBuilder>(
+        this TBuilder builder,
+        Action<EventBusHealthCheckOptions>? configure = null) where TBuilder : IHostApplicationBuilder
+    {
+        var options = new EventBusHealthCheckOptions();
+        configure?.Invoke(options);
+        builder.Services.AddSingleton(options);
+        builder.Services.AddSingleton<EventBusHealthCheck>();
+        builder.Services.AddHealthChecks()
+            .AddCheck<EventBusHealthCheck>("event-bus", tags: ["eventbus", "ready"]);
+        return builder;
+    }
+
+    /// <summary>
+    /// 注册 Outbox 健康检查（监控待处理消息积压量）。
+    /// </summary>
+    public static TBuilder AddOutboxHealthCheck<TBuilder>(
+        this TBuilder builder,
+        Action<OutboxHealthCheckOptions>? configure = null) where TBuilder : IHostApplicationBuilder
+    {
+        var options = new OutboxHealthCheckOptions();
+        configure?.Invoke(options);
+        builder.Services.AddSingleton(options);
+        builder.Services.AddSingleton<OutboxHealthCheck>();
+        builder.Services.AddHealthChecks()
+            .AddCheck<OutboxHealthCheck>("outbox", tags: ["outbox", "ready"]);
+        return builder;
+    }
+
+    /// <summary>
+    /// 注册多租户健康检查（验证 ICurrentTenant / ITenantConnectionResolver 注册状态）。
+    /// </summary>
+    public static TBuilder AddTenantHealthCheck<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    {
+        builder.Services.AddSingleton<TenantHealthCheck>();
+        builder.Services.AddHealthChecks()
+            .AddCheck<TenantHealthCheck>("tenant", tags: ["tenant", "ready"]);
+        return builder;
     }
 }

@@ -64,8 +64,8 @@ public class OutboxDispatcher : BackgroundService
                     catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) { return; }
                     catch (Exception ex)
                     {
-                        _logger.LogWarning(ex, "Outbox message {Id} dispatch failed", msg.Id);
-                        await store.MarkFailedAsync(msg.Id, ex.Message, stoppingToken);
+                        _logger.LogWarning(ex, "Outbox message {Id} dispatch failed (attempt {Attempt})", msg.Id, msg.AttemptCount + 1);
+                        await store.MarkFailedAsync(msg.Id, ex.Message, _options.RetryStrategy, _options.RetryInterval, stoppingToken);
                     }
                 }
             }
@@ -99,17 +99,4 @@ public class OutboxDispatcher : BackgroundService
         pollCts.Cancel();
         try { await winner; } catch (OperationCanceledException) { }
     }
-}
-
-/// <summary>Outbox 派发配置</summary>
-public class OutboxOptions
-{
-    /// <summary>派发轮询间隔。Notifier 启用时是 fallback 上限；纯 polling 模式下是真实间隔。</summary>
-    public TimeSpan PollInterval { get; set; } = TimeSpan.FromSeconds(1);
-
-    /// <summary>每次批量取出的消息数</summary>
-    public Int32 BatchSize { get; set; } = 100;
-
-    /// <summary>最大重试次数，超过则跳过（保留消息供人工处理）</summary>
-    public Int32 MaxAttempts { get; set; } = 5;
 }

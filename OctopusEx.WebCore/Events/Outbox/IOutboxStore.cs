@@ -3,7 +3,7 @@ namespace OctopusEx.WebCore.Events.Outbox;
 /// <summary>
 /// Outbox 持久化记录。事务内与业务数据一起落库；后台 dispatcher 取出并发布。
 ///
-/// 字段为 init-only，构造后只能由 IOutboxStore 实现内部修改 ProcessedAt / AttemptCount / LastError。
+/// 字段为 init-only，构造后只能由 IOutboxStore 实现内部修改 ProcessedAt / AttemptCount / LastError / NextRetry。
 /// </summary>
 public sealed class OutboxMessage
 {
@@ -12,11 +12,12 @@ public sealed class OutboxMessage
     public String Payload { get; init; } = "";
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
 
-    // 这三个字段在 dispatch 过程中由 IOutboxStore 实现更新。
+    // 这四个字段在 dispatch 过程中由 IOutboxStore 实现更新。
     // 设为 public set 以兼容外部存储实现（如 EFOutboxStore 在独立 assembly）。
     public DateTimeOffset? ProcessedAt { get; set; }
     public Int32 AttemptCount { get; set; }
     public String? LastError { get; set; }
+    public DateTimeOffset? NextRetry { get; set; }
 }
 
 /// <summary>
@@ -36,8 +37,11 @@ public interface IOutboxStore
     /// <summary>标记成功处理。</summary>
     Task MarkProcessedAsync(Guid messageId, CancellationToken cancellationToken = default);
 
-    /// <summary>标记失败（自增 AttemptCount，记录错误，留待下次重试）。</summary>
+    /// <summary>标记失败（自增 AttemptCount，记录错误，计算 NextRetry，留待下次重试）。</summary>
     Task MarkFailedAsync(Guid messageId, String error, CancellationToken cancellationToken = default);
+
+    /// <summary>标记失败并指定重试策略。由实现计算 NextRetry 时间。</summary>
+    Task MarkFailedAsync(Guid messageId, String error, RetryStrategy retryStrategy, TimeSpan retryInterval, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -60,9 +64,10 @@ public class InMemoryOutboxStore : IOutboxStore
 
     public Task<IReadOnlyList<OutboxMessage>> FetchPendingAsync(Int32 batchSize, Int32 maxAttempts, CancellationToken cancellationToken = default)
     {
+        var now = DateTimeOffset.UtcNow;
         IReadOnlyList<OutboxMessage> list = _store.Values
-            .Where(m => m.ProcessedAt == null && m.AttemptCount < maxAttempts)
-            .OrderBy(m => m.CreatedAt)
+            .Where(m => m.ProcessedAt == null && m.AttemptCount < maxAttempts && (!m.NextRetry.HasValue || m.NextRetry.Value <= now))
+            .OrderBy(m => m.NextRetry ?? m.CreatedAt)
             .Take(batchSize)
             .ToList();
         return Task.FromResult(list);
@@ -74,15 +79,28 @@ public class InMemoryOutboxStore : IOutboxStore
         return Task.CompletedTask;
     }
 
-    public Task MarkFailedAsync(Guid messageId, String error, CancellationToken cancellationToken = default)
+    public Task MarkFailedAsync(Guid messageId, String error, RetryStrategy retryStrategy, TimeSpan retryInterval, CancellationToken cancellationToken = default)
     {
         if (_store.TryGetValue(messageId, out var msg))
         {
             msg.AttemptCount++;
             msg.LastError = error;
+            msg.NextRetry = CalculateNextRetry(msg.AttemptCount, retryStrategy, retryInterval);
         }
         return Task.CompletedTask;
     }
+
+    public Task MarkFailedAsync(Guid messageId, String error, CancellationToken cancellationToken = default)
+        => MarkFailedAsync(messageId, error, RetryStrategy.ExponentialWithJitter, TimeSpan.FromSeconds(30), cancellationToken);
+
+    private static DateTimeOffset CalculateNextRetry(Int32 attemptCount, RetryStrategy strategy, TimeSpan baseInterval) =>
+        strategy switch
+        {
+            RetryStrategy.Linear => DateTimeOffset.UtcNow + baseInterval * attemptCount,
+            RetryStrategy.Exponential => DateTimeOffset.UtcNow + baseInterval * Math.Pow(2, attemptCount - 1),
+            RetryStrategy.ExponentialWithJitter => DateTimeOffset.UtcNow + Random.Shared.NextDouble() * baseInterval * Math.Pow(2, attemptCount - 1) + baseInterval,
+            _ => DateTimeOffset.UtcNow + baseInterval * Math.Pow(2, attemptCount - 1),
+        };
 
     /// <summary>测试辅助：列出所有消息（含已处理）。</summary>
     public IReadOnlyList<OutboxMessage> Snapshot() => _store.Values.ToList();

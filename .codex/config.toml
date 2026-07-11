@@ -1,0 +1,5 @@
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+DOTNET_CLI_TELEMETRY_OPTOUT = "1"

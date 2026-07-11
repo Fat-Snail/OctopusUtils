@@ -1,7 +1,7 @@
 # OctopusUtils Roadmap
 
-> 当前版本：**v1.5.3**（2026-05-11，含 22 项 code review 修复）  
-> 下一里程碑：**v1.5.4** —— 持久化层补全 + 幂等性（预计 2026-06）
+> 当前版本：**v1.5.5**（2026-07-07，健康检查 + 诊断 + 示例项目）
+> 下一里程碑：**v1.5.6** —— 分布式协调（预计 2026-08）
 
 ---
 
@@ -26,6 +26,8 @@
 | ✅ v1.5.1 | 2026-05 | 多租户（ICurrentTenant、Header/Query/Subdomain/JWT 解析、EF 全局过滤器） |
 | ✅ v1.5.2 | 2026-05 | OctopusEx.Aspire 包：ServiceDefaults、OTLP、HTTP 弹性、服务发现 |
 | ✅ v1.5.3 | 2026-05 | RedisEventBus、Outbox、租户连接路由 + Hangfire 队列、Aspire 接线、Telemetry、Benchmarks |
+| ✅ v1.5.4 | 2026-06 | 持久化层补全（EFOutboxStore、EFAuditStore）、幂等性（IdempotencyMiddleware、EF/Redis 实现） |
+| ✅ v1.5.5 | 2026-07 | 模块健康检查（Cache/EventBus/Outbox/Tenant）、诊断端点（/octopus/diagnostics）、Hangfire 多租户 Dashboard、示例项目（WebApi + Worker） |
 
 ---
 
@@ -306,60 +308,86 @@
 
 ---
 
-### v1.5.5 — 健康检查、诊断与示例项目（预计 2026-07）
+### v1.5.5 — 健康检查、诊断与示例项目（2026-07-07 落地）
 
 > **主题：** 提升运维可观测性与开发者上手体验。
 
 **模块健康检查**（基于 `IHealthCheck`，挂到 v1.2 已有的 `/health/full` 端点）
-- `CacheHealthCheck` —— Memory 容量、L2 连通性
-- `EventBusHealthCheck` —— DeadLetterQueue size 阈值告警
-- `OutboxHealthCheck` —— 待处理消息积压告警（超过 N 条标 Degraded，超过 M 条标 Unhealthy）
-- `TenantHealthCheck` —— 检查 `ICurrentTenant` / `ITenantConnectionResolver` 已正确注册
+- ✅ `OctopusCacheHealthCheck` —— 基于 ICacheService 的真实连通性检测（读写测试 key）
+- ✅ `EventBusHealthCheck` —— DeadLetterQueue size 阈值告警（Degraded 10 / Unhealthy 100）
+- ✅ `OutboxHealthCheck` —— 待处理消息积压告警（Degraded 100 / Unhealthy 500）
+- ✅ `TenantHealthCheck` —— 检查 `ICurrentTenant` / `ITenantConnectionResolver` 已正确注册
 
 **诊断端点**
-- `app.MapOctopusDiagnostics()` —— 暴露 `/octopus/diagnostics`（仅 Development 默认开启）
-- 输出：缓存 hit ratio、Outbox 积压、DeadLetter 列表、当前 ICurrentUser/ICurrentTenant
-- JSON + 简单 HTML 视图
+- ✅ `app.MapOctopusDiagnostics()` —— 暴露 `/octopus/diagnostics`（Development 自动开启，Production 需显式授权）
+- ✅ 输出：缓存状态、Outbox 积压、DeadLetter 列表、当前 ICurrentUser/ICurrentTenant
+- ✅ JSON + 简单 HTML 视图（根据 Accept 头自动选择）
 
 **Hangfire Dashboard 多租户扩展**
-- 按 `JobParameter:TenantId` 过滤任务列表
-- 仅显示当前请求租户的任务（隔离）
-- 全局视图（admin 角色可见所有租户）
+- ✅ `app.UseHangfireTenantDashboard()` —— 注入租户上下文，按 TenantId 过滤展示
+- ✅ admin 角色可见所有租户，非 admin 仅可见自己租户的任务
+- ✅ 支持 `?tenant=` query / cookie 切换租户视图
 
 **示例项目**
-- 新建 `samples/OctopusEx.Sample.WebApi` —— 完整 demo：
-  - 用户登录（JWT）+ 多租户 Header + 软删除实体 + Mapster 映射 + Hangfire 任务 + 领域事件 + Outbox + AI 客户端
-  - README 含 docker-compose（Postgres + Redis）一键启动
-- 配套 `samples/OctopusEx.Sample.Worker` —— 后台服务 demo（订阅 RedisEventBus、处理 Outbox 消息）
+- ✅ `samples/OctopusEx.Sample.WebApi` —— 完整 demo：JWT + 多租户 + 软删除 + Mapster + Hangfire + 事件总线 + Outbox + 健康检查 + 诊断
+- ✅ `samples/OctopusEx.Sample.Worker` —— 后台服务 demo：事件总线集成，演示独立 Worker 如何处理领域事件
 
 ---
 
 ### v1.5.6 — 分布式协调（预计 2026-08）
 
-> **主题：** 多实例部署常用的协调原语。
+> **主题：** 让 OctopusEx.WebCore 在多实例部署下具备可靠、可观测的协调能力。
+
+**范围原则**
+- 本版聚焦 Redis 单后端的生产可用能力，不同时引入数据库锁、读写分离等高复杂度特性
+- 所有协调 key 默认包含应用名与环境名，避免不同应用或环境相互污染
+- Redis 故障时支持 `FailOpen` / `FailClosed` 策略，并为各功能给出安全默认值
 
 **分布式锁**
-- `IDistributedLock` 抽象 + 3 种实现：
-  - `InMemoryDistributedLock`（单实例 / 测试）
-  - `RedisDistributedLock`（RedLock 算法变体，TTL 自动续期）
-  - `EFDistributedLock`（基于唯一索引的 advisory lock，适合无 Redis 场景）
-- `using var l = await lockSvc.AcquireAsync("key", TimeSpan.FromSeconds(30))` 用法
-- 超时、续期、Token 错误（其他实例已抢到锁）三类错误明确建模
+- `IDistributedLockProvider` + `IDistributedLockHandle : IAsyncDisposable` 抽象
+- `InMemoryDistributedLockProvider`（单实例 / 测试）
+- `RedisDistributedLockProvider`（租约 TTL + 自动续期）
+- 支持等待超时、租约时间、取消令牌与租约丢失状态
+- Redis 释放锁使用原子 Compare-and-Delete，防止误删其他实例重新获取的锁
+- Outbox Dispatcher、审计清理及缓存维护任务可选择通过分布式锁保证单活
 
-**缓存注解式失效**
-- `[CacheEvict("user:*")]` 标在 Service 方法上，方法执行后按 pattern 失效
-- 内存模式遍历前缀；Redis 模式用 `SCAN + UNLINK`（避免 `KEYS` 阻塞）
-- 与 v1.3.2 的 `[Cache]` 装饰器配套
+**缓存模式失效（P1）**
+- `ICacheService.RemoveByPatternAsync(pattern)`，先稳定服务能力，再考虑方法拦截特性
+- 内存实现维护 key 索引；Redis 实现使用 `SCAN + UNLINK`，禁止使用阻塞式 `KEYS`
+- `[CacheEvict]` 延后到统一拦截器机制成熟后实现
 
 **分布式 Rate Limiter**
-- `RedisRateLimiter` —— 基于 Redis 的固定/滑动窗口实现
-- 替换 v1.3.3 内存版的 PartitionedRateLimiter（多实例下不再各自计数）
-- 同 `AddSimpleRateLimit` API，仅 backend 切换
+- `RedisRateLimiter` 首版实现固定窗口，使用 Lua 保证计数与过期设置原子性
+- 支持 IP、用户、租户三个限流维度
+- 沿用 `AddSimpleRateLimit` API，仅切换 backend
+- 超限返回标准 `429`、`Retry-After` 与统一 `BaseResponse` 响应
 
-**读写分离**
-- `IDbContextRouter` —— 查询路由到 read replica，命令路由到 primary
-- `[ReadReplica]` 标在 Repository 方法上自动切换
-- 主从延迟容忍配置（默认 1s 内的查询仍走 primary，避免读不到刚写入的数据）
+**可观测性与诊断**
+- 指标：锁获取成功、等待超时、租约丢失、持锁时长、限流通过与拒绝次数
+- Activity 只记录哈希或分类后的业务 key，避免标签高基数和敏感数据泄漏
+- `/octopus/diagnostics` 显示锁与限流后端状态，不暴露 Redis 地址或凭据
+
+**验收标准**
+- 两个独立进程竞争同一把锁时，同一时刻只有一个进入临界区
+- 持锁进程异常退出后，锁可在租约到期后恢复；续期失败时 handle 明确进入 `LeaseLost` 状态
+- 100 并发请求下 Redis 固定窗口计数不超发
+- Redis 不可用时 `FailOpen` / `FailClosed` 行为均有集成测试
+- 单元测试覆盖锁状态机，并使用真实 Redis 完成跨进程集成测试
+- Sample 演示“跨实例后台任务单活”和“按租户限流”
+- `dotnet build`、全部测试与 NuGet pack 通过，新增公共 API 具备 XML 文档
+
+**实施顺序**
+1. 冻结锁、租约、故障策略与限流接口
+2. 完成 InMemory 锁及状态机测试
+3. 完成 Redis 锁、原子释放、自动续期与跨进程测试
+4. 接入后台任务、Telemetry 与诊断端点
+5. 完成 Redis 固定窗口限流及并发测试
+6. 视进度实现缓存模式失效，最后补齐 Sample、文档与打包验证
+
+**明确延期**
+- `EFDistributedLockProvider`：数据库方言与锁语义差异较大，后续以实验功能单独评估
+- Redis 滑动窗口限流、RedLock 多节点算法：待固定窗口和单 Redis 租约锁稳定后演进
+- `IDbContextRouter` / `[ReadReplica]`：独立规划为后续版本，单独解决事务一致性与“读己之写”问题
 
 ---
 

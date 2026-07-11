@@ -1,5 +1,6 @@
 namespace OctopusEx.WebCore.Events;
 
+using Idempotency;
 using Observability;
 
 /// <summary>
@@ -8,6 +9,7 @@ using Observability;
 /// - 所有匹配处理器并行执行；单个失败按 maxRetries 指数退避重试，耗尽写 IDeadLetterStore
 /// - 一个处理器失败不影响其他处理器
 /// - 客户端取消（OperationCanceledException）原样抛出，不计入重试与死信
+/// - 支持 [Idempotent] 属性：标在处理器上，按 EventId 去重
 /// </summary>
 public class InMemoryEventBus : IEventBus
 {
@@ -15,6 +17,7 @@ public class InMemoryEventBus : IEventBus
 
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IDeadLetterStore _deadLetters;
+    private readonly IIdempotencyStore? _idempotencyStore;
     private readonly ILogger<InMemoryEventBus> _logger;
     private readonly EventBusOptions _options;
 
@@ -22,10 +25,12 @@ public class InMemoryEventBus : IEventBus
         IServiceScopeFactory scopeFactory,
         IDeadLetterStore deadLetters,
         ILogger<InMemoryEventBus> logger,
+        IIdempotencyStore? idempotencyStore = null,
         EventBusOptions? options = null)
     {
         _scopeFactory = scopeFactory;
         _deadLetters = deadLetters;
+        _idempotencyStore = idempotencyStore;
         _logger = logger;
         _options = options ?? new EventBusOptions();
     }
@@ -63,6 +68,30 @@ public class InMemoryEventBus : IEventBus
 
     private async Task InvokeWithRetryAsync(Object handler, IDomainEvent @event, Type eventType, CancellationToken ct)
     {
+        // [Idempotent] 检查：按 EventId 去重
+        if (_idempotencyStore != null)
+        {
+            var idempotentAttr = handler.GetType().GetCustomAttribute<IdempotentAttribute>();
+            if (idempotentAttr != null)
+            {
+                var key = $"event:{@event.EventId}";
+                var record = await _idempotencyStore.TryAcquireAsync(new IdempotencyRecord
+                {
+                    Key = key,
+                    EntityType = eventType.FullName,
+                    ExpiresAt = DateTimeOffset.UtcNow + idempotentAttr.Ttl,
+                }, ct);
+
+                if (record != null)
+                {
+                    _logger.LogInformation(
+                        "Idempotent handler {Handler} skipped duplicate event {EventId} ({EventType})",
+                        handler.GetType().Name, @event.EventId, eventType.Name);
+                    return;
+                }
+            }
+        }
+
         var method = HandleMethodCache.GetOrAdd(handler.GetType(),
             t => t.GetMethod(nameof(IEventHandler<IDomainEvent>.HandleAsync))!);
         var attempt = 0;
