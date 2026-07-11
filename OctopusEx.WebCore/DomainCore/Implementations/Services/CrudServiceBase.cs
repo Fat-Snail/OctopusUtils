@@ -6,6 +6,8 @@ using APICommon;
 using Mapping;
 using Microsoft.Extensions.Logging;
 using Repositories.Interfaces;
+using ValidationResult = OctopusEx.WebCore.DomainCore.APICommon.ValidationResult;
+using DeleteCheckResult = OctopusEx.WebCore.DomainCore.APICommon.DeleteCheckResult;
 
 /// <summary>
 /// CRUD服务基类
@@ -513,71 +515,8 @@ public abstract class CrudServiceBase<TEntity, TKey, TDto, TCreateDto, TUpdateDt
 
     #endregion
 
-    #region 辅助类
+    // ValidationResult 与 DeleteCheckResult 已提取为共享类型，
+    // 位于 OctopusEx.WebCore.DomainCore.APICommon 命名空间（APICommon/ValidationResult.cs、APICommon/DeleteCheckResult.cs），
+    // 由本文件顶部的 using APICommon; 引入，Controller 与 Service 共用，消除重复定义。
 
-    /// <summary>
-    /// 验证结果
-    /// </summary>
-    public class ValidationResult
-    {
-        /// <summary>
-        /// 是否验证通过
-        /// </summary>
-        public bool IsValid { get; set; }
-
-        /// <summary>
-        /// 错误消息
-        /// </summary>
-        public string ErrorMessage { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 创建成功的验证结果
-        /// </summary>
-        public static ValidationResult Success => new ValidationResult { IsValid = true };
-
-        /// <summary>
-        /// 创建失败的验证结果
-        /// </summary>
-        /// <param name="errorMessage">错误消息</param>
-        /// <returns>验证结果</returns>
-        public static ValidationResult Fail(string errorMessage) => new ValidationResult
-        {
-            IsValid = false,
-            ErrorMessage = errorMessage
-        };
-    }
-
-    /// <summary>
-    /// 删除检查结果
-    /// </summary>
-    public class DeleteCheckResult
-    {
-        /// <summary>
-        /// 是否可以删除
-        /// </summary>
-        public bool CanDelete { get; set; }
-
-        /// <summary>
-        /// 不能删除的原因
-        /// </summary>
-        public string? Reason { get; set; }
-
-        /// <summary>
-        /// 允许删除的结果
-        /// </summary>
-        public static DeleteCheckResult Allowed => new DeleteCheckResult { CanDelete = true };
-
-        /// <summary>
-        /// 不允许删除的结果
-        /// </summary>
-        /// <param name="reason">原因</param>
-        /// <returns>删除检查结果</returns>
-        public static DeleteCheckResult NotAllowed(string reason) => new DeleteCheckResult
-        {
-            CanDelete = false,
-            Reason = reason
-        };
-    }
-
-    #endregion
 }

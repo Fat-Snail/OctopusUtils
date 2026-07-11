@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OctopusEx.WebCore.DomainCore.Abstractions.Interfaces.Services;
 using OctopusEx.WebCore.DomainCore.APICommon;
+using ValidationResult = OctopusEx.WebCore.DomainCore.APICommon.ValidationResult;
+using DeleteCheckResult = OctopusEx.WebCore.DomainCore.APICommon.DeleteCheckResult;
 
 namespace OctopusEx.WebCore.DomainCore.Implementations.Controllers;
 
@@ -50,7 +52,7 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
         TKey id,
         CancellationToken cancellationToken = default)
     {
-        try
+        return await ExecuteAsync<BaseResponse<TDto>>(async () =>
         {
             var entity = await _service.GetAsync(id, cancellationToken);
             if ( entity == null )
@@ -59,11 +61,7 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
             }
 
             return Ok(BaseResponse<TDto>.Success(entity, "获取成功"));
-        }
-        catch ( Exception ex )
-        {
-            return HandleException(ex);
-        }
+        });
     }
 
     /// <summary>
@@ -78,15 +76,11 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
         [FromQuery] PageRequest request,
         CancellationToken cancellationToken = default)
     {
-        try
+        return await ExecuteAsync<BaseResponsePaged<TDto>>(async () =>
         {
             var pagedData = await _service.GetListAsync(request, cancellationToken);
             return Ok(BaseResponsePaged<TDto>.Success(pagedData, "获取成功"));
-        }
-        catch ( Exception ex )
-        {
-            return HandleException(ex);
-        }
+        });
     }
 
     /// <summary>
@@ -99,15 +93,11 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
     public virtual async Task<ActionResult<BaseResponse<List<TDto>>>> GetAllAsync(
         CancellationToken cancellationToken = default)
     {
-        try
+        return await ExecuteAsync<BaseResponse<List<TDto>>>(async () =>
         {
             var entities = await _service.GetAllAsync(cancellationToken);
             return Ok(BaseResponse<List<TDto>>.Success(entities, "获取成功"));
-        }
-        catch ( Exception ex )
-        {
-            return HandleException(ex);
-        }
+        });
     }
 
     /// <summary>
@@ -122,15 +112,11 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
         [FromQuery] IEnumerable<TKey> ids,
         CancellationToken cancellationToken = default)
     {
-        try
+        return await ExecuteAsync<BaseResponse<List<TDto>>>(async () =>
         {
             var entities = await _service.GetByIdsAsync(ids, cancellationToken);
             return Ok(BaseResponse<List<TDto>>.Success(entities, "获取成功"));
-        }
-        catch ( Exception ex )
-        {
-            return HandleException(ex);
-        }
+        });
     }
 
     /// <summary>
@@ -145,15 +131,11 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
         TKey id,
         CancellationToken cancellationToken = default)
     {
-        try
+        return await ExecuteAsync<BaseResponse<bool>>(async () =>
         {
             var exists = await _service.ExistsAsync(id, cancellationToken);
             return Ok(BaseResponse<bool>.Success(exists, exists ? "记录存在" : "记录不存在"));
-        }
-        catch ( Exception ex )
-        {
-            return HandleException(ex);
-        }
+        });
     }
 
     #endregion
@@ -197,13 +179,9 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
             return CreatedAtAction(nameof(GetAsync), new { id = entityId },
                 BaseResponse<TDto>.Success(createdEntity, "创建成功"));
         }
-        catch ( ArgumentException ex )
-        {
-            return BadRequest(BaseResponse<TDto>.Error(ex.Message));
-        }
         catch ( Exception ex )
         {
-            return HandleException(ex);
+            return HandleWriteException<TDto>(ex);
         }
     }
 
@@ -245,19 +223,11 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
             // 更新后处理
             await AfterUpdateAsync(updatedEntity, request, cancellationToken);
 
-            return Ok(BaseResponse<TDto>.Success(updatedEntity, "更新成功"));
-        }
-        catch ( KeyNotFoundException ex )
-        {
-            return NotFound(BaseResponse<TDto>.Error(ex.Message));
-        }
-        catch ( ArgumentException ex )
-        {
-            return BadRequest(BaseResponse<TDto>.Error(ex.Message));
+            return OkResponse(updatedEntity, "更新成功");
         }
         catch ( Exception ex )
         {
-            return HandleException(ex);
+            return HandleWriteException<TDto>(ex);
         }
     }
 
@@ -285,7 +255,7 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
             var canDeleteResult = await CanDeleteAsync(id, cancellationToken);
             if ( !canDeleteResult.CanDelete )
             {
-                return BadRequest(BaseResponse<bool>.Error(canDeleteResult.Reason ?? "不能删除该记录"));
+                return BadRequestResponse<bool>(canDeleteResult.Reason ?? "不能删除该记录");
             }
 
             // 删除前处理
@@ -299,18 +269,14 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
 
             if ( !deleted )
             {
-                return NotFound(BaseResponse<bool>.Error("记录不存在"));
+                return NotFoundResponse<bool>("记录不存在");
             }
 
-            return Ok(BaseResponse<bool>.Success(true, "删除成功"));
-        }
-        catch ( InvalidOperationException ex )
-        {
-            return BadRequest(BaseResponse<bool>.Error(ex.Message));
+            return OkResponse(true, "删除成功");
         }
         catch ( Exception ex )
         {
-            return HandleException(ex);
+            return HandleWriteException<bool>(ex);
         }
     }
 
@@ -332,14 +298,14 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
             var idList = ids.ToList();
             if ( idList.Count == 0 )
             {
-                return Ok(BaseResponse<int>.Success(0, "未提供要删除的记录"));
+                return OkResponse(0, "未提供要删除的记录");
             }
 
             // 批量删除前检查
             var canDeleteResult = await CanDeleteBatchAsync(idList, cancellationToken);
             if ( !canDeleteResult.CanDelete )
             {
-                return BadRequest(BaseResponse<int>.Error(canDeleteResult.Reason ?? "不能删除这些记录"));
+                return BadRequestResponse<int>(canDeleteResult.Reason ?? "不能删除这些记录");
             }
 
             // 批量删除前处理
@@ -351,15 +317,11 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
             // 批量删除后处理
             await AfterDeleteBatchAsync(idList, deletedCount, cancellationToken);
 
-            return Ok(BaseResponse<int>.Success(deletedCount, $"成功删除 {deletedCount} 条记录"));
-        }
-        catch ( InvalidOperationException ex )
-        {
-            return BadRequest(BaseResponse<int>.Error(ex.Message));
+            return OkResponse(deletedCount, $"成功删除 {deletedCount} 条记录");
         }
         catch ( Exception ex )
         {
-            return HandleException(ex);
+            return HandleWriteException<int>(ex);
         }
     }
 
@@ -529,72 +491,92 @@ public abstract class CURDControllerBase<TEntity, TKey, TDto, TCreateDto, TUpdat
             BaseResponse.Error($"服务器内部错误: {ex.Message}"));
     }
 
-    #endregion
-
-    #region 辅助类
-
     /// <summary>
-    /// 验证结果
+    /// 执行异步操作并统一处理异常（封装 try-catch 模式）。
+    /// 适用于查询类方法：捕获所有异常并委托给 <see cref="HandleException"/> 处理。
     /// </summary>
-    public class ValidationResult
+    /// <typeparam name="T">ActionResult 内部的数据类型（如 <see cref="BaseResponse{TDto}"/>）</typeparam>
+    /// <param name="action">要执行的异步操作，返回具体的 <see cref="ActionResult{T}"/></param>
+    /// <returns>操作结果或异常处理后的错误响应</returns>
+    protected async Task<ActionResult<T>> ExecuteAsync<T>(Func<Task<ActionResult<T>>> action)
     {
-        /// <summary>
-        /// 是否验证通过
-        /// </summary>
-        public bool IsSuccess { get; set; }
-
-        /// <summary>
-        /// 错误消息
-        /// </summary>
-        public string? ErrorMessage { get; set; }
-
-        /// <summary>
-        /// 创建成功的验证结果
-        /// </summary>
-        public static ValidationResult Success => new ValidationResult { IsSuccess = true };
-
-        /// <summary>
-        /// 创建失败的验证结果
-        /// </summary>
-        /// <param name="errorMessage">错误消息</param>
-        /// <returns>验证结果</returns>
-        public static ValidationResult Fail(string errorMessage) => new ValidationResult
+        try
         {
-            IsSuccess = false,
-            ErrorMessage = errorMessage
-        };
+            return await action();
+        }
+        catch ( Exception ex )
+        {
+            return HandleException(ex);
+        }
     }
 
     /// <summary>
-    /// 删除检查结果
+    /// 处理写操作异常，将常见异常类型统一映射到对应的 HTTP 响应。
+    /// <list type="bullet">
+    ///   <item><see cref="KeyNotFoundException"/> → 404 NotFound</item>
+    ///   <item><see cref="ArgumentException"/> → 400 BadRequest</item>
+    ///   <item><see cref="InvalidOperationException"/> → 400 BadRequest</item>
+    ///   <item>其他异常 → 委托给 <see cref="HandleException"/></item>
+    /// </list>
     /// </summary>
-    public class DeleteCheckResult
+    /// <typeparam name="T">BaseResponse 内部的数据类型</typeparam>
+    /// <param name="ex">捕获的异常</param>
+    /// <returns>映射后的 HTTP 响应</returns>
+    protected ActionResult<BaseResponse<T>> HandleWriteException<T>(Exception ex)
     {
-        /// <summary>
-        /// 是否可以删除
-        /// </summary>
-        public bool CanDelete { get; set; }
-
-        /// <summary>
-        /// 不能删除的原因
-        /// </summary>
-        public string? Reason { get; set; }
-
-        /// <summary>
-        /// 允许删除的结果
-        /// </summary>
-        public static DeleteCheckResult Allowed => new DeleteCheckResult { CanDelete = true };
-
-        /// <summary>
-        /// 不允许删除的结果
-        /// </summary>
-        /// <param name="reason">原因</param>
-        /// <returns>删除检查结果</returns>
-        public static DeleteCheckResult NotAllowed(string reason) => new DeleteCheckResult
+        if ( ex is KeyNotFoundException )
         {
-            CanDelete = false,
-            Reason = reason
-        };
+            return NotFound(BaseResponse<T>.Error(ex.Message));
+        }
+
+        if ( ex is ArgumentException )
+        {
+            return BadRequest(BaseResponse<T>.Error(ex.Message));
+        }
+
+        if ( ex is InvalidOperationException )
+        {
+            return BadRequest(BaseResponse<T>.Error(ex.Message));
+        }
+
+        return HandleException(ex);
+    }
+
+    /// <summary>
+    /// 构造 200 OK 成功响应。
+    /// </summary>
+    /// <typeparam name="T">数据类型</typeparam>
+    /// <param name="data">响应数据</param>
+    /// <param name="message">响应消息</param>
+    /// <returns>成功的 ActionResult</returns>
+    protected ActionResult<BaseResponse<T>> OkResponse<T>(T data, string message = "操作成功")
+    {
+        ActionResult result = Ok(BaseResponse<T>.Success(data, message));
+        return result;
+    }
+
+    /// <summary>
+    /// 构造 404 NotFound 错误响应。
+    /// </summary>
+    /// <typeparam name="T">数据类型</typeparam>
+    /// <param name="message">错误消息</param>
+    /// <returns>未找到的 ActionResult</returns>
+    protected ActionResult<BaseResponse<T>> NotFoundResponse<T>(string message)
+    {
+        ActionResult result = NotFound(BaseResponse<T>.Error(message));
+        return result;
+    }
+
+    /// <summary>
+    /// 构造 400 BadRequest 错误响应。
+    /// </summary>
+    /// <typeparam name="T">数据类型</typeparam>
+    /// <param name="message">错误消息</param>
+    /// <returns>错误请求的 ActionResult</returns>
+    protected ActionResult<BaseResponse<T>> BadRequestResponse<T>(string message)
+    {
+        ActionResult result = BadRequest(BaseResponse<T>.Error(message));
+        return result;
     }
 
     #endregion
