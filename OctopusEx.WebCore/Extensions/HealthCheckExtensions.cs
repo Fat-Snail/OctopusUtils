@@ -13,50 +13,13 @@ using Microsoft.Extensions.Hosting;
 public static class HealthCheckExtensions
 {
     /// <summary>
-    /// Adds common health checks to the service.
-    /// Auto-detects registered IHealthCheck / ICustomHealthCheck implementations and wires them to the correct tags.
+    /// Adds the common self health check to the service.
+    /// Module health checks are registered by their corresponding Add*HealthCheck extension methods.
     /// </summary>
     public static TBuilder AddCommonHealthChecks<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        var healthChecks = builder.Services.AddHealthChecks()
+        builder.Services.AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
-
-        // 检查并添加已注册的健康检查
-        if ( builder.Services.Any(sd => sd.ServiceType == typeof(DatabaseHealthCheck)) )
-        {
-            healthChecks.AddCheck<DatabaseHealthCheck>("database", tags: ["database", "ready"]);
-        }
-
-        if ( builder.Services.Any(sd => sd.ServiceType == typeof(ExternalApiHealthCheck)) )
-        {
-            healthChecks.AddCheck<ExternalApiHealthCheck>("external-api", tags: ["external", "ready"]);
-        }
-
-        if ( builder.Services.Any(sd => sd.ServiceType == typeof(CacheHealthCheck)) )
-        {
-            healthChecks.AddCheck<CacheHealthCheck>("cache", tags: ["cache", "live"]);
-        }
-
-        // v1.5.5 — 新的模块健康检查
-        if ( builder.Services.Any(sd => sd.ServiceType == typeof(OctopusCacheHealthCheck)) )
-        {
-            healthChecks.AddCheck<OctopusCacheHealthCheck>("cache", tags: ["cache", "live"]);
-        }
-
-        if ( builder.Services.Any(sd => sd.ServiceType == typeof(EventBusHealthCheck)) )
-        {
-            healthChecks.AddCheck<EventBusHealthCheck>("event-bus", tags: ["eventbus", "ready"]);
-        }
-
-        if ( builder.Services.Any(sd => sd.ServiceType == typeof(OutboxHealthCheck)) )
-        {
-            healthChecks.AddCheck<OutboxHealthCheck>("outbox", tags: ["outbox", "ready"]);
-        }
-
-        if ( builder.Services.Any(sd => sd.ServiceType == typeof(TenantHealthCheck)) )
-        {
-            healthChecks.AddCheck<TenantHealthCheck>("tenant", tags: ["tenant", "ready"]);
-        }
 
         return builder;
     }
