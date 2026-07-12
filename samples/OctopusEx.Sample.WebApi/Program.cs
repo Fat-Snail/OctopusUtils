@@ -6,6 +6,7 @@ using OctopusEx.WebCore.Extensions.HealthChecks;
 using OctopusEx.WebCore.Helpers;
 using OctopusEx.WebCore.MultiTenancy;
 using OctopusEx.Sample.WebApi;
+using OctopusEx.Sample.WebApi.Coordination;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,8 @@ builder.Services.AddAuditing();
 
 // ===== 10. 当前用户 =====
 builder.Services.AddCurrentUser();
+builder.Services.AddInMemoryDistributedLock("sample-webapi");
+builder.Services.AddScoped<CoordinationDemoService>();
 
 // ===== 11. 健康检查（v1.5.5 新增） =====
 builder.AddOctopusCacheHealthCheck();
@@ -91,6 +94,10 @@ app.UseMultiTenancy();
 app.MapGet("/", () => Results.Content(SampleLandingPage.Html, "text/html; charset=utf-8"))
     .AllowAnonymous()
     .ExcludeFromDescription();
+app.MapGet("/coordination/demo", async (CoordinationDemoService demo, CancellationToken cancellationToken) =>
+    Results.Ok(await demo.RunAsync(cancellationToken)))
+    .AllowAnonymous()
+    .WithTags("Sample");
 app.MapControllers();
 app.MapHealthCheckEndpoints();
 
