@@ -77,11 +77,10 @@ using (var scope = app.Services.CreateScope())
 }
 
 // ===== 中间件管道 =====
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapOctopusDiagnostics(); // /octopus/diagnostics
-}
+// Sample 项目始终开放 OpenAPI 与诊断页，方便直接体验；生产项目应根据
+// 环境限制 OpenAPI，并为诊断端点启用授权。
+app.MapOpenApi();
+app.MapOctopusDiagnostics(); // /octopus/diagnostics
 
 app.UseGlobalExceptionHandler();
 app.UseAuthentication();
@@ -89,6 +88,9 @@ app.UseAuthorization();
 app.UseMultiTenancy();
 
 // ===== 端点 =====
+app.MapGet("/", () => Results.Content(SampleLandingPage.Html, "text/html; charset=utf-8"))
+    .AllowAnonymous()
+    .ExcludeFromDescription();
 app.MapControllers();
 app.MapHealthCheckEndpoints();
 
