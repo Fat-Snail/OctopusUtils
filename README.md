@@ -1,6 +1,4 @@
-<div align="center">
-
-<img src="favicon.png" width="96" height="96" alt="OctopusUtils Logo" />
+![OctopusUtils Logo](favicon.png)
 
 # OctopusUtils
 
@@ -13,68 +11,26 @@
 [![OctopusEx.SearchCore](https://img.shields.io/nuget/v/OctopusEx.SearchCore?style=flat-square&logo=nuget&label=OctopusEx.SearchCore&color=004880)](https://www.nuget.org/packages/OctopusEx.SearchCore)
 [![OctopusEx.WebCore](https://img.shields.io/nuget/v/OctopusEx.WebCore?style=flat-square&logo=nuget&label=OctopusEx.WebCore&color=004880)](https://www.nuget.org/packages/OctopusEx.WebCore)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/OctopusEx.WebCore?style=flat-square&logo=nuget&label=downloads&color=004880)](https://www.nuget.org/packages/OctopusEx.WebCore)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
-[![.NET](https://img.shields.io/badge/.NET-Standard%202.0%20%7C%20net8%20%7C%20net10-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/Fat-Snail/OctopusUtils/blob/master/LICENSE)
+[![.NET](https://img.shields.io/badge/.NET-Standard%202.0%20%7C%20net10-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com)
 [![Build](https://img.shields.io/github/actions/workflow/status/Fat-Snail/OctopusUtils/dotnet.yml?style=flat-square&logo=github)](https://github.com/Fat-Snail/OctopusUtils/actions)
 
-[快速开始](#-快速开始) · [功能模块](#-功能模块) · [文档](#-文档) · [更新日志](CHANGELOG.md) · [贡献指南](#-贡献)
+[快速开始](#-快速开始) · [功能模块](#-功能模块) · [文档](#-文档) · [更新日志](https://github.com/Fat-Snail/OctopusUtils/blob/master/CHANGELOG.md) · [贡献指南](#-贡献)
 
-<br />
+[![OctopusUtils 介绍](https://raw.githubusercontent.com/Fat-Snail/OctopusUtils/master/docs/intro.gif)](https://github.com/Fat-Snail/OctopusUtils/blob/master/docs/intro.mp4)
 
-[![OctopusUtils 介绍](docs/intro.gif)](docs/intro.mp4)
-
-<sub>▶️ 点击查看 <a href="docs/intro.mp4">高清完整版 (MP4)</a></sub>
-
-</div>
+▶️ [点击查看高清完整版（MP4）](https://github.com/Fat-Snail/OctopusUtils/blob/master/docs/intro.mp4)
 
 ---
 
 ## ✨ 特性概览
 
-<table>
-<tr>
-<td width="50%">
-
-**🔍 全文搜索引擎**
-基于 Lucene.NET 4.8，原生中文分词支持，支持模糊搜索、多字段权重、分页排序。
-
-</td>
-<td width="50%">
-
-**✂️ 中文分词**
-移植自结巴分词，内置 HMM 未登录词识别，支持 TF-IDF / TextRank 关键词提取。
-
-</td>
-</tr>
-<tr>
-<td>
-
-**⚡ 异步彩色控制台**
-非阻塞队列写入，内置 Info / Debug / Warn / Error 四级日志，带时间戳前缀。
-
-</td>
-<td>
-
-**🔄 智能重试机制**
-同步/异步通用，可配置次数、间隔、回调，一行代码包装任意操作。
-
-</td>
-</tr>
-<tr>
-<td>
-
-**🤖 AI 客户端**
-兼容 OpenAI / Llama API，内置会话缓存，支持批量翻译、自动写作等场景。
-
-</td>
-<td>
-
-**🏗️ Web 脚手架**
-DDD + CQRS + Repository，自动依赖注入、审计日志、健康检查、Hangfire 一键接入。
-
-</td>
-</tr>
-</table>
+- **🔍 全文搜索引擎**：基于 Lucene.NET 4.8，原生中文分词支持，支持模糊搜索、多字段权重、分页排序。
+- **✂️ 中文分词**：移植自结巴分词，内置 HMM 未登录词识别，支持 TF-IDF / TextRank 关键词提取。
+- **⚡ 异步彩色控制台**：非阻塞队列写入，内置 Info / Debug / Warn / Error 四级日志，带时间戳前缀。
+- **🔄 智能重试机制**：同步/异步通用，可配置次数、间隔、回调，一行代码包装任意操作。
+- **🤖 AI 客户端**：兼容 OpenAI / Llama API，内置会话缓存，支持批量翻译、自动写作等场景。
+- **🏗️ Web 脚手架**：DDD + CQRS + Repository，自动依赖注入、审计日志、健康检查、Hangfire 一键接入。
 
 ---
 
@@ -112,8 +68,7 @@ dotnet restore && dotnet build
 
 ### Octopus.Tools · `netstandard2.0`
 
-<details>
-<summary><b>⚡ 异步彩色控制台 (ConsoleEx)</b></summary>
+#### ⚡ 异步彩色控制台 (ConsoleEx)
 
 ```csharp
 using Octopus;
@@ -133,10 +88,7 @@ await ConsoleEx.ShutdownAsync(timeout: 3000);
 
 > 写入操作通过内部 `BlockingCollection` 队列异步消费，**不阻塞主线程**。
 
-</details>
-
-<details>
-<summary><b>🔄 智能重试 (Utils.RetryMethod)</b></summary>
+#### 🔄 智能重试 (Utils.RetryMethod)
 
 ```csharp
 using Octopus;
@@ -156,10 +108,7 @@ await Utils.RetryMethodAsync(async () =>
 }, maxRetryCount: 3, throwOnFailure: true);
 ```
 
-</details>
-
-<details>
-<summary><b>📊 控制台进度条 (ConsoleProgressBar)</b></summary>
+#### 📊 控制台进度条 (ConsoleProgressBar)
 
 ```csharp
 using var progress = new ConsoleProgressBar();
@@ -171,10 +120,7 @@ for (int i = 0; i <= 100; i++)
 }
 ```
 
-</details>
-
-<details>
-<summary><b>🤖 AI 客户端 (AIClient)</b></summary>
+#### 🤖 AI 客户端 (AIClient)
 
 ```csharp
 using Octopus;
@@ -199,10 +145,7 @@ var response = await client.CreateChatCompletionAsync(
 Console.WriteLine(response.Choices[0].Message.Content);
 ```
 
-</details>
-
-<details>
-<summary><b>🗃️ TTL 缓存 (DictionaryCache)</b></summary>
+#### 🗃️ TTL 缓存 (DictionaryCache)
 
 ```csharp
 using NewLife;
@@ -216,14 +159,11 @@ var cache = new DictionaryCache<String, UserInfo>
 var user = cache.GetItem("user:42", key => LoadUserFromDb(key));
 ```
 
-</details>
-
 ---
 
 ### Octopus.Segment · `netstandard2.1`
 
-<details>
-<summary><b>✂️ 中文分词 (JiebaSegmenter)</b></summary>
+#### ✂️ 中文分词 (JiebaSegmenter)
 
 ```csharp
 using JiebaNet.Segmenter;
@@ -242,10 +182,7 @@ var searchWords = seg.CutForSearch("小明硕士毕业于中国科学院");
 seg.AddWord("OctopusUtils", freq: 1000, tag: "eng");
 ```
 
-</details>
-
-<details>
-<summary><b>🔑 关键词提取</b></summary>
+#### 🔑 关键词提取
 
 ```csharp
 using JiebaNet.Analyser;
@@ -261,14 +198,11 @@ var textrank = new TextRankExtractor();
 var tags = textrank.ExtractTags(article, topK: 10);
 ```
 
-</details>
-
 ---
 
-### Octopus.SearchCore · `net8.0`
+### Octopus.SearchCore · `net10.0`
 
-<details>
-<summary><b>🔍 全文搜索引擎</b></summary>
+#### 🔍 全文搜索引擎
 
 **第一步：定义可索引实体**
 
@@ -320,14 +254,11 @@ foreach (var item in results.Results)
     Console.WriteLine($"[{item.Score:F2}] {item.Entity.Title}");
 ```
 
-</details>
-
 ---
 
 ### OctopusEx.WebCore · `net10.0`
 
-<details>
-<summary><b>🏗️ 自动依赖注入</b></summary>
+#### 🏗️ 自动依赖注入
 
 ```csharp
 // 1. 服务接口继承生命周期接口（推荐方式）
@@ -347,10 +278,7 @@ builder.Host.AddUtil();
 // OrderService 自动以 IOrderService 注册为 Scoped
 ```
 
-</details>
-
-<details>
-<summary><b>🗄️ CRUD 脚手架（Repository + Service + Controller）</b></summary>
+#### 🗄️ CRUD 脚手架（Repository + Service + Controller）
 
 ```csharp
 // Entity
@@ -396,10 +324,7 @@ public class ProductController
 | `DELETE` | `/api/products/{id}` | 删除 |
 | `POST` | `/api/products/bulk-delete` | 批量删除 |
 
-</details>
-
-<details>
-<summary><b>📋 审计日志 (AuditInterceptor)</b></summary>
+#### 📋 审计日志 (AuditInterceptor)
 
 ```csharp
 // Program.cs — 一行注册，SaveChanges 自动捕获所有变更
@@ -431,10 +356,7 @@ builder.Services.AddAuditService(config =>
 }
 ```
 
-</details>
-
-<details>
-<summary><b>⏰ 后台任务 (HangfireExtensions)</b></summary>
+#### ⏰ 后台任务 (HangfireExtensions)
 
 ```csharp
 // 注册（内存存储，零依赖）
@@ -453,10 +375,7 @@ provider.AddRecurringJob("daily-report", async () =>
     await reportService.GenerateDailyAsync(), cronExpression: "0 8 * * *");
 ```
 
-</details>
-
-<details>
-<summary><b>🏥 健康检查 (HealthCheckExtensions)</b></summary>
+#### 🏥 健康检查 (HealthCheckExtensions)
 
 ```csharp
 // 注册
@@ -476,10 +395,7 @@ app.MapHealthCheckEndpoints();
 | `GET /health/full` | 全项检查 |
 | `GET /health` | 详细状态（含耗时 / 描述） |
 
-</details>
-
-<details>
-<summary><b>🛡️ 敏感词过滤 (SensitiveWordFilterPlugin)</b></summary>
+#### 🛡️ 敏感词过滤 (SensitiveWordFilterPlugin)
 
 ```csharp
 var filter = new SensitiveWordFilterPlugin(kernel); // kernel 可选，不传则仅词典模式
@@ -498,8 +414,6 @@ filter.SetSensitiveWords(["词1", "词2"]);
 filter.AddSensitiveWord("新词");
 ```
 
-</details>
-
 ---
 
 ## 🏛️ 架构总览
@@ -509,7 +423,7 @@ OctopusUtils.sln
 │
 ├── Octopus.Tools          [netstandard2.0]  控制台 · 重试 · AI客户端 · 缓存 · 字符串扩展
 ├── Octopus.Segment        [netstandard2.1]  结巴分词 · TF-IDF · TextRank · 词性标注
-├── Octopus.SearchCore     [net8.0]          Lucene.NET 全文搜索 · Tag提取 · 中文分析器
+├── Octopus.SearchCore     [net10.0]         Lucene.NET 全文搜索 · Tag提取 · 中文分析器
 └── OctopusEx.WebCore      [net10.0]         DDD脚手架 · 自动DI · 审计 · 健康检查 · Hangfire
          │
          ├── Dependency/        自动依赖注入（生命周期接口 + 程序集扫描）
@@ -535,21 +449,21 @@ HTTP Request
 
 | 文档 | 说明 |
 |------|------|
-| [CHANGELOG.md](CHANGELOG.md) | 版本更新日志 |
-| [REQUIREMENTS.md](REQUIREMENTS.md) | 完整功能需求文档 |
-| [Search.md](Search.md) | 全文搜索使用指南 |
-| [AIClient.md](AIClient.md) | AI 客户端使用指南 |
-| [Google.md](Google.md) | Google Drive 下载指南 |
-| [ConsoleShow.md](ConsoleShow.md) | 控制台进度条指南 |
-| [UnitTest.md](UnitTest.md) | 单元测试工具指南 |
-| [HUSKY.md](HUSKY.md) | 代码提交质量检查 |
-| [OctopusEx.WebCore/README.md](OctopusEx.WebCore/README.md) | Web 脚手架详细文档 |
+| [CHANGELOG.md](https://github.com/Fat-Snail/OctopusUtils/blob/master/CHANGELOG.md) | 版本更新日志 |
+| [REQUIREMENTS.md](https://github.com/Fat-Snail/OctopusUtils/blob/master/REQUIREMENTS.md) | 完整功能需求文档 |
+| [Search.md](https://github.com/Fat-Snail/OctopusUtils/blob/master/Search.md) | 全文搜索使用指南 |
+| [AIClient.md](https://github.com/Fat-Snail/OctopusUtils/blob/master/AIClient.md) | AI 客户端使用指南 |
+| [Google.md](https://github.com/Fat-Snail/OctopusUtils/blob/master/Google.md) | Google Drive 下载指南 |
+| [ConsoleShow.md](https://github.com/Fat-Snail/OctopusUtils/blob/master/ConsoleShow.md) | 控制台进度条指南 |
+| [UnitTest.md](https://github.com/Fat-Snail/OctopusUtils/blob/master/UnitTest.md) | 单元测试工具指南 |
+| [HUSKY.md](https://github.com/Fat-Snail/OctopusUtils/blob/master/HUSKY.md) | 代码提交质量检查 |
+| [OctopusEx.WebCore/README.md](https://github.com/Fat-Snail/OctopusUtils/blob/master/OctopusEx.WebCore/README.md) | Web 脚手架详细文档 |
 
 ---
 
 ## 🗺️ 路线图
 
-查看 [roadmap.md](roadmap.md) 了解后续计划，欢迎通过 [Issue](https://github.com/Fat-Snail/OctopusUtils/issues) 提交建议。
+查看 [roadmap.md](https://github.com/Fat-Snail/OctopusUtils/blob/master/roadmap.md) 了解后续计划，欢迎通过 [Issue](https://github.com/Fat-Snail/OctopusUtils/issues) 提交建议。
 
 ---
 
@@ -562,7 +476,7 @@ HTTP Request
 3. 提交变更（遵循 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/)）
 4. 发起 Pull Request
 
-本项目使用 [Husky.NET](HUSKY.md) 在提交时自动格式化代码，首次克隆后运行：
+本项目使用 [Husky.NET](https://github.com/Fat-Snail/OctopusUtils/blob/master/HUSKY.md) 在提交时自动格式化代码，首次克隆后运行：
 
 ```bash
 dotnet tool restore
@@ -573,14 +487,10 @@ dotnet husky install
 
 ## 📄 许可证
 
-本项目基于 [MIT License](LICENSE) 开源。
+本项目基于 [MIT License](https://github.com/Fat-Snail/OctopusUtils/blob/master/LICENSE) 开源。
 
-Copyright © 2024–2025 [Fatty Coder](https://github.com/Fat-Snail)
+Copyright © 2024–2026 [Fatty Coder](https://github.com/Fat-Snail)
 
 ---
 
-<div align="center">
-
 如果这个项目对你有帮助，欢迎点个 ⭐ Star 支持一下！
-
-</div>

@@ -7,8 +7,8 @@
     <AssemblyTitle>Octopus核心库</AssemblyTitle>
     <Description>Web核心基础组件，公共类。</Description>
     <Company>Fatty Coder</Company>
-    <Copyright>©2024-2025 Fatty Coder</Copyright>
-    <VersionPrefix>1.2</VersionPrefix>
+    <Copyright>©2024-2026 Fatty Coder</Copyright>
+    <VersionPrefix>1.5</VersionPrefix>
     <VersionSuffix>$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</VersionSuffix>
     <Version>$(VersionPrefix).$(VersionSuffix)</Version>
     <FileVersion>$(Version)</FileVersion>
@@ -34,7 +34,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>Octopus核心库;$(AssemblyName)</PackageTags>
     <PackageIcon>favicon.png</PackageIcon>
-    <PackageReleaseNotes>Octopus核心库；Scalar UI脚手架；Aspire工具类；简易审计日志；hangfire脚手架；自动注入；</PackageReleaseNotes>
+    <PackageReleaseNotes>v1.5.5：新增模块健康检查、Octopus 诊断端点、多租户 Hangfire Dashboard、Outbox 与幂等性持久化能力，并完善 CRUD、审计和敏感词过滤。</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

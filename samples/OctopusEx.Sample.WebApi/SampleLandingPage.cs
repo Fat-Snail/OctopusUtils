@@ -40,6 +40,7 @@ internal static class SampleLandingPage
               <a class="button" href="/health/full">完整健康检查</a>
               <a class="button" href="/octopus/diagnostics">诊断面板</a>
               <a class="button" href="/openapi/v1.json">OpenAPI JSON</a>
+              <a class="button" href="/coordination/demo">分布式锁演示</a>
             </div>
             <div class="grid">
               <section>
@@ -66,6 +67,11 @@ internal static class SampleLandingPage
                 <pre>curl http://localhost:5000/api/todos \
           -H "Authorization: Bearer &lt;token&gt;" \
           -H "X-Tenant-Id: tenant-a"</pre>
+              </section>
+              <section>
+                <h2>分布式协调演示</h2>
+                <p>两个并发任务会竞争同一个租约锁，同一时刻只有一个任务进入临界区。</p>
+                <p><a class="button" href="/coordination/demo">运行锁竞争演示 →</a></p>
               </section>
             </div>
             <footer>提示：本 Sample 始终开放 OpenAPI 与诊断页；实际生产项目应按环境限制 OpenAPI，并为诊断端点启用授权。</footer>

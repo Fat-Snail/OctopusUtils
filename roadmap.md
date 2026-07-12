@@ -343,9 +343,16 @@
 - 所有协调 key 默认包含应用名与环境名，避免不同应用或环境相互污染
 - Redis 故障时支持 `FailOpen` / `FailClosed` 策略，并为各功能给出安全默认值
 
+**发布工程（先行门禁）**
+- GitHub Actions 从干净检出执行 `restore → build → test → pack`，Sample 项目必须纳入解决方案验证
+- 增加本地 NuGet 源安装冒烟测试，验证 Tools → WebCore、Segment → SearchCore 的包依赖闭环
+- 校验每个 `.nupkg` 的版本、依赖版本、README、图标和符号包；README 禁止使用 NuGet 不支持的结构性 HTML
+- 保持“产品线前缀 + `yyyy.MMdd`”版本规则，并输出可预测的发布清单和依赖发布顺序
+
 **分布式锁**
-- `IDistributedLockProvider` + `IDistributedLockHandle : IAsyncDisposable` 抽象
-- `InMemoryDistributedLockProvider`（单实例 / 测试）
+- ✅ `IDistributedLockProvider` + `IDistributedLockHandle : IAsyncDisposable` 抽象
+- ✅ `InMemoryDistributedLockProvider`（单实例 / 测试）
+- ✅ 租约过期恢复、等待超时、取消令牌、自动续租与幂等释放
 - `RedisDistributedLockProvider`（租约 TTL + 自动续期）
 - 支持等待超时、租约时间、取消令牌与租约丢失状态
 - Redis 释放锁使用原子 Compare-and-Delete，防止误删其他实例重新获取的锁
@@ -377,12 +384,40 @@
 - `dotnet build`、全部测试与 NuGet pack 通过，新增公共 API 具备 XML 文档
 
 **实施顺序**
-1. 冻结锁、租约、故障策略与限流接口
-2. 完成 InMemory 锁及状态机测试
-3. 完成 Redis 锁、原子释放、自动续期与跨进程测试
-4. 接入后台任务、Telemetry 与诊断端点
-5. 完成 Redis 固定窗口限流及并发测试
-6. 视进度实现缓存模式失效，最后补齐 Sample、文档与打包验证
+1. **M0 发布基线**：补齐 clean-checkout、pack、README 和本地源安装验证
+2. **M1 API 冻结**：确定锁、租约、故障策略、key 命名和限流配置接口
+3. **M2 单机实现**：完成 InMemory 锁、状态机、并发与取消测试
+4. **M3 Redis 锁**：完成原子获取/释放、自动续期、租约丢失与跨进程测试
+5. **M4 业务接入**：为 Outbox 和维护任务增加可选单活模式，接入 Telemetry 与诊断端点
+6. **M5 分布式限流**：完成 Redis 固定窗口、租户维度、`Retry-After` 与故障策略测试
+7. **M6 发布候选**：视进度实现缓存模式失效，补齐 Sample、迁移文档、包安装测试和发布清单
+
+**建议 API 形态（评审草案）**
+```csharp
+await using var handle = await lockProvider.AcquireAsync(
+    "outbox:dispatcher",
+    new DistributedLockOptions
+    {
+        LeaseTime = TimeSpan.FromSeconds(30),
+        WaitTime = TimeSpan.FromSeconds(5),
+        AutoRenew = true,
+        FailureMode = CoordinationFailureMode.FailClosed
+    },
+    cancellationToken);
+
+if (!handle.Acquired)
+    return;
+```
+- 正常竞争失败以 `Acquired = false` 表达，不用异常控制业务流程
+- Redis 故障、租约丢失和参数错误使用不同异常或状态，调用方能明确处理
+- `DisposeAsync` 必须幂等；租约丢失后不得释放其他持有者重新获取的锁
+
+**版本切片**
+- 路线图里程碑使用 `v1.5.6-preview.1` / `preview.2` / `rc.1` / 正式版标签
+- NuGet 继续使用产品线日期版本，例如 `1.5.2026.801-preview.1`，正式包为发布当天的 `1.5.yyyy.Mdd`
+- `preview.1`：发布门禁 + API + InMemory 实现
+- `preview.2`：Redis 锁 + Telemetry + 跨进程测试
+- `rc.1`：Redis 限流 + Sample + 文档；进入 RC 后只接收阻断发布的问题修复
 
 **明确延期**
 - `EFDistributedLockProvider`：数据库方言与锁语义差异较大，后续以实验功能单独评估
@@ -421,25 +456,164 @@
 
 ---
 
-## v1.5.x 路线图节奏
+## v1.6–v2.0 ERP 基础平台路线
 
+> **长期目标：** 为 `/Users/lobster/Test/test-cc-umc` 这类多系统 ERP 提供统一的应用框架、模块化运行时和微服务基础设施，同时保持现有 WebCore 用户可平滑升级。
+
+### 总体架构
+
+```text
+ERP 业务模块（UMC / OA / PLM / CRM / WMS / MES / FIN / HRM / OMS）
+                 │
+     ┌───────────┴───────────┐
+     │                       │
+模块化单体宿主            独立微服务宿主
+     │                       │
+     └───────────┬───────────┘
+                 │
+       OctopusEx ERP 基础平台
+                 │
+ WebCore · Identity · Policy · Audit · Events · Outbox · Telemetry
 ```
-v1.5.0 ─► v1.5.1 ─► v1.5.2 ─► v1.5.3 ─┐
-事件总线  多租户    Aspire    全方位    │
-2026-05   2026-05   2026-05   2026-05  │
-                                       │
-v1.5.4 ◄── 持久化 + 幂等性 ◄───────────┤
-2026-06                                │
-                                       │
-v1.5.5 ◄── 健康检查 + 诊断 + 示例 ◄────┤
-2026-07                                │
-                                       │
-v1.5.6 ◄── 分布式协调 ◄────────────────┤
-2026-08                                │
-                                       │
-v1.5.7 ◄── 批量 + 安全合规 ◄───────────┘
-2026-09
-```
+
+**兼容策略**
+- v1.6–v1.9 保留现有 `OctopusEx.WebCore` API，新增能力优先通过扩展包提供
+- 旧 API 先标记 `[Obsolete]`，提供迁移诊断和替代 API，不在 v1.x 直接删除
+- v2.0 固化包边界、删除已废弃 API，并提供现有 ERP 系统迁移指南
+
+### v1.6 — ERP 应用框架（预计 2026-10～12）
+
+> **目标：** 让 UMC、OA、CRM 等系统共享一致的基础应用能力。
+
+**Phase 1：基础上下文统一**
+- `ICurrentUser`、`ICurrentTenant`、`ICurrentOrganization`、`ICorrelationContext`
+- 统一租户、公司、部门、职位和数据权限上下文
+- 统一 `BaseResponse`、分页、错误码、ProblemDetails 和 TraceId
+
+**Phase 2：权限与策略**
+- `IPermissionChecker`、`IDataScopeEvaluator`、`IAuthorizationPolicyProvider`
+- 菜单/按钮权限、组织范围、本人/部门/公司/全部数据范围
+- 与 UMC RBAC/组织关系映射，支持缓存和权限版本失效
+
+**Phase 3：应用服务基座**
+- `ApplicationServiceBase`、请求验证、事务边界、幂等入口
+- CRUD、批量操作、导入导出、操作日志和审计统一管道
+- 统一服务注册与启动诊断，消除各 ERP 项目重复的异常中间件和日志过滤器
+
+**Phase 4：ERP 样板接入**
+- UMC：身份/组织/权限接入样板
+- CRM：客户→询盘→报价→合同业务流样板
+- 提供从现有项目逐模块迁移的适配层
+
+**v1.6 验收**
+- UMC 和 CRM 至少各迁移一个完整业务链路
+- 关键 API 集成测试覆盖认证、数据权限、审计、幂等和错误响应
+- 不改变现有 WebCore 使用者的编译结果
+
+### v1.7 — 模块化运行时（预计 2027-01～03）
+
+> **目标：** 同一业务模块可部署在模块化单体，也可独立拆成微服务。
+
+**Phase 1：模块契约**
+- `IOctopusModule`、`IModuleManifest`、模块版本和依赖声明
+- 依赖拓扑排序、循环依赖检测、模块启停状态
+- 模块独立配置、服务、Endpoint、HealthCheck、Telemetry 注册
+
+**Phase 2：模块宿主**
+- `AddOctopusModules()` 和模块生命周期
+- 模块间只通过公共契约、领域事件和集成事件通信
+- 模块数据库迁移、Seed 和权限资源按模块隔离
+
+**Phase 3：WebCore 拆包**
+- `OctopusEx.WebCore.Caching`
+- `OctopusEx.WebCore.Events`
+- `OctopusEx.WebCore.MultiTenancy`
+- `OctopusEx.WebCore.Diagnostics`
+- `OctopusEx.WebCore.Hangfire`
+- 原聚合包继续作为兼容入口
+
+**Phase 4：模块化 ERP 样板**
+- 把 CRM、OA 审批、PLM 商品目录做成可装配模块
+- 同一套模块分别以单体宿主和独立 API 宿主运行
+
+**v1.7 验收**
+- 新建模块不修改宿主核心代码即可注册
+- 模块依赖错误在启动阶段可读地报告
+- 聚合包与拆分包的功能和 API 行为有兼容测试
+
+### v1.8 — 微服务基础设施 SDK（预计 2027-04～06）
+
+> **目标：** 统一 ERP 服务间通信、可靠投递和故障处理。
+
+**Phase 1：服务间调用**
+- `IOctopusHttpClient`、服务发现、超时、重试、熔断和 Trace 传播
+- HMAC Webhook 客户端/服务端统一封装
+- 标准化签名、时间戳、Nonce、防重放和错误响应
+
+**Phase 2：可靠消息链路**
+- Outbox/Inbox 统一模型
+- 事件幂等、重试、死信、补偿和消费进度
+- HTTP Webhook、Redis EventBus 和未来消息队列使用同一事件契约
+
+**Phase 3：跨服务一致性**
+- Saga/Process Manager 基础抽象
+- 业务补偿动作、状态机、人工介入点和操作审计
+- 不在本版承诺分布式事务或强一致性跨库提交
+
+**Phase 4：云原生接入**
+- Aspire 服务注册、配置、健康检查、Telemetry 和诊断统一接线
+- 服务依赖图和跨服务 CorrelationId 查询
+
+**v1.8 验收**
+- CRM→OA、OA→CRM、MES→WMS 至少各有一条可靠集成链路
+- 重复投递、超时、服务不可用和签名错误均有自动化测试
+- 故障后可从诊断端点定位事件、重试和补偿状态
+
+### v1.9 — ERP 开发平台与模板（预计 2027-07～09）
+
+> **目标：** 把成熟模式变成可复制的开发工具。
+
+**Phase 1：项目模板**
+- `dotnet new octopus-erp-api`
+- `dotnet new octopus-module`
+- `dotnet new octopus-plugin`
+- 预置认证、权限、审计、健康检查、OpenAPI、测试项目和 CI
+
+**Phase 2：通用业务组件**
+- 编码规则和单据号生成
+- 附件/对象存储抽象
+- 导入导出、字典、参数配置、通知和站内消息
+- 多语言、时区、金额/税率和工作日历基础抽象
+
+**Phase 3：质量门禁**
+- 模块契约测试、架构依赖测试、数据库迁移测试
+- NuGet 本地源安装测试和包内 README/依赖校验
+- ERP Sample 全链路演示：询盘→报价→审批→合同→库存/生产→回款
+
+### v2.0 — 稳定平台（预计 2027-10～12）
+
+**Phase 1：API 冻结**
+- 公共 API 审核、包边界冻结、版本兼容矩阵
+- 删除 v1.x 已标记且有迁移替代的 API
+
+**Phase 2：ERP 迁移**
+- UMC、OA、CRM、PLM、WMS、MES、FIN、HRM、OMS 分批迁移
+- 每个系统提供迁移前后行为对照和回滚方案
+
+**Phase 3：生产门禁**
+- 全链路集成测试、性能基线、安全扫描、包安装验证
+- v2.0 发布后只接受兼容性和安全修复
+
+### 长期不纳入核心的能力
+
+- 低代码页面设计器和完整工作流 SaaS
+- 强绑定某一家云厂商的基础设施实现
+- 跨库分布式事务和全量 Event Sourcing
+- 与具体 ERP 业务绑定的财务、生产、仓储规则
+
+这些能力应通过 ERP 业务模块或插件实现，避免基础库反向吞并业务系统。
+
+---
 
 ---
 
@@ -457,22 +631,6 @@ v1.5.7 ◄── 批量 + 安全合规 ◄───────────┘
 | `ResourceHelper` | 后缀匹配性能低于精确匹配 | ✅ 已在 v1.3.1 改造为 static readonly 缓存 ResourceNames |
 
 ---
-
-## 版本节奏
-
-```
-v1.2.3 ──► v1.3.0 ──► v1.3.1 ──► v1.3.2 ──► v1.3.3
-  已完成    已完成      收尾强化    多级缓存    限流+JWT
-  2026-03   2026-05     2026-06    2026-08    2026-09
-
-           ──► v1.4.0 ──► v1.4.1 ──► v1.4.2
-                AI集成    向量搜索    分词升级
-                2026-11   2026-12    2027-01
-
-           ──► v1.5.0 ──► v1.5.1 ──► v1.5.2
-                事件总线   多租户     Aspire
-                2027-03   2027-04    2027-05
-```
 
 ---
 

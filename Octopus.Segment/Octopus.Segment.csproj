@@ -9,7 +9,7 @@
     <AssemblyTitle>Octopus分词(基于结巴分词)</AssemblyTitle>
     <Description>分词组件，公共类。</Description>
     <Company>Fatty Coder</Company>
-    <Copyright>©2024-2025 Fatty Coder</Copyright>
+    <Copyright>©2024-2026 Fatty Coder</Copyright>
     <VersionPrefix>1.3</VersionPrefix>
     <VersionSuffix>$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</VersionSuffix>
     <Version>$(VersionPrefix).$(VersionSuffix)</Version>
@@ -29,7 +29,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>Octopus分词(基于结巴分词);$(AssemblyName)</PackageTags>
     <PackageIcon>favicon.png</PackageIcon>
-    <PackageReleaseNotes>Octopus分词(基于结巴分词)</PackageReleaseNotes>
+    <PackageReleaseNotes>新增统一中文分词抽象、词典热加载、新词发现、词性标注与命名实体识别能力，并更新 .NET 10 依赖。</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

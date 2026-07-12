@@ -11,7 +11,7 @@
         <AssemblyTitle>OctopusEx 全文搜索引擎</AssemblyTitle>
         <Description>基于 Lucene.NET 的中文全文搜索引擎，内置结巴分词，支持模糊搜索、多字段权重、Tag提取。</Description>
         <Company>Fatty Coder</Company>
-        <Copyright>©2024-2025 Fatty Coder</Copyright>
+        <Copyright>©2024-2026 Fatty Coder</Copyright>
         <VersionPrefix>1.2</VersionPrefix>
         <VersionSuffix>$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</VersionSuffix>
         <Version>$(VersionPrefix).$(VersionSuffix)</Version>
@@ -33,7 +33,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>OctopusEx全文搜索;Lucene.NET;中文分词;结巴;OctopusEx.SearchCore</PackageTags>
         <PackageIcon>favicon.png</PackageIcon>
-        <PackageReleaseNotes>OctopusEx 全文搜索引擎；Lucene.NET；中文分词；Tag提取；</PackageReleaseNotes>
+        <PackageReleaseNotes>首次发布 net10.0 包；提供 Lucene.NET 中文全文搜索、Jieba 分词、标签提取、内存缓存与依赖注入集成。</PackageReleaseNotes>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>

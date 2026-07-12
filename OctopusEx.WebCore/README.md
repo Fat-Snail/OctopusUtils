@@ -841,7 +841,7 @@ dotnet add package OctopusEx.WebCore
 
 ### 项目引用
 ```xml
-<PackageReference Include="OctopusEx.WebCore" Version="1.0.2025.1225" />
+<PackageReference Include="OctopusEx.WebCore" Version="1.5.2026.712" />
 ```
 
 **额外依赖：**
@@ -1025,7 +1025,7 @@ builder.Services.AddScoped<ProductService>();
 
 ## 📄 许可证
 
-MIT License - 详见 [LICENSE](../LICENSE) 文件
+MIT License - 详见 [LICENSE](https://github.com/Fat-Snail/OctopusUtils/blob/master/LICENSE) 文件
 
 ## 📞 支持
 
