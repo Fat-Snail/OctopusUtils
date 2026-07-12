@@ -8,7 +8,7 @@
     <AssemblyTitle>Octopus核心库</AssemblyTitle>
     <Description>核心基础组件，公共类。</Description>
     <Company>Fatty Coder</Company>
-    <Copyright>©2024-2025 Fatty Coder</Copyright>
+    <Copyright>©2024-2026 Fatty Coder</Copyright>
     <VersionPrefix>1.0</VersionPrefix>
     <VersionSuffix>$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</VersionSuffix>
     <Version>$(VersionPrefix).$(VersionSuffix)</Version>
@@ -33,7 +33,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>Octopus核心库;$(AssemblyName)</PackageTags>
     <PackageIcon>favicon.png</PackageIcon>
-    <PackageReleaseNotes>Octopus核心库；谷歌云盘下载工具类；</PackageReleaseNotes>
+    <PackageReleaseNotes>更新 .NET 10 依赖；完善异步控制台、重试、AI 客户端与缓存工具；DictionaryCache 标记迁移指引。</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
