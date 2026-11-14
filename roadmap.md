@@ -354,7 +354,7 @@
 - ✅ `IDistributedLockProvider` + `IDistributedLockHandle : IAsyncDisposable` 抽象
 - ✅ `InMemoryDistributedLockProvider`（单实例 / 测试）
 - ✅ 租约过期恢复、等待超时、取消令牌、自动续租与幂等释放
-- `RedisDistributedLockProvider`（租约 TTL + 自动续期）
+- ✅ `RedisDistributedLockProvider`（租约 TTL + 自动续期，客户端连接抽象）
 - 支持等待超时、租约时间、取消令牌与租约丢失状态
 - Redis 释放锁使用原子 Compare-and-Delete，防止误删其他实例重新获取的锁
 - Outbox Dispatcher、审计清理及缓存维护任务可选择通过分布式锁保证单活
