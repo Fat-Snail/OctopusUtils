@@ -1,7 +1,5 @@
 namespace OctopusEx.WebCore.MultiTenancy;
 
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 /// <summary>
 /// 多租户全局查询过滤器扩展。
 ///
@@ -22,10 +20,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 /// 适用于 ICurrentTenant 注册为 Singleton 的常见场景；多 DbContext 实例并发
 /// 切换租户的极端用例下推荐使用上面的直接写法。
 ///
-/// 与软删除等已有过滤器使用 AndAlso 合并，不会互相覆盖。
+/// 以命名过滤器注册（EF Core 10+ 的 SetQueryFilter(key, expression)），
+/// 与软删除等已有过滤器由 EF Core 自动按 AND 组合，不会互相覆盖。
 /// </summary>
 public static class MultiTenancyModelBuilderExtensions
 {
+    /// <summary>多租户命名过滤器的 key。</summary>
+    public const String MultiTenantFilterKey = "Octopus:MultiTenant";
+
     /// <summary>
     /// 在指定实体上注册多租户过滤器。
     /// C# 编译器从 lambda 生成的闭包结构能被 EF Core ParameterExtractingExpressionVisitor
@@ -40,24 +42,10 @@ public static class MultiTenancyModelBuilderExtensions
         // 每查询重新求值的参数，避免把 tenant.TenantId 作为闭包字段被快照成常量。
         Func<String?> getTenantId = () => tenant.TenantId;
 
-        var builder = modelBuilder.Entity<TEntity>();
-        var existing = builder.Metadata.GetQueryFilter();
+        Expression<Func<TEntity, Boolean>> tenantFilter =
+            e => e.TenantId == getTenantId() || getTenantId() == null;
 
-        if (existing == null)
-        {
-            builder.HasQueryFilter(e => e.TenantId == getTenantId() || getTenantId() == null);
-        }
-        else
-        {
-            var parameter = Expression.Parameter(typeof(TEntity), "e");
-            var existingBody = ParameterReplacer.Replace(existing.Body, existing.Parameters[0], parameter);
-            Expression<Func<TEntity, Boolean>> tenantFilter =
-                e => e.TenantId == getTenantId() || getTenantId() == null;
-            var tenantBody = ParameterReplacer.Replace(tenantFilter.Body, tenantFilter.Parameters[0], parameter);
-            var combined = Expression.Lambda<Func<TEntity, Boolean>>(
-                Expression.AndAlso(existingBody, tenantBody), parameter);
-            builder.HasQueryFilter(combined);
-        }
+        modelBuilder.Entity<TEntity>().Metadata.SetQueryFilter(MultiTenantFilterKey, tenantFilter);
 
         return modelBuilder;
     }
@@ -80,17 +68,5 @@ public static class MultiTenancyModelBuilderExtensions
         }
 
         return modelBuilder;
-    }
-
-    private sealed class ParameterReplacer : ExpressionVisitor
-    {
-        private readonly ParameterExpression _from, _to;
-        private ParameterReplacer(ParameterExpression from, ParameterExpression to) { _from = from; _to = to; }
-
-        public static Expression Replace(Expression body, ParameterExpression from, ParameterExpression to)
-            => new ParameterReplacer(from, to).Visit(body);
-
-        protected override Expression VisitParameter(ParameterExpression node)
-            => node == _from ? _to : base.VisitParameter(node);
     }
 }

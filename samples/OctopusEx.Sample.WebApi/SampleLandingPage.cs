@@ -34,7 +34,7 @@ internal static class SampleLandingPage
           <main>
             <div class="eyebrow">OctopusUtils · v1.5.5 Sample</div>
             <h1>WebCore 能力展示</h1>
-            <p class="lead">这是 OctopusEx.WebCore 的可运行示例，串联多租户、JWT、EF Core、缓存、事件总线、Outbox、Hangfire、审计、健康检查与诊断能力。</p>
+            <p class="lead">这是 OctopusEx.WebCore 的可运行示例，串联多租户、JWT、EF Core、缓存、事件总线、Outbox、Hangfire、审计、健康检查与分布式协调能力。</p>
             <div class="actions">
               <a class="button primary" href="/health">查看服务状态</a>
               <a class="button" href="/health/full">完整健康检查</a>
@@ -70,7 +70,7 @@ internal static class SampleLandingPage
               </section>
               <section>
                 <h2>分布式协调演示</h2>
-                <p>两个并发任务会竞争同一个租约锁，同一时刻只有一个任务进入临界区。</p>
+                <p>两个并发任务会竞争同一个租约锁，同一时刻只有一个任务进入临界区。设置 <code>Redis:ConnectionString</code> 后可切换为 Redis，启动两个 Sample 进程验证跨进程互斥。</p>
                 <p><a class="button" href="/coordination/demo">运行锁竞争演示 →</a></p>
               </section>
             </div>

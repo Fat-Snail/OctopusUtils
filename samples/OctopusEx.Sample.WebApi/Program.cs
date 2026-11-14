@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OctopusEx.WebCore.Diagnostics;
+using OctopusEx.WebCore.Coordination;
 using OctopusEx.WebCore.Events;
 using OctopusEx.WebCore.Extensions;
 using OctopusEx.WebCore.Extensions.HealthChecks;
@@ -7,6 +8,7 @@ using OctopusEx.WebCore.Helpers;
 using OctopusEx.WebCore.MultiTenancy;
 using OctopusEx.Sample.WebApi;
 using OctopusEx.Sample.WebApi.Coordination;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +50,17 @@ builder.Services.AddAuditing();
 
 // ===== 10. 当前用户 =====
 builder.Services.AddCurrentUser();
-builder.Services.AddInMemoryDistributedLock("sample-webapi");
+var redisConnectionString = builder.Configuration["Redis:ConnectionString"];
+if (String.IsNullOrWhiteSpace(redisConnectionString))
+{
+    builder.Services.AddInMemoryDistributedLock("sample-webapi");
+}
+else
+{
+    builder.Services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(redisConnectionString));
+    builder.Services.AddSingleton<IRedisDistributedLockConnection, StackExchangeRedisLockConnection>();
+    builder.Services.AddRedisDistributedLock("sample-webapi");
+}
 builder.Services.AddScoped<CoordinationDemoService>();
 
 // ===== 11. 健康检查（v1.5.5 新增） =====
@@ -94,8 +106,16 @@ app.UseMultiTenancy();
 app.MapGet("/", () => Results.Content(SampleLandingPage.Html, "text/html; charset=utf-8"))
     .AllowAnonymous()
     .ExcludeFromDescription();
-app.MapGet("/coordination/demo", async (CoordinationDemoService demo, CancellationToken cancellationToken) =>
-    Results.Ok(await demo.RunAsync(cancellationToken)))
+app.MapGet("/coordination/demo", async (HttpRequest request, CoordinationDemoService demo, IDistributedLockProvider lockProvider, CancellationToken cancellationToken) =>
+{
+    var result = await demo.RunAsync(cancellationToken);
+    if (String.Equals(request.Query["format"], "json", StringComparison.OrdinalIgnoreCase) ||
+        request.Headers.Accept.Any(value => value?.Contains("application/json", StringComparison.OrdinalIgnoreCase) == true))
+        return Results.Ok(result);
+
+    var backend = lockProvider.GetType().Name.Replace("DistributedLockProvider", "", StringComparison.Ordinal);
+    return Results.Content(CoordinationDemoPage.Render(result, backend), "text/html; charset=utf-8");
+})
     .AllowAnonymous()
     .WithTags("Sample");
 app.MapControllers();

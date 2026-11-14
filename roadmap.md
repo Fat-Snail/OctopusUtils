@@ -2,6 +2,7 @@
 
 > 当前版本：**v1.5.5**（2026-07-07，健康检查 + 诊断 + 示例项目）
 > 下一里程碑：**v1.5.6** —— 分布式协调（预计 2026-08）
+> 进行中（工作区，未发布）：**.NET 11 双目标迁移 + 依赖升级**（2026-11-14）—— 明细见「长期技术债」
 
 ---
 
@@ -353,7 +354,7 @@
 - ✅ `IDistributedLockProvider` + `IDistributedLockHandle : IAsyncDisposable` 抽象
 - ✅ `InMemoryDistributedLockProvider`（单实例 / 测试）
 - ✅ 租约过期恢复、等待超时、取消令牌、自动续租与幂等释放
-- `RedisDistributedLockProvider`（租约 TTL + 自动续期）
+- ✅ `RedisDistributedLockProvider`（租约 TTL + 自动续期，客户端连接抽象）
 - 支持等待超时、租约时间、取消令牌与租约丢失状态
 - Redis 释放锁使用原子 Compare-and-Delete，防止误删其他实例重新获取的锁
 - Outbox Dispatcher、审计清理及缓存维护任务可选择通过分布式锁保证单活
@@ -432,7 +433,7 @@ if (!handle.Acquired)
 
 **批量数据操作**
 - `IRepository<T,K>.BulkInsertAsync / BulkUpdateAsync / BulkDeleteAsync`
-- 默认用 EF Core 10 原生 `ExecuteUpdateAsync` / `ExecuteDeleteAsync`；
+- 默认用 EF Core 10/11 原生 `ExecuteUpdateAsync` / `ExecuteDeleteAsync`；
   超过 1000 条自动切换到 `EFCore.BulkExtensions` 路径（按需引用）
 - 进度回调：`onBatchCommitted: (int batchIdx, int count) => ...`
 
@@ -623,11 +624,17 @@ ERP 业务模块（UMC / OA / PLM / CRM / WMS / MES / FIN / HRM / OMS）
 
 | 项目 | 问题 | 状态 |
 |------|------|------|
-| `OctopusEx.SearchCore` | 目标框架 net8.0 | ✅ 已升级到 net10（2026-05-10）|
-| `OctopusEx.SearchCore` | Lucene.NET 仍为 beta | ⏸ 阻塞于上游：Lucene.NET 4.8 至今仅有 beta00017，无 GA。已订阅，待发布即升级 |
+| 全局 | 目标框架基线 | ✅ 已建立 net10.0 + net11.0 双目标（工作区，2026-11-14）：`OctopusEx.WebCore` / `OctopusEx.Aspire` / `Octopus.SearchCore` 同时产出两套资产，net10.0 消费方不受影响；`Octopus.Tools` / `Octopus.Segment` 保持 netstandard2.0 / 2.1 |
+| `OctopusEx.SearchCore` | 目标框架 net8.0 | ✅ 已升级到 net10（2026-05-10），并进一步扩展到 net10.0;net11.0（2026-11-14） |
+| `OctopusEx.SearchCore` | Lucene.NET 仍为 beta | ⏸ 阻塞于上游：Lucene.NET 4.8 至今无 GA，最新为 beta00018。当前锁定 beta00017（遵循"只用稳定版"策略），是否跟进新版 beta 待定 |
+| `OctopusEx.WebCore` | Swashbuckle 11 无法用于 net10.0 | ⚠️ 上游硬边界：`Microsoft.AspNetCore.OpenApi` 10.x 依赖 `Microsoft.OpenApi [2.13.0, 3.0.0)`，而 Swashbuckle 11 需要 `>= 3.11.0`。已按 TFM 条件引用（net10.0=10.1.7 / net11.0=11.0.1）；副作用是 net10.0 消费方拿不到 Swashbuckle 11，直到升级到 .NET 11 |
+| `OctopusEx.WebCore` | EF Core 11 移除 `GetQueryFilter()` | ✅ 已改用命名过滤器 `SetQueryFilter(key, expression)`（2026-11-14）。EF Core 10 与 11 共用同一实现，顺带删掉了手工 AndAlso 表达式合并与 `ParameterReplacer`，`SoftDeleteFilterKey` / `MultiTenantFilterKey` 为新的公开常量 |
+| `OctopusEx.WebCore` | `OpenTelemetry.Instrumentation.EntityFrameworkCore` 仍为 beta | ⏸ 阻塞于上游：至今无 GA（最新 1.21.0-beta.1，当前 1.15.1-beta.1）。稳定版本包引用预发布依赖，导致 `dotnet pack` 报 NU5104。已订阅，待 GA 即升级 |
+| `OctopusEx.WebCore` | Scalar 弃用 API | ⚠️ `WithLayout` / `WithDarkModeToggle` 自 Scalar 2.21 起标记过时（`ApiUIExtensions.cs:94`），替换为 `WithClassicLayout()` / `HideDarkModeToggle()` 即可，属顺手清理项 |
 | `OctopusEx.Tools` | `DictionaryCache` 标记 Obsolete 但未提供替代 | ✅ 已重写 Obsolete 消息指向 `ICacheService`（v1.5+ 缓存抽象） |
 | 全局 | 1236 个 CS1591 XML 注释警告 | ✅ 已通过 Directory.Build.props 全局抑制（vendored 第三方代码大量缺注释成本过高），新代码 code review 保证完整 |
-| 全局 | 无单元测试项目 | ✅ v1.3.1 落地，v1.5.x 已扩展到 105 个测试覆盖核心模块 |
+| 全局 | 无单元测试项目 | ✅ v1.3.1 落地，目前已扩展到 201 个测试用例（双目标下共 359 次执行） |
+| 全局 | 测试项目依赖 FluentAssertions 8.x | ⚠️ 授权变更：8.x 起为 Xceed 商业授权（非商用免费，商用需付费 license）。如需规避，单独回退到 7.2.0（Apache-2.0）即可，不影响其余依赖 |
 | `ResourceHelper` | 后缀匹配性能低于精确匹配 | ✅ 已在 v1.3.1 改造为 static readonly 缓存 ResourceNames |
 
 ---

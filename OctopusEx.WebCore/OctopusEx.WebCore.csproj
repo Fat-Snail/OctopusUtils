@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
     <LangVersion>12</LangVersion>
     <AssemblyName>OctopusEx.WebCore</AssemblyName>
     <AssemblyTitle>Octopus核心库</AssemblyTitle>
@@ -52,28 +52,38 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.23" />
-    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.25" />
+    <PackageReference Include="Mapster" Version="10.0.14" />
     <!-- Source Generator 集成：Mapster.Tool 是 dotnet CLI 工具（不是 NuGet 库）。
          运行 `dotnet tool install -g Mapster.Tool` 后通过 `dotnet mapster model -a <asm>`
          编译期生成映射代码，运行时无反射开销。详见 Mapster 文档。 -->
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
-    <PackageReference Include="Hangfire.Core" Version="1.8.23" />
+    <!-- ASP.NET Core / EF Core 家族：11.x 只提供 net11.0 资产，net10.0 目标停留在 10.0.15 -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.15" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="11.0.0" Condition="'$(TargetFramework)' == 'net11.0'" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.25" />
     <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.7" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.7" />
-    <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.75.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.15" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="11.0.0" Condition="'$(TargetFramework)' == 'net11.0'" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.15" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="11.0.0" Condition="'$(TargetFramework)' == 'net11.0'" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.15" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="11.0.0" Condition="'$(TargetFramework)' == 'net11.0'" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.15" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="11.0.0" Condition="'$(TargetFramework)' == 'net11.0'" />
+    <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.82.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="OpenTelemetry" Version="1.15.3" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
+    <PackageReference Include="OpenTelemetry" Version="1.21.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.21.0" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.21.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.21.0" />
     <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.15.1-beta.1" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.14.11" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.21.0" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.21.0" />
+    <!-- Swashbuckle 11 依赖 Microsoft.OpenApi 3.x，而 net10.0 上的
+         Microsoft.AspNetCore.OpenApi 10.0.15 锁在 Microsoft.OpenApi 2.x，
+         两者不共存，因此按 TFM 分别引用。 -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="11.0.1" Condition="'$(TargetFramework)' == 'net11.0'" />
     <PackageReference Include="ToolGood.Words" Version="3.1.0.3" />
   </ItemGroup>
 
